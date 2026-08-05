@@ -1,68 +1,35 @@
-{
-  "$schema": "https://json.schemastore.org/wrangler.json",
-  "name": "verde-sector-5-api",
-  "main": "src/index.ts",
-  "compatibility_date": "2024-04-05",
-  "compatibility_flags": ["nodejs_compat"],
-  
-  "vars": {
-    "ENVIRONMENT": "development",
-    "JWT_EXPIRY": "7d",
-    "REFRESH_TOKEN_EXPIRY": "30d"
-  },
-  
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "verde-sector-5-db",
-      "database_id": ""
-    }
-  ],
-  
-  "r2_buckets": [
-    {
-      "binding": "PHOTOS",
-      "bucket_name": "verde-sector-5-photos",
-      "jurisdiction": "eu"
-    }
-  ],
-  
-  "routes": [
-    {
-      "pattern": "api.verde-sector5.ro/*",
-      "zone_name": "verde-sector5.ro"
-    }
-  ],
-  
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_classes": []
-    }
-  ],
-  
-  "env": {
-    "production": {
-      "vars": {
-        "ENVIRONMENT": "production"
-      },
-      "routes": [
-        {
-          "pattern": "api.verde-sector5.ro/*",
-          "zone_name": "verde-sector5.ro"
-        }
-      ]
-    },
-    "staging": {
-      "vars": {
-        "ENVIRONMENT": "staging"
-      },
-      "routes": [
-        {
-          "pattern": "staging-api.verde-sector5.ro/*",
-          "zone_name": "verde-sector5.ro"
-        }
-      ]
-    }
-  }
-}
+# Verde în Sectorul 5 - Cloudflare Workers Configuration
+name = "verde-sector-5-api"
+main = "src/index.ts"
+compatibility_date = "2024-04-05"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "development"
+JWT_EXPIRY = "7d"
+REFRESH_TOKEN_EXPIRY = "30d"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "verde-sector-5-db"
+database_id = "local"
+
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "verde-sector-5-photos"
+
+[env.production]
+[env.production.vars]
+ENVIRONMENT = "production"
+
+[[env.production.routes]]
+pattern = "api.verde-sector5.ro/*"
+zone_name = "verde-sector5.ro"
+
+[env.staging]
+[env.staging.vars]
+ENVIRONMENT = "staging"
+
+[[env.staging.routes]]
+pattern = "staging-api.verde-sector5.ro/*"
+zone_name = "verde-sector5.ro"

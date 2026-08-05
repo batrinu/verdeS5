@@ -2,8 +2,9 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
+import { AppEnv } from '../types/hono';
 
-const reports = new Hono();
+const reports = new Hono<AppEnv>();
 
 // Validation schemas
 const createReportSchema = z.object({
@@ -72,23 +73,21 @@ reports.get('/', jwtMiddleware, async (c) => {
 
     const skip = (page - 1) * limit;
 
-    const [reports, total] = await Promise.all([
-      prisma.report.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { submittedAt: 'desc' },
-        include: {
-          user: {
-            select: { id: true, email: true, name: true, phone: true },
-          },
-          assignedTo: {
-            select: { id: true, email: true, name: true },
-          },
+    const reports = await prisma.report.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { submittedAt: 'desc' },
+      include: {
+        user: {
+          select: { id: true, email: true, name: true, phone: true },
         },
-      }),
-      prisma.report.count({ where }),
-    ]);
+        assignedTo: {
+          select: { id: true, email: true, name: true },
+        },
+      },
+    });
+    const total = await prisma.report.count({ where });
 
     return c.json({
       reports,

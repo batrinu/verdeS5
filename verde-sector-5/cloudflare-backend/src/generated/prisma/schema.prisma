@@ -1,0 +1,233 @@
+// Verde în Sectorul 5 - Database Schema for Cloudflare D1 (SQLite)
+// Note: SQLite doesn't support enums or PostGIS, so we use String fields
+// for enum-like values and store lat/lon as Float columns
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  phone        String?
+  name         String?
+  role         String   @default("CITIZEN") // CITIZEN | FIELD_WORKER | ADMIN
+  neighborhood String? // GIULESTI | CRANGASI | DRUMUL_TABEREI | FERENTARI | RAHOVA | PROGRESUL | SEPTEMBRIE_13 | MILITARI
+  avatar       String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  reports            Report[]           @relation("ReportAuthor")
+  adoptedTrees       Tree[]
+  assignedReports    Report[]           @relation("ReportAssignee")
+  assignments        ReportAssignment[]
+  campaigns          PlantingCampaign[] @relation("CampaignResponsible")
+  volunteerCampaigns PlantingCampaign[] @relation("CampaignVolunteers")
+  notifications      Notification[]
+  auditLogs          AuditLog[]
+
+  @@map("users")
+}
+
+model GreenSpace {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   @default("PARK") // PARK | GARDEN | GREEN_STRIP | FOREST | PLAYGROUND | OTHER
+  location    String // JSON polygon coordinates: [[lat, lon], ...]
+  area        Float // Area in square meters
+  description String?
+  address     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  trees Tree[]
+
+  @@map("green_spaces")
+}
+
+model Tree {
+  id            String      @id @default(cuid())
+  species       String      @default("OTHER") // OAK | MAPLE | LIME | POPLAR | WILLOW | BIRCH | ASH | CHESTNUT | PINE | SPRUCE | FIR | OTHER
+  speciesOther  String?
+  latitude      Float
+  longitude     Float
+  plantingDate  DateTime?
+  height        Float?
+  trunkDiameter Float?
+  healthStatus  String      @default("GOOD") // EXCELLENT | GOOD | FAIR | POOR | CRITICAL | DEAD
+  adoptedBy     User?       @relation(fields: [adoptedById], references: [id])
+  adoptedById   String?
+  adoptionDate  DateTime?
+  greenSpace    GreenSpace? @relation(fields: [greenSpaceId], references: [id])
+  greenSpaceId  String?
+  notes         String?
+  photos        String      @default("[]") // JSON array of photo URLs
+  neighborhood  String      @default("RAHOVA") // COTROCENI | RAHOVA | FERENTARI | SEBASTIAN | IZVOR
+  nickname      String? // Citizen nickname e.g. "Teiul din Cotroceni"
+  lastWateredAt DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  wateringLogs WateringLog[]
+
+  @@index([latitude, longitude])
+  @@index([neighborhood])
+  @@map("trees")
+}
+
+model WateringLog {
+  id           String   @id @default(cuid())
+  tree         Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
+  treeId       String
+  userName     String
+  liters       Int      @default(10)
+  earnedPoints Int      @default(50)
+  loggedAt     DateTime @default(now())
+
+  @@index([treeId])
+  @@map("watering_logs")
+}
+
+model CareAlert {
+  id           String   @id @default(cuid())
+  neighborhood String
+  alertType    String   @default("HEATWAVE_DRYNESS") // HEATWAVE_DRYNESS | YOUNG_TREE_WATERING | STORM_RISK
+  message      String
+  status       String   @default("ACTIVE") // ACTIVE | RESOLVED
+  createdAt    DateTime @default(now())
+
+  @@index([neighborhood])
+  @@index([status])
+  @@map("care_alerts")
+}
+
+model NeighborhoodStats {
+  id             String   @id @default(cuid())
+  neighborhood   String   @unique // COTROCENI | RAHOVA | FERENTARI | SEBASTIAN | IZVOR
+  totalTrees     Int      @default(0)
+  adoptedTrees   Int      @default(0)
+  wateringsCount Int      @default(0)
+  ecoPoints      Int      @default(0)
+  updatedAt      DateTime @updatedAt
+
+  @@map("neighborhood_stats")
+}
+
+model Report {
+  id              String    @id @default(cuid())
+  user            User      @relation("ReportAuthor", fields: [userId], references: [id])
+  userId          String
+  issueType       String // FALLEN_TREE | BROKEN_BRANCHES | DISEASED | RISK_FALLING | EMPTY_PIT | OBSTRUCTION | VANDALISM | OTHER
+  description     String
+  latitude        Float
+  longitude       Float
+  address         String
+  photos          String    @default("[]") // JSON array of photo URLs
+  status          String    @default("SUBMITTED") // SUBMITTED | UNDER_REVIEW | ASSIGNED | IN_PROGRESS | RESOLVED | REJECTED
+  priority        String    @default("MEDIUM") // LOW | MEDIUM | HIGH | URGENT
+  assignedTo      User?     @relation("ReportAssignee", fields: [assignedToId], references: [id])
+  assignedToId    String?
+  trackingNumber  String    @unique
+  adminNotes      String?
+  resolutionNotes String?
+  rejectionReason String?
+  submittedAt     DateTime  @default(now())
+  reviewedAt      DateTime?
+  assignedAt      DateTime?
+  resolvedAt      DateTime?
+  updatedAt       DateTime  @updatedAt
+
+  assignments ReportAssignment[]
+
+  @@index([status])
+  @@index([issueType])
+  @@index([submittedAt])
+  @@index([latitude, longitude])
+  @@map("reports")
+}
+
+model ReportAssignment {
+  id            String    @id @default(cuid())
+  report        Report    @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId      String
+  fieldWorker   User      @relation(fields: [fieldWorkerId], references: [id])
+  fieldWorkerId String
+  assignedAt    DateTime  @default(now())
+  notes         String?
+  completedAt   DateTime?
+
+  @@index([reportId])
+  @@index([fieldWorkerId])
+  @@map("report_assignments")
+}
+
+model PlantingCampaign {
+  id            String   @id @default(cuid())
+  name          String
+  description   String
+  latitude      Float?
+  longitude     Float?
+  locationDesc  String
+  species       String   @default("[]") // JSON array of species
+  numberOfTrees Int      @default(0)
+  treesPlanted  Int      @default(0)
+  startDate     DateTime
+  endDate       DateTime
+  status        String   @default("PLANNED") // PLANNED | ONGOING | COMPLETED | CANCELLED
+  budget        Float?
+  responsible   User?    @relation("CampaignResponsible", fields: [responsibleId], references: [id])
+  responsibleId String?
+  volunteers    User[]   @relation("CampaignVolunteers")
+  photos        String   @default("[]") // JSON array of photo URLs
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([startDate])
+  @@map("planting_campaigns")
+}
+
+model Notification {
+  id                String    @id @default(cuid())
+  user              User      @relation(fields: [userId], references: [id])
+  userId            String
+  title             String
+  message           String
+  notificationType  String    @default("GENERAL") // REPORT_STATUS | ASSIGNMENT | CAMPAIGN | ADOPTION | GENERAL
+  relatedObjectId   String?
+  relatedObjectType String?
+  isRead            Boolean   @default(false)
+  sentAt            DateTime  @default(now())
+  readAt            DateTime?
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  action     String // CREATE | UPDATE | DELETE | ASSIGN | STATUS_CHANGE | LOGIN | LOGOUT
+  entityType String
+  entityId   String?
+  changes    String? // JSON object with old/new values
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}

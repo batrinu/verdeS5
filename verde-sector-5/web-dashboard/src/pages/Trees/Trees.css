@@ -1,0 +1,149 @@
+.trees-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #f8fafc;
+}
+
+.trees-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.trees-header h1 {
+  color: #4ade80;
+  margin: 0 0 0.5rem 0;
+}
+
+.trees-header p {
+  color: #94a3b8;
+  margin: 0;
+}
+
+.trees-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #4ade80;
+}
+
+.filter-select {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  outline: none;
+  min-width: 180px;
+}
+
+.filter-select option {
+  background: #1e3c2f;
+}
+
+.trees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.tree-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tree-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.tree-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.health-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+}
+
+.health-sănătos {
+  background: rgba(34, 197, 94, 0.8);
+  color: white;
+}
+
+.health-necesită-toaletare {
+  background: rgba(245, 158, 11, 0.8);
+  color: white;
+}
+
+.health-uscat {
+  background: rgba(239, 68, 68, 0.8);
+  color: white;
+}
+
+.tree-info {
+  padding: 1.5rem;
+}
+
+.tree-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #e2e8f0;
+}
+
+.tree-location {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.btn-adopt {
+  width: 100%;
+  padding: 0.75rem;
+  background: transparent;
+  border: 1px solid #4ade80;
+  color: #4ade80;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-adopt:hover {
+  background: #4ade80;
+  color: #0f172a;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: #94a3b8;
+  font-size: 1.125rem;
+}

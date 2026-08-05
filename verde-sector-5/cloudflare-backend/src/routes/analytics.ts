@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 import { jwtMiddleware, roleMiddleware } from './auth';
+import { AppEnv } from '../types/hono';
 
-const analytics = new Hono();
+const analytics = new Hono<AppEnv>();
 
 // Dashboard analytics - Admin only
 analytics.get('/dashboard', jwtMiddleware, roleMiddleware('ADMIN'), async (c) => {
@@ -75,20 +76,13 @@ analytics.get('/dashboard', jwtMiddleware, roleMiddleware('ADMIN'), async (c) =>
       avgResolutionTime = Math.round((totalDays / resolvedWithTime.length) * 10) / 10;
     }
 
-    // Reports by neighborhood (user's neighborhood)
+    // Users by neighborhood
     const reportsByNeighborhood = await prisma.user.groupBy({
       by: ['neighborhood'],
-      _count: {
-        reports: true,
-      },
+      _count: true,
       where: {
-        reports: {
-          some: {},
-        },
-      },
-      orderBy: {
-        _count: {
-          reports: 'desc',
+        neighborhood: {
+          not: null,
         },
       },
     });
@@ -144,7 +138,7 @@ analytics.get('/dashboard', jwtMiddleware, roleMiddleware('ADMIN'), async (c) =>
         })),
         byNeighborhood: reportsByNeighborhood.map(item => ({
           neighborhood: item.neighborhood,
-          count: item._count.reports,
+          count: item._count,
         })),
       },
       trees: {

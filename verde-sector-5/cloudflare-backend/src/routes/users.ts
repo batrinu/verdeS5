@@ -2,8 +2,9 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
+import { AppEnv } from '../types/hono';
 
-const users = new Hono();
+const users = new Hono<AppEnv>();
 
 // Get user profile
 users.get('/me', jwtMiddleware, async (c) => {

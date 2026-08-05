@@ -1,13 +1,14 @@
 import { Hono } from 'hono';
-import { jwtMiddleware } from './auth';
+import { jwtMiddleware, roleMiddleware } from './auth';
+import { AppEnv } from '../types/hono';
 
-const upload = new Hono();
+const upload = new Hono<AppEnv>();
 
 // Upload photo to R2
 upload.post('/photo', jwtMiddleware, async (c) => {
   try {
     const formData = await c.req.formData();
-    const file = formData.get('file') as File;
+    const file = formData.get('file') as unknown as File;
 
     if (!file) {
       return c.json({ error: 'No file provided' }, 400);
@@ -127,7 +128,7 @@ upload.get('/stats', jwtMiddleware, async (c) => {
       totalSize += listed.objects.reduce((sum, obj) => sum + (obj.size || 0), 0);
       
       truncated = listed.truncated;
-      cursor = listed.cursor;
+      cursor = (listed as any).cursor;
     } while (truncated);
 
     return c.json({

@@ -1,0 +1,162 @@
+.create-report-container {
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.create-report-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 600px;
+  color: #fff;
+}
+
+.create-report-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.create-report-header h2 {
+  color: #4ade80;
+  margin: 0 0 0.5rem 0;
+}
+
+.create-report-header p {
+  color: #94a3b8;
+  margin: 0;
+}
+
+.create-report-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.issue-types-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.issue-type-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.issue-type-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.issue-type-card.selected {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: #4ade80;
+}
+
+.issue-icon {
+  font-size: 1.5rem;
+}
+
+.issue-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+textarea {
+  resize: vertical;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  outline: none;
+  font-family: inherit;
+}
+
+textarea:focus {
+  border-color: #4ade80;
+}
+
+.location-picker-mock {
+  margin-top: 0.75rem;
+  height: 100px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.photo-upload-area {
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.photo-upload-area:hover {
+  border-color: #4ade80;
+}
+
+.photo-upload-area span {
+  display: block;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+}
+
+.photo-upload-area p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-cancel {
+  flex: 1;
+  padding: 0.75rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-submit {
+  flex: 2;
+  padding: 0.75rem;
+  background: #22c55e;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-submit:disabled {
+  background: #14532d;
+  cursor: not-allowed;
+}

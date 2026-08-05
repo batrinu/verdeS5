@@ -2,8 +2,9 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
+import { AppEnv } from '../types/hono';
 
-const trees = new Hono();
+const trees = new Hono<AppEnv>();
 
 // Validation schemas
 const createTreeSchema = z.object({
@@ -57,23 +58,21 @@ trees.get('/', async (c) => {
 
     const skip = (page - 1) * limit;
 
-    const [trees, total] = await Promise.all([
-      prisma.tree.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-        include: {
-          adoptedBy: {
-            select: { id: true, email: true, name: true },
-          },
-          greenSpace: {
-            select: { id: true, name: true, type: true },
-          },
+    const trees = await prisma.tree.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        adoptedBy: {
+          select: { id: true, email: true, name: true },
         },
-      }),
-      prisma.tree.count({ where }),
-    ]);
+        greenSpace: {
+          select: { id: true, name: true, type: true },
+        },
+      },
+    });
+    const total = await prisma.tree.count({ where });
 
     return c.json({
       trees,
@@ -84,9 +83,9 @@ trees.get('/', async (c) => {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Get trees error:', error);
-    return c.json({ error: 'Failed to fetch trees' }, 500);
+    return c.json({ error: error?.message || String(error) }, 500);
   }
 });
 
@@ -232,6 +231,45 @@ trees.post('/:id/adopt', jwtMiddleware, async (c) => {
   } catch (error) {
     console.error('Adopt tree error:', error);
     return c.json({ error: 'Failed to adopt tree' }, 500);
+  }
+});
+
+// Water tree
+trees.post('/:id/water', async (c) => {
+  const prisma = c.get('prisma');
+  const id = c.req.param('id');
+
+  try {
+    const body = await c.req.json().catch(() => ({}));
+    const liters = body.liters || 10;
+    const userName = body.userName || 'Cetățean Anonim';
+
+    const tree = await prisma.tree.findUnique({ where: { id } });
+    if (!tree) {
+      return c.json({ error: 'Tree not found' }, 404);
+    }
+
+    const updatedTree = await prisma.tree.update({
+      where: { id },
+      data: {
+        lastWateredAt: new Date(),
+        healthStatus: 'EXCELLENT',
+      },
+    });
+
+    const wateringLog = await prisma.wateringLog.create({
+      data: {
+        treeId: id,
+        userName,
+        liters,
+        earnedPoints: 50,
+      },
+    });
+
+    return c.json({ tree: updatedTree, wateringLog });
+  } catch (error) {
+    console.error('Water tree error:', error);
+    return c.json({ error: 'Failed to log tree watering' }, 500);
   }
 });
 

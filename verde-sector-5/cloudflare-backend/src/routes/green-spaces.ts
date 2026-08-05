@@ -2,8 +2,9 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
+import { AppEnv } from '../types/hono';
 
-const greenSpaces = new Hono();
+const greenSpaces = new Hono<AppEnv>();
 
 // Validation schemas
 const createGreenSpaceSchema = z.object({

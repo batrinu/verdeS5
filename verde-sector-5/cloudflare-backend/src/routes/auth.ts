@@ -1,15 +1,66 @@
 import { Hono } from 'hono';
-import { sign, verify } from 'jose';
+import { SignJWT, jwtVerify } from 'jose';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import bcrypt from 'bcryptjs';
+import { AppEnv } from '../types/hono';
 
-const auth = new Hono();
+const auth = new Hono<AppEnv>();
 
 // JWT configuration
 const JWT_SECRET_KEY = 'your-secret-key-change-in-production';
 const JWT_EXPIRY = '7d';
 const REFRESH_TOKEN_EXPIRY = '30d';
+
+// --- Password hashing using Web Crypto API (Workers-compatible) ---
+async function hashPassword(password: string): Promise<string> {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt,
+      iterations: 100000,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    256
+  );
+  const hashArray = new Uint8Array(derivedBits);
+  const saltHex = Array.from(salt).map(b => b.toString(16).padStart(2, '0')).join('');
+  const hashHex = Array.from(hashArray).map(b => b.toString(16).padStart(2, '0')).join('');
+  return `${saltHex}:${hashHex}`;
+}
+
+async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  const [saltHex, hashHex] = stored.split(':');
+  const salt = new Uint8Array(saltHex.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt,
+      iterations: 100000,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    256
+  );
+  const hashArray = new Uint8Array(derivedBits);
+  const computedHex = Array.from(hashArray).map(b => b.toString(16).padStart(2, '0')).join('');
+  return computedHex === hashHex;
+}
 
 // Validation schemas
 const registerSchema = z.object({
@@ -47,8 +98,8 @@ auth.post('/register', zValidator('json', registerSchema), async (c) => {
       return c.json({ error: 'User with this email already exists' }, 400);
     }
 
-    // Hash password
-    const passwordHash = await bcrypt.hash(password, 10);
+    // Hash password using Web Crypto
+    const passwordHash = await hashPassword(password);
 
     // Create user
     const user = await prisma.user.create({
@@ -100,8 +151,8 @@ auth.post('/login', zValidator('json', loginSchema), async (c) => {
       return c.json({ error: 'Invalid credentials' }, 401);
     }
 
-    // Verify password
-    const isValid = await bcrypt.compare(password, user.passwordHash);
+    // Verify password using Web Crypto
+    const isValid = await verifyPassword(password, user.passwordHash);
     if (!isValid) {
       return c.json({ error: 'Invalid credentials' }, 401);
     }
@@ -144,9 +195,9 @@ auth.post('/refresh', zValidator('json', refreshSchema), async (c) => {
   const { refreshToken } = c.req.valid('json');
 
   try {
-    const payload = await verify(refreshToken, new TextEncoder().encode(JWT_SECRET_KEY));
+    const { payload } = await jwtVerify(refreshToken, new TextEncoder().encode(JWT_SECRET_KEY));
     
-    if (!payload || typeof payload === 'string') {
+    if (!payload) {
       return c.json({ error: 'Invalid refresh token' }, 401);
     }
 
@@ -187,9 +238,9 @@ auth.get('/me', async (c) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const payload = await verify(token, new TextEncoder().encode(JWT_SECRET_KEY));
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET_KEY));
     
-    if (!payload || typeof payload === 'string') {
+    if (!payload) {
       return c.json({ error: 'Invalid token' }, 401);
     }
 
@@ -225,9 +276,9 @@ auth.post('/logout', async (c) => {
     const authHeader = c.req.header('Authorization');
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      const payload = await verify(token, new TextEncoder().encode(JWT_SECRET_KEY));
+      const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET_KEY));
       
-      if (payload && typeof payload !== 'string') {
+      if (payload) {
         const prisma = c.get('prisma');
         await prisma.auditLog.create({
           data: {
@@ -250,28 +301,28 @@ auth.post('/logout', async (c) => {
 async function generateAccessToken(user: any): Promise<string> {
   const secret = new TextEncoder().encode(JWT_SECRET_KEY);
   
-  return await sign(
-    {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-    },
-    secret,
-    { expiresIn: JWT_EXPIRY }
-  );
+  return await new SignJWT({
+    sub: user.id,
+    email: user.email,
+    role: user.role,
+  })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime(JWT_EXPIRY)
+    .sign(secret);
 }
 
 async function generateRefreshToken(user: any): Promise<string> {
   const secret = new TextEncoder().encode(JWT_SECRET_KEY);
   
-  return await sign(
-    {
-      sub: user.id,
-      type: 'refresh',
-    },
-    secret,
-    { expiresIn: REFRESH_TOKEN_EXPIRY }
-  );
+  return await new SignJWT({
+    sub: user.id,
+    type: 'refresh',
+  })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime(REFRESH_TOKEN_EXPIRY)
+    .sign(secret);
 }
 
 // JWT middleware for protected routes
@@ -283,9 +334,9 @@ export const jwtMiddleware = async (c: any, next: any) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const payload = await verify(token, new TextEncoder().encode(JWT_SECRET_KEY));
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET_KEY));
     
-    if (!payload || typeof payload === 'string') {
+    if (!payload) {
       return c.json({ error: 'Invalid token' }, 401);
     }
 

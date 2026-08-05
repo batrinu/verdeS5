@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 import { jwtMiddleware } from './auth';
+import { AppEnv } from '../types/hono';
 
-const notifications = new Hono();
+const notifications = new Hono<AppEnv>();
 
 // Get user notifications
 notifications.get('/', jwtMiddleware, async (c) => {

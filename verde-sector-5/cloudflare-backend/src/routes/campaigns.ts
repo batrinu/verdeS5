@@ -2,8 +2,9 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
+import { AppEnv } from '../types/hono';
 
-const campaigns = new Hono();
+const campaigns = new Hono<AppEnv>();
 
 // Validation schemas
 const createCampaignSchema = z.object({
@@ -52,27 +53,25 @@ campaigns.get('/', async (c) => {
 
     const skip = (page - 1) * limit;
 
-    const [campaigns, total] = await Promise.all([
-      prisma.plantingCampaign.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { startDate: 'desc' },
-        include: {
-          responsible: {
-            select: { id: true, email: true, name: true },
-          },
-          volunteers: {
-            select: { id: true, email: true, name: true },
-            take: 5,
-          },
-          _count: {
-            select: { volunteers: true },
-          },
+    const campaigns = await prisma.plantingCampaign.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { startDate: 'desc' },
+      include: {
+        responsible: {
+          select: { id: true, email: true, name: true },
         },
-      }),
-      prisma.plantingCampaign.count({ where }),
-    ]);
+        volunteers: {
+          select: { id: true, email: true, name: true },
+          take: 5,
+        },
+        _count: {
+          select: { volunteers: true },
+        },
+      },
+    });
+    const total = await prisma.plantingCampaign.count({ where });
 
     return c.json({
       campaigns,
