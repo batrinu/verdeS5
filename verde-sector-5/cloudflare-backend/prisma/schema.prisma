@@ -1,0 +1,289 @@
+// Verde în Sectorul 5 - Database Schema for Cloudflare D1 (SQLite)
+// Note: SQLite doesn't support PostGIS, so we store lat/lon as REAL columns
+// and implement geospatial queries manually using the Haversine formula
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  phone        String?
+  name         String?
+  role         UserRole  @default(CITIZEN)
+  neighborhood Neighborhood?
+  avatar       String?
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  reports      Report[]
+  adoptedTrees Tree[]
+  assignments  ReportAssignment[]
+  campaigns    PlantingCampaign[] @relation("CampaignResponsible")
+  volunteerCampaigns PlantingCampaign[] @relation("CampaignVolunteers")
+  notifications Notification[]
+  auditLogs    AuditLog[]
+  
+  @@map("users")
+}
+
+enum UserRole {
+  CITIZEN
+  FIELD_WORKER
+  ADMIN
+}
+
+enum Neighborhood {
+  GIULESTI
+  CRANGASI
+  DRUMUL_TABEREI
+  FERENTARI
+  RAHOVA
+  PROGRESUL
+  SEPTEMBRIE_13
+  MILITARI
+}
+
+model GreenSpace {
+  id          String   @id @default(cuid())
+  name        String
+  type        GreenSpaceType @default(PARK)
+  location    String   // JSON polygon coordinates: [[lat, lon], ...]
+  area        Float    // Area in square meters
+  description String?
+  address     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  trees       Tree[]
+  
+  @@map("green_spaces")
+}
+
+enum GreenSpaceType {
+  PARK
+  GARDEN
+  GREEN_STRIP
+  FOREST
+  PLAYGROUND
+  OTHER
+}
+
+model Tree {
+  id            String    @id @default(cuid())
+  species       TreeSpecies @default(OTHER)
+  speciesOther  String?
+  latitude      Float
+  longitude     Float
+  plantingDate  DateTime?
+  height        Float?
+  trunkDiameter Float?
+  healthStatus  HealthStatus @default(GOOD)
+  adoptedBy     User?     @relation(fields: [adoptedById], references: [id])
+  adoptedById   String?
+  adoptionDate  DateTime?
+  greenSpace    GreenSpace? @relation(fields: [greenSpaceId], references: [id])
+  greenSpaceId  String?
+  notes         String?
+  photos        String    // JSON array of photo URLs
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@map("trees")
+  @@index([latitude, longitude])
+}
+
+enum TreeSpecies {
+  OAK
+  MAPLE
+  LIME
+  POPLAR
+  WILLOW
+  BIRCH
+  ASH
+  CHESTNUT
+  PINE
+  SPRUCE
+  FIR
+  OTHER
+}
+
+enum HealthStatus {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+  CRITICAL
+  DEAD
+}
+
+model Report {
+  id              String      @id @default(cuid())
+  user            User        @relation(fields: [userId], references: [id])
+  userId          String
+  issueType       IssueType
+  description     String
+  latitude        Float
+  longitude       Float
+  address         String
+  photos          String      // JSON array of photo URLs
+  status          ReportStatus @default(SUBMITTED)
+  priority        Priority     @default(MEDIUM)
+  assignedTo      User?       @relation(fields: [assignedToId], references: [id])
+  assignedToId    String?
+  trackingNumber  String      @unique
+  adminNotes      String?
+  resolutionNotes String?
+  rejectionReason String?
+  submittedAt     DateTime    @default(now())
+  reviewedAt      DateTime?
+  assignedAt      DateTime?
+  resolvedAt      DateTime?
+  updatedAt       DateTime    @updatedAt
+  
+  assignments     ReportAssignment[]
+  
+  @@map("reports")
+  @@index([status])
+  @@index([issueType])
+  @@index([submittedAt])
+  @@index([latitude, longitude])
+}
+
+enum IssueType {
+  FALLEN_TREE
+  BROKEN_BRANCHES
+  DISEASED
+  RISK_FALLING
+  EMPTY_PIT
+  OBSTRUCTION
+  VANDALISM
+  OTHER
+}
+
+enum ReportStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model ReportAssignment {
+  id            String   @id @default(cuid())
+  report        Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId      String
+  fieldWorker   User     @relation(fields: [fieldWorkerId], references: [id])
+  fieldWorkerId String
+  assignedAt    DateTime @default(now())
+  notes         String?
+  completedAt   DateTime?
+  
+  @@map("report_assignments")
+  @@index([reportId])
+  @@index([fieldWorkerId])
+}
+
+model PlantingCampaign {
+  id                String   @id @default(cuid())
+  name              String
+  description       String
+  latitude          Float?
+  longitude         Float?
+  locationDesc      String
+  species           String   // JSON array of species
+  numberOfTrees     Int      @default(0)
+  treesPlanted      Int      @default(0)
+  startDate         DateTime
+  endDate           DateTime
+  status            CampaignStatus @default(PLANNED)
+  budget            Float?
+  responsible       User?    @relation("CampaignResponsible", fields: [responsibleId], references: [id])
+  responsibleId     String?
+  volunteers        User[]   @relation("CampaignVolunteers")
+  photos            String   // JSON array of photo URLs
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("planting_campaigns")
+  @@index([status])
+  @@index([startDate])
+}
+
+enum CampaignStatus {
+  PLANNED
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+model Notification {
+  id                 String             @id @default(cuid())
+  user               User               @relation(fields: [userId], references: [id])
+  userId             String
+  title              String
+  message            String
+  notificationType   NotificationType   @default(GENERAL)
+  relatedObjectId    String?
+  relatedObjectType  String?
+  isRead             Boolean            @default(false)
+  sentAt             DateTime           @default(now())
+  readAt             DateTime?
+  
+  @@map("notifications")
+  @@index([userId])
+  @@index([isRead])
+}
+
+enum NotificationType {
+  REPORT_STATUS
+  ASSIGNMENT
+  CAMPAIGN
+  ADOPTION
+  GENERAL
+}
+
+model AuditLog {
+  id              String      @id @default(cuid())
+  user            User?       @relation(fields: [userId], references: [id])
+  userId          String?
+  action          AuditAction
+  entityType      String
+  entityId        String?
+  changes         String?     // JSON object with old/new values
+  ipAddress       String?
+  userAgent       String?
+  createdAt       DateTime    @default(now())
+  
+  @@map("audit_logs")
+  @@index([userId])
+  @@index([createdAt])
+  @@index([entityType, entityId])
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  ASSIGN
+  STATUS_CHANGE
+  LOGIN
+  LOGOUT
+}
