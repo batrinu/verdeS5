@@ -43,10 +43,12 @@ export async function adoptTreeApi(treeId: string, adopterName: string, nickname
       body: JSON.stringify({ adopterName, nickname }),
     });
     if (res.ok) {
+      apiReachable = true;
       const data = await res.json();
       return data.tree || data;
     }
   } catch (err) {
+    apiReachable = false;
     console.warn('API adoptTree error:', err);
   }
   return null;
@@ -66,10 +68,12 @@ export async function waterTreeApi(
       body: JSON.stringify({ liters, userName, photoProofUrl, isPhotoVerified }),
     });
     if (res.ok) {
+      apiReachable = true;
       const data = await res.json();
       return data.tree || data;
     }
   } catch (err) {
+    apiReachable = false;
     console.warn('API waterTree error:', err);
   }
   return null;

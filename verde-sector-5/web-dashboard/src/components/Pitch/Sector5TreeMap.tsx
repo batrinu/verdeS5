@@ -101,8 +101,13 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
 
     // Add tree markers
     trees.forEach((tree) => {
+      // Descriptive accessible name so screen readers announce the tree, not "Marker".
+      const label = `${tree.nickname || tree.species} — ${tree.neighborhood}, ${tree.isAdopted ? 'adoptat' : 'disponibil pentru adopție'} (${tree.code})`;
       const marker = L.marker([tree.latitude, tree.longitude], {
         icon: getMarkerIcon(tree),
+        alt: label,
+        title: label,
+        keyboard: true,
       }).addTo(map);
 
       const popupContainer = document.createElement('div');

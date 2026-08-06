@@ -42,8 +42,9 @@ export const TreeService = {
 
   async adoptTree(treeId: string, adopterName: string, nickname: string): Promise<TreeItem> {
     const updatedTree = adoptTreeInStorage(treeId, adopterName, nickname);
-    // Fire and forget background API sync
-    adoptTreeApi(treeId, adopterName, nickname).catch(() => {});
+    // Local write already succeeded; await the sync so callers know whether it
+    // reached the server (updates isApiReachable), then return the local result.
+    await adoptTreeApi(treeId, adopterName, nickname).catch(() => null);
     return updatedTree;
   },
 
@@ -55,8 +56,7 @@ export const TreeService = {
     isPhotoVerified?: boolean
   ): Promise<TreeItem> {
     const updatedTree = waterTreeInStorage(treeId, liters, userName, photoProofUrl, isPhotoVerified);
-    // Fire and forget background API sync
-    waterTreeApi(treeId, liters, userName, photoProofUrl, isPhotoVerified).catch(() => {});
+    await waterTreeApi(treeId, liters, userName, photoProofUrl, isPhotoVerified).catch(() => null);
     return updatedTree;
   },
 

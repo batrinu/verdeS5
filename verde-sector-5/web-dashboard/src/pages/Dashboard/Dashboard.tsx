@@ -119,7 +119,36 @@ export const Dashboard: React.FC = () => {
     setSelectedTree(null);
     addPoints(100);
     setAdoptionCertModalTarget(updatedTree);
+    // The certificate is the success cue; only surface the offline case.
+    setIsOffline(!isApiReachable());
+    if (!isApiReachable()) {
+      setToastAlerts(prev => [...prev, {
+        id: `adopt-offline-${Date.now()}`,
+        neighborhood: 'Sector 5',
+        alertType: 'default',
+        title: '💾 Salvat local',
+        message: 'Adopția e salvată local — se va sincroniza automat când revii online.',
+        autoDismissMs: 6000,
+      }]);
+    }
     loadData();
+  };
+
+  // Confirm a write to the user and, if the server sync failed, say so honestly
+  // instead of pretending it persisted.
+  const notifyWrite = (okToast: ToastAlert, offlineMessage: string) => {
+    const toast: ToastAlert = isApiReachable()
+      ? okToast
+      : {
+          id: `write-offline-${Date.now()}`,
+          neighborhood: 'Sector 5',
+          alertType: 'default',
+          title: '💾 Salvat local',
+          message: offlineMessage,
+          autoDismissMs: 6000,
+        };
+    setToastAlerts(prev => [...prev, toast]);
+    setIsOffline(!isApiReachable());
   };
 
   const handleWaterConfirm = async (
@@ -129,18 +158,41 @@ export const Dashboard: React.FC = () => {
     photoProofUrl?: string,
     isPhotoVerified?: boolean
   ) => {
-    await TreeService.waterTree(treeId, liters, userName, photoProofUrl, isPhotoVerified);
+    // Optimistic: close and credit points immediately, then persist.
     setWaterTreeModalTarget(null);
     setSelectedTree(null);
     const basePoints = liters * 5;
     const bonusPoints = isPhotoVerified ? 50 : 0;
     addPoints(basePoints + bonusPoints);
     incrementWaterings();
+    await TreeService.waterTree(treeId, liters, userName, photoProofUrl, isPhotoVerified);
+    notifyWrite(
+      {
+        id: `water-ok-${Date.now()}`,
+        neighborhood: 'Sector 5',
+        alertType: 'YOUNG_TREE_WATERING',
+        title: '💧 Udare înregistrată!',
+        message: `+${basePoints + bonusPoints} EcoPuncte adăugate. Mulțumim!`,
+        autoDismissMs: 4000,
+      },
+      'Udarea e salvată local — se va sincroniza automat când revii online.'
+    );
     loadData();
   };
 
   const handleCreateAlert = async (neighborhood: Sector5Neighborhood, alertType: CareAlertItem['alertType'], message: string) => {
     await TreeService.createAlert(neighborhood, alertType, message);
+    notifyWrite(
+      {
+        id: `alert-ok-${Date.now()}`,
+        neighborhood,
+        alertType,
+        title: '📢 Alertă transmisă',
+        message: 'Cetățenii din zonă au fost notificați.',
+        autoDismissMs: 4000,
+      },
+      'Alerta e salvată local — se va sincroniza automat când revii online.'
+    );
     loadData();
   };
 
