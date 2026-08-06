@@ -5,7 +5,7 @@ import { TreeCareDetails } from '../../components/Pitch/TreeCareDetails';
 import { TreeService } from '../../api/treeService';
 import { SEED_SPONSORS, SEED_GROVES, SEED_CHALLENGE } from '../../data/gamificationSeedData';
 import type { TreeItem } from '../../types/tree';
-import { TIER_LABELS } from './Sponsors';
+import { TIER_LABELS, seedLogoFor } from './Sponsors';
 import { Sprout, ArrowLeft, Droplets, Users } from 'lucide-react';
 import './Sponsors.css';
 
@@ -86,10 +86,10 @@ const SponsorGrove: React.FC = () => {
         <BackToSponsors />
 
         <header className="grove-header">
-          {/* logoSvg is a seed-only literal SVG string from
-              gamificationSeedData.ts, never user input — safe to render via
-              dangerouslySetInnerHTML. */}
-          <span className="sponsor-logo sponsor-logo-lg" dangerouslySetInnerHTML={{ __html: sponsor.logoSvg }} aria-hidden="true" />
+          {/* seedLogoFor() resolves this exclusively from the local
+              SEED_SPONSORS literals (never from API-sourced sponsor data) —
+              safe to render via dangerouslySetInnerHTML. */}
+          <span className="sponsor-logo sponsor-logo-lg" dangerouslySetInnerHTML={{ __html: seedLogoFor(sponsor) }} aria-hidden="true" />
           <div>
             <h1>{sponsor.name} (sponsor demonstrativ)</h1>
             <span className={`sponsor-tier tier-${sponsor.tier.toLowerCase()}`}>{TIER_LABELS[sponsor.tier]}</span>

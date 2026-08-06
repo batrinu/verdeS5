@@ -18,6 +18,15 @@ const TIER_ORDER: SponsorTier[] = ['GOLD', 'SILVER', 'BRONZE'];
 const sortByTier = (sponsors: SponsorItem[]): SponsorItem[] =>
   [...sponsors].sort((a, b) => TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier));
 
+// Logo markup must never come from API-sourced sponsor data — fetchSponsorsApi()
+// can replace the rendered sponsor list, and a sponsor's `logoSvg` there is
+// either NULL (renders the literal word "null") or an untrusted string that
+// would get injected raw via dangerouslySetInnerHTML. Always resolve the SVG
+// from the local seed literals instead, matched by id or slug, regardless of
+// which list is currently rendered.
+export const seedLogoFor = (sponsor: Pick<SponsorItem, 'id' | 'slug'>): string =>
+  SEED_SPONSORS.find(seed => seed.id === sponsor.id || seed.slug === sponsor.slug)?.logoSvg ?? '';
+
 // Public tier list (spec §4.1). Local-first: seed sponsors render instantly;
 // fetchSponsorsApi() swaps them for live data if the API is reachable.
 const Sponsors: React.FC = () => {
@@ -60,10 +69,10 @@ const Sponsors: React.FC = () => {
             const linkable = s.tier === 'GOLD' || s.tier === 'SILVER';
             const content = (
               <>
-                {/* logoSvg is a seed-only literal SVG string from
-                    gamificationSeedData.ts, never user input — safe to render
-                    via dangerouslySetInnerHTML. */}
-                <span className="sponsor-logo" dangerouslySetInnerHTML={{ __html: s.logoSvg }} aria-hidden="true" />
+                {/* seedLogoFor() resolves this exclusively from the local
+                    SEED_SPONSORS literals (never from `s`, which may be
+                    API-sourced) — safe to render via dangerouslySetInnerHTML. */}
+                <span className="sponsor-logo" dangerouslySetInnerHTML={{ __html: seedLogoFor(s) }} aria-hidden="true" />
                 <h3 className="sponsor-name">{withDemoTag(s.name)}</h3>
                 <span className={`sponsor-tier tier-${s.tier.toLowerCase()}`}>{TIER_LABELS[s.tier]}</span>
                 <p className="sponsor-desc">{s.description}</p>

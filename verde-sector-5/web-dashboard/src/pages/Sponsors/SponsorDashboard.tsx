@@ -63,7 +63,12 @@ const SponsorDashboard: React.FC = () => {
   const downloadCsv = () => {
     const header = 'treeId,nickname,species,latitude,longitude,healthStatus,wateringsCount,lastWateredAt,photoProofCount,co2KgPerYear';
     const rows = trees.map(t => {
-      const nickname = `"${(t.nickname ?? '').replace(/"/g, '""')}"`;
+      // Neutralize CSV formula injection (=, +, -, @, tab, CR at the start of
+      // a field make Excel/Sheets treat it as a formula) — mirrors the
+      // backend's CSV export in cloudflare-backend/src/routes/sponsors.ts.
+      const raw = t.nickname ?? '';
+      const neutralized = /^[=+\-@\t\r]/.test(raw) ? `'${raw}` : raw;
+      const nickname = `"${neutralized.replace(/"/g, '""')}"`;
       return [t.id, nickname, t.species, t.latitude, t.longitude, t.healthStatus,
         t.wateringsCount || 0, t.lastWateredAt ?? '', t.lastWateredPhotoProof ? 1 : 0,
         computeImpact(t.species).co2KgPerYear].join(',');
@@ -137,7 +142,7 @@ const SponsorDashboard: React.FC = () => {
               </div>
             </div>
 
-            <button className="btn-redeem esg-csv-btn" onClick={downloadCsv} disabled={trees.length === 0}>
+            <button className="esg-csv-btn" onClick={downloadCsv} disabled={trees.length === 0}>
               <Download size={15} aria-hidden="true" /> Export CSV — dovezi pentru raportare (CSRD)
             </button>
 
