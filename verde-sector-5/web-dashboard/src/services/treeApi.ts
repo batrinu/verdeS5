@@ -1,6 +1,11 @@
 import type { TreeItem, CareAlertItem, DistrictStat } from '../types/tree';
 import { API_BASE_URL } from '../config';
 
+// Tracks whether the last network call reached the API. Read paths set this so
+// the UI can honestly tell the user when it has fallen back to local demo data.
+let apiReachable = true;
+export const isApiReachable = () => apiReachable;
+
 function getAuthHeaders(): Record<string, string> {
   const token = localStorage.getItem('verde_s5_jwt_token') || localStorage.getItem('verde_s5_token');
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -17,12 +22,14 @@ export async function fetchTreesFromApi(neighborhood?: string): Promise<TreeItem
       : `${API_BASE_URL}/trees`;
     const res = await fetch(url);
     if (res.ok) {
+      apiReachable = true;
       const data = await res.json();
       if (data && Array.isArray(data.trees)) {
         return data.trees;
       }
     }
   } catch (err) {
+    apiReachable = false;
     console.warn('API fetchTrees error:', err);
   }
   return null;
@@ -72,12 +79,14 @@ export async function fetchAlertsApi(): Promise<CareAlertItem[] | null> {
   try {
     const res = await fetch(`${API_BASE_URL}/alerts`);
     if (res.ok) {
+      apiReachable = true;
       const data = await res.json();
       if (data && Array.isArray(data.alerts)) {
         return data.alerts;
       }
     }
   } catch (err) {
+    apiReachable = false;
     console.warn('API fetchAlerts error:', err);
   }
   return null;
@@ -116,12 +125,14 @@ export async function fetchDistrictStatsApi(): Promise<DistrictStat[] | null> {
   try {
     const res = await fetch(`${API_BASE_URL}/neighborhoods/stats`);
     if (res.ok) {
+      apiReachable = true;
       const data = await res.json();
       if (data && Array.isArray(data.stats) && data.stats.length > 0) {
         return data.stats;
       }
     }
   } catch (err) {
+    apiReachable = false;
     console.warn('API fetchDistrictStats error:', err);
   }
   return null;

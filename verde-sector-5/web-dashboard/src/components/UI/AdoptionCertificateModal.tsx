@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Download, X, Award } from 'lucide-react';
 import type { TreeItem } from '../../types/tree';
+import { useModalA11y } from '../../hooks/useModalA11y';
 import './AdoptionCertificateModal.css';
 
 export interface AdoptionCertificateData {
@@ -29,6 +30,7 @@ export const AdoptionCertificateModal: React.FC<AdoptionCertificateModalProps> =
   onClose,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dialogRef = useModalA11y<HTMLDivElement>(onClose);
 
   // Consolidate data from either customCertData or tree props
   const certData: AdoptionCertificateData = useMemo(() => customCertData || {
@@ -282,7 +284,15 @@ export const AdoptionCertificateModal: React.FC<AdoptionCertificateModalProps> =
 
   return (
     <div className="adoption-cert-overlay" onClick={onClose}>
-      <div className="adoption-cert-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Certificat de adopție"
+        tabIndex={-1}
+        className="adoption-cert-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="adoption-cert-header">
           <div className="adoption-cert-title-group">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TreeService } from '../../api/treeService';
+import { TreeService, isApiReachable } from '../../api/treeService';
 import type { TreeItem, CareAlertItem, DistrictStat, Sector5Neighborhood } from '../../types/tree';
 import { Sector5TreeMap } from '../../components/Pitch/Sector5TreeMap';
 import { AdoptTreeModal } from '../../components/Pitch/AdoptTreeModal';
@@ -30,6 +30,8 @@ export const Dashboard: React.FC = () => {
   // newly arrive — the persistent "Alerte Active" feed covers everything else.
   const seenAlertIdsRef = useRef<Set<string>>(new Set());
   const isFirstLoadRef = useRef(true);
+  // True when the API is unreachable and we're showing local demo data.
+  const [isOffline, setIsOffline] = useState(false);
 
   // Mobile active tab state
   const [mobileTab, setMobileTab] = useState<MobileTab>('MAP');
@@ -76,6 +78,11 @@ export const Dashboard: React.FC = () => {
           })));
         }
       }
+
+      // Honest connection status: if the API is unreachable we're showing local
+      // demo data — surface it with a persistent indicator instead of failing
+      // silently.
+      setIsOffline(!isApiReachable());
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
     }
@@ -174,6 +181,13 @@ export const Dashboard: React.FC = () => {
           </button>
         </div>
 
+        {/* Offline / local-data notice */}
+        {isOffline && (
+          <div className="offline-banner" role="status">
+            📡 Mod offline — nu ne-am putut conecta la server, afișăm date demonstrative locale.
+          </div>
+        )}
+
         {/* Dashboard Split-Screen Grid Layout */}
         <div className="dashboard-grid">
 
@@ -200,6 +214,10 @@ export const Dashboard: React.FC = () => {
                   <option value="Izvor">Izvor</option>
                 </select>
               </div>
+
+              <p className="map-hint">
+                💡 Apasă un copac de pe hartă pentru a-l adopta sau a-i loga o udare.
+              </p>
             </div>
 
             <div className="map-wrapper">

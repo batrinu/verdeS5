@@ -99,6 +99,33 @@
   box-shadow: 0 0 0 3px rgba(52, 216, 122, 0.15);
 }
 
+/* Quiet presenter-only control — deliberately recessive so citizens aren't
+   pulled toward an admin view; it's a demo switch (also toggled with "P"). */
+.presenter-control {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.presenter-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.presenter-control .role-segmented-switcher {
+  opacity: 0.72;
+  transition: opacity 0.2s ease;
+}
+
+.presenter-control:hover .role-segmented-switcher,
+.presenter-control:focus-within .role-segmented-switcher {
+  opacity: 1;
+}
+
 /* Segmented Role Switcher */
 .role-segmented-switcher {
   background-color: #112220;
@@ -111,6 +138,7 @@
 
 .role-tab-btn {
   padding: 8px 16px;
+  min-height: 40px;
   border-radius: 8px;
   border: none;
   background-color: transparent;
@@ -122,6 +150,7 @@
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
 }
 
@@ -252,6 +281,7 @@
   .role-tab-btn {
     flex: 1;
     justify-content: center;
+    min-height: 44px; /* HIG/WCAG touch target */
   }
 
   .pitch-ticker-group {

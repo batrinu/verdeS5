@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePresenter } from '../../context/PresenterContext';
 import { Menu, X, Shield, TreePine } from 'lucide-react';
 import './PitchHeader.css';
@@ -6,6 +6,21 @@ import './PitchHeader.css';
 export const PitchHeader: React.FC = () => {
   const { role, setRole } = usePresenter();
   const [mobileExpanded, setMobileExpanded] = useState(false);
+
+  // Live-pitch accelerator: press "P" to flip between citizen and council views
+  // without reaching for the (deliberately quiet) presenter control.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      const typing = el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.isContentEditable);
+      if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'p' || e.key === 'P') {
+        setRole(role === 'CITIZEN' ? 'COUNCIL_ADMIN' : 'CITIZEN');
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [role, setRole]);
 
   return (
     <header className="pitch-header" role="banner">
@@ -38,8 +53,10 @@ export const PitchHeader: React.FC = () => {
 
       {/* Desktop Controls & Mobile Collapsible Panel */}
       <div className={`pitch-controls-panel ${mobileExpanded ? 'mobile-open' : ''}`}>
-        {/* Segmented Presenter Role Switcher */}
-        <div className="role-segmented-switcher" role="tablist" aria-label="Comută rolul prezentării">
+        {/* Quiet presenter-only control (demo view switch; shortcut: P) */}
+        <div className="presenter-control">
+          <span className="presenter-label" title="Comutator de prezentare (tasta P)">Prezentare</span>
+          <div className="role-segmented-switcher" role="tablist" aria-label="Comută rolul prezentării">
           <button
             role="tab"
             aria-selected={role === 'CITIZEN'}
@@ -59,6 +76,7 @@ export const PitchHeader: React.FC = () => {
             <Shield size={14} />
             <span>Mod Consiliu Local</span>
           </button>
+          </div>
         </div>
       </div>
     </header>

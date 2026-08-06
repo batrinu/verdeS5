@@ -29,11 +29,16 @@ export const DistrictLeaderboard: React.FC<DistrictLeaderboardProps> = ({
       boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
       border: '1px solid var(--border-color)',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--color-primary-50)', fontFamily: 'var(--font-family-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          🏆 Clasament Cartiere Sector 5
-        </h3>
-        <span style={{ fontSize: '11px', backgroundColor: 'rgba(52, 216, 122, 0.1)', color: 'var(--color-primary-400)', padding: '4px 8px', borderRadius: '12px', fontWeight: 600 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px', gap: '8px' }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--color-primary-50)', fontFamily: 'var(--font-family-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            🏆 Clasament Cartiere Sector 5
+          </h3>
+          <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: 'var(--color-text-muted)' }}>
+            EcoPuncte câștigate prin adopții și udări
+          </p>
+        </div>
+        <span style={{ flexShrink: 0, fontSize: '11px', backgroundColor: 'rgba(52, 216, 122, 0.1)', color: 'var(--color-primary-400)', padding: '4px 8px', borderRadius: '12px', fontWeight: 600 }}>
           Actualizat Live
         </span>
       </div>

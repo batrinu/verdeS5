@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import type { TreeItem } from '../../types/tree';
 import { usePresenter } from '../../context/PresenterContext';
+import { useModalA11y } from '../../hooks/useModalA11y';
 import { Upload, CheckCircle2, Sparkles, X, Camera, RefreshCw, Droplets, Trophy } from 'lucide-react';
 
 export interface WateringModalProps {
@@ -53,7 +54,8 @@ const compressImage = (file: File, maxDim = 1000, quality = 0.7): Promise<string
 export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onConfirm }) => {
   const { userName } = usePresenter();
   const [liters, setLiters] = useState<number>(10);
-  
+  const dialogRef = useModalA11y<HTMLDivElement>(onClose);
+
   // Photo Proof Verification State
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
@@ -170,16 +172,22 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
       }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Udare și dovadă foto"
+        tabIndex={-1}
         style={{
-          backgroundColor: '#ffffff',
+          backgroundColor: 'var(--bg-surface)',
           borderRadius: '24px',
           maxWidth: '480px',
           width: '100%',
           margin: 'auto', // centers when it fits, keeps top reachable when it doesn't
           padding: '28px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+          border: '1px solid var(--border-color)',
           position: 'relative',
+          outline: 'none',
           animation: 'fadeInModal 0.25s ease-out',
         }}
       >
@@ -190,26 +198,26 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
               width: '42px',
               height: '42px',
               borderRadius: '12px',
-              backgroundColor: '#e0f2fe',
+              backgroundColor: 'rgba(56, 189, 248, 0.12)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#0284c7',
+              color: '#38BDF8',
             }}>
               <Droplets size={24} />
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: '#0f172a' }}>
+              <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: 'var(--color-primary-50)', fontFamily: 'var(--font-family-heading)' }}>
                 Udare & Verificare Foto
               </h3>
-              <span style={{ fontSize: '12px', color: '#64748b' }}>Verde în Sectorul 5</span>
+              <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>Verde în Sectorul 5</span>
             </div>
           </div>
           <button
             onClick={onClose}
             style={{
-              background: '#f1f5f9',
-              border: 'none',
+              background: 'var(--bg-surface-elevated)',
+              border: '1px solid var(--border-color)',
               borderRadius: '50%',
               width: '32px',
               height: '32px',
@@ -217,7 +225,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#64748b',
+              color: 'var(--color-text-muted)',
               transition: 'all 0.2s',
             }}
             aria-label="Închide"
@@ -229,8 +237,8 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
         {/* Selected Tree Info Card */}
         <div
           style={{
-            backgroundColor: '#f0f9ff',
-            border: '1px solid #bae6fd',
+            backgroundColor: 'rgba(56, 189, 248, 0.08)',
+            border: '1px solid rgba(56, 189, 248, 0.15)',
             padding: '14px 16px',
             borderRadius: '16px',
             marginBottom: '20px',
@@ -240,23 +248,23 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
           }}
         >
           <div>
-            <span style={{ fontSize: '11px', color: '#0369a1', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <span style={{ fontSize: '11px', color: '#38BDF8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Copac Selectat
             </span>
-            <div style={{ fontSize: '16px', fontWeight: 800, color: '#0c4a6e', marginTop: '2px' }}>
-              {tree.nickname || tree.species} <span style={{ fontSize: '13px', fontWeight: 600, color: '#0284c7' }}>({tree.code})</span>
+            <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--color-primary-50)', marginTop: '2px' }}>
+              {tree.nickname || tree.species} <span style={{ fontSize: '13px', fontWeight: 600, color: '#38BDF8' }}>({tree.code})</span>
             </div>
-            <div style={{ fontSize: '12px', color: '#0369a1', marginTop: '2px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
               📍 Cartier <strong>{tree.neighborhood}</strong> • Specie: {tree.species}
             </div>
           </div>
           <div style={{
-            backgroundColor: '#e0f2fe',
+            backgroundColor: 'rgba(56, 189, 248, 0.12)',
             padding: '6px 12px',
             borderRadius: '20px',
             fontSize: '12px',
             fontWeight: 700,
-            color: '#0369a1',
+            color: '#38BDF8',
           }}>
             💧 {tree.wateringsCount || 0} Udări
           </div>
@@ -265,7 +273,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
         <form onSubmit={handleSubmit}>
           {/* Liters Selector */}
           <div style={{ marginBottom: '22px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#334155', marginBottom: '10px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: '10px' }}>
               💧 Cantitate udare (Litri de apă):
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
@@ -277,14 +285,14 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                   style={{
                     padding: '12px 6px',
                     borderRadius: '12px',
-                    border: liters === amt ? '2px solid #0284c7' : '1px solid #cbd5e1',
-                    backgroundColor: liters === amt ? '#e0f2fe' : '#ffffff',
-                    color: liters === amt ? '#0369a1' : '#475569',
+                    border: liters === amt ? '2px solid #0EA5E9' : '1px solid var(--border-color)',
+                    backgroundColor: liters === amt ? 'rgba(56, 189, 248, 0.12)' : 'var(--bg-surface-elevated)',
+                    color: liters === amt ? '#38BDF8' : 'var(--color-text-muted)',
                     fontWeight: 800,
                     fontSize: '14px',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease',
-                    boxShadow: liters === amt ? '0 2px 8px rgba(2, 132, 199, 0.2)' : 'none',
+                    boxShadow: liters === amt ? '0 2px 8px rgba(14, 165, 233, 0.25)' : 'none',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -301,11 +309,11 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
           {/* Photo Proof Verification Section */}
           <div style={{ marginBottom: '22px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <label style={{ fontSize: '13px', fontWeight: 700, color: '#334155', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Camera size={16} color="#0284c7" />
+              <label style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Camera size={16} color="#38BDF8" />
                 Dovadă Foto Udare
               </label>
-              <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 700, backgroundColor: '#dcfce7', padding: '2px 8px', borderRadius: '10px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--color-primary-400)', fontWeight: 700, backgroundColor: 'rgba(52, 216, 122, 0.12)', padding: '2px 8px', borderRadius: '10px' }}>
                 +50 Puncte Bonus
               </span>
             </div>
@@ -326,8 +334,8 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
                 style={{
-                  border: isDragging ? '2px dashed #0284c7' : '2px dashed #cbd5e1',
-                  backgroundColor: isDragging ? '#f0f9ff' : '#f8fafc',
+                  border: isDragging ? '2px dashed #0EA5E9' : '2px dashed var(--border-color)',
+                  backgroundColor: isDragging ? 'rgba(56, 189, 248, 0.08)' : 'var(--bg-surface-elevated)',
                   borderRadius: '16px',
                   padding: '20px 16px',
                   textAlign: 'center',
@@ -335,13 +343,13 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                   transition: 'all 0.2s ease',
                 }}
               >
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#e0f2fe', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', color: '#0284c7', margin: '0 auto 10px' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(56, 189, 248, 0.12)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', color: '#38BDF8', margin: '0 auto 10px' }}>
                   <Upload size={22} />
                 </div>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: '#334155' }}>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-primary-50)' }}>
                   Apasă sau trage poza cu udarea aici
                 </div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
                   Format JPG sau PNG
                 </div>
 
@@ -356,27 +364,26 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                     style={{
                       padding: '7px 14px',
                       borderRadius: '20px',
-                      border: '1px solid #7dd3fc',
-                      backgroundColor: '#e0f2fe',
-                      color: '#0369a1',
+                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                      backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                      color: '#38BDF8',
                       fontSize: '12px',
                       fontWeight: 700,
                       cursor: 'pointer',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px',
-                      boxShadow: '0 2px 6px rgba(2, 132, 199, 0.15)',
                     }}
                   >
-                    <Sparkles size={14} color="#0284c7" />
+                    <Sparkles size={14} color="#38BDF8" />
                     Folosește o poză demonstrativă
                   </button>
                 </div>
               </div>
             ) : (
-              <div style={{ borderRadius: '16px', border: '1px solid #cbd5e1', overflow: 'hidden', backgroundColor: '#f8fafc' }}>
+              <div style={{ borderRadius: '16px', border: '1px solid var(--border-color)', overflow: 'hidden', backgroundColor: 'var(--bg-surface-elevated)' }}>
                 {/* Photo Thumbnail Container */}
-                <div style={{ position: 'relative', width: '100%', height: '160px', backgroundColor: '#0f172a' }}>
+                <div style={{ position: 'relative', width: '100%', height: '160px', backgroundColor: '#060f0e' }}>
                   <img
                     src={photoPreview}
                     alt="Dovadă udare"
@@ -409,7 +416,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                 {/* AI Verification Status Box */}
                 <div style={{ padding: '12px 16px' }}>
                   {isVerifying ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#0284c7' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#38BDF8' }}>
                       <RefreshCw size={18} className="spin-icon" style={{ animation: 'spin 1s linear infinite' }} />
                       <span style={{ fontSize: '13px', fontWeight: 600 }}>
                         Se verifică poza...
@@ -421,9 +428,9 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '6px',
-                        backgroundColor: '#dcfce7',
-                        border: '1px solid #86efac',
-                        color: '#15803d',
+                        backgroundColor: 'rgba(52, 216, 122, 0.12)',
+                        border: '1px solid rgba(52, 216, 122, 0.3)',
+                        color: 'var(--color-primary-400)',
                         padding: '6px 12px',
                         borderRadius: '20px',
                         fontSize: '13px',
@@ -433,7 +440,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                         <Sparkles size={16} />
                         <span>Poză validată! +50 EcoPuncte Bonus</span>
                       </div>
-                      <div style={{ fontSize: '11px', color: '#166534', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--color-primary-400)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <CheckCircle2 size={13} />
                         Poza cu udarea a fost confirmată. Mulțumim!
                       </div>
@@ -447,8 +454,8 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
           {/* EcoPoints Total Banner */}
           <div
             style={{
-              backgroundColor: '#fefce8',
-              border: '1px solid #fef08a',
+              backgroundColor: 'rgba(251, 191, 36, 0.08)',
+              border: '1px solid rgba(251, 191, 36, 0.2)',
               padding: '14px 16px',
               borderRadius: '16px',
               marginBottom: '24px',
@@ -462,26 +469,26 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                 width: '40px',
                 height: '40px',
                 borderRadius: '12px',
-                backgroundColor: '#fef08a',
+                backgroundColor: 'rgba(251, 191, 36, 0.15)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '20px',
               }}>
-                <Trophy size={22} color="#a16207" />
+                <Trophy size={22} color="#FBBF24" />
               </div>
               <div>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: '#713f12' }}>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--color-primary-50)' }}>
                   Total: +{totalPoints} EcoPuncte!
                 </div>
-                <div style={{ fontSize: '11px', color: '#854d0e' }}>
+                <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
                   Bază: +{basePoints} pct ({liters}L) {isPhotoVerified ? '• Bonus Foto: +50 pct' : ''}
                 </div>
               </div>
             </div>
 
             {!isPhotoVerified && (
-              <span style={{ fontSize: '11px', color: '#a16207', fontStyle: 'italic' }}>
+              <span style={{ fontSize: '11px', color: '#FBBF24', fontStyle: 'italic' }}>
                 Adaugă foto pt. +50 bonus
               </span>
             )}
@@ -496,9 +503,9 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                 flex: 1,
                 padding: '12px',
                 borderRadius: '14px',
-                border: '1px solid #cbd5e1',
-                backgroundColor: '#f8fafc',
-                color: '#475569',
+                border: '1px solid var(--border-color)',
+                backgroundColor: 'var(--bg-surface-elevated)',
+                color: 'var(--color-text-muted)',
                 fontWeight: 700,
                 fontSize: '14px',
                 cursor: 'pointer',
@@ -514,12 +521,12 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                 padding: '12px',
                 borderRadius: '14px',
                 border: 'none',
-                backgroundColor: '#0284c7',
+                backgroundColor: '#0EA5E9',
                 color: '#ffffff',
                 fontWeight: 800,
                 fontSize: '14px',
                 cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(2, 132, 199, 0.35)',
+                boxShadow: '0 4px 14px rgba(14, 165, 233, 0.35)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
