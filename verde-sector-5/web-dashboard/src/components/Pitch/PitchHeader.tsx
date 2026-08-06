@@ -60,11 +60,12 @@ export const PitchHeader: React.FC = () => {
         </nav>
       </div>
 
-      {/* Quiet presenter-only control (demo view switch; shortcut: P).
-          Dashboard-only; label hidden in the compact header — the title
-          tooltip carries the hint instead. */}
+      {/* Presenter-only demo control (accepted live-mode variant „Pastilă demo
+          plutitoare"): floating glass pill, bottom-right, out of the product
+          chrome entirely. Dashboard-only; „P" flips the persona too. */}
       {isDashboard && (
-        <div className="presenter-control">
+        <div className="demo-float" role="group" aria-label="Comutator de prezentare (doar demo)">
+          <span className="demo-float-tag">Demo</span>
           <div className="role-segmented-switcher" role="tablist" aria-label="Comută rolul prezentării" title="Comutator de prezentare (tasta P)">
             <button role="tab" aria-selected={role === 'CITIZEN'} onClick={() => setRole('CITIZEN')} className={`role-tab-btn ${role === 'CITIZEN' ? 'active-citizen' : ''}`}>
               <Shield size={13} />

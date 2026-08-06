@@ -129,25 +129,44 @@
   color: #6EE7A0;
 }
 
-/* Quiet presenter-only control — deliberately recessive so citizens aren't
-   pulled toward an admin view; it's a demo switch (also toggled with "P").
-   Sits outside the nav menu as the header grid's right column (Dashboard only). */
-.presenter-control {
-  display: inline-flex;
-  flex-direction: column;
+/* Presenter-only demo control (accepted live variant „Pastilă demo plutitoare"):
+   a floating glass pill anchored bottom-right, outside the product chrome —
+   deliberately recessive (also toggled with "P"), Dashboard only. */
+.demo-float {
+  position: fixed;
+  right: 16px;
+  bottom: 72px;
+  z-index: 1100;
+  display: flex;
   align-items: center;
-  gap: 3px;
-  justify-self: end;
+  gap: 6px;
+  padding: 5px 8px 5px 10px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-full);
+  opacity: 0.8;
+  transition: opacity 150ms ease;
 }
 
-.presenter-control .role-segmented-switcher {
-  opacity: 0.72;
-  transition: opacity 0.2s ease;
-}
-
-.presenter-control:hover .role-segmented-switcher,
-.presenter-control:focus-within .role-segmented-switcher {
+.demo-float:hover,
+.demo-float:focus-within {
   opacity: 1;
+}
+
+.demo-float-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-float {
+    transition: none;
+  }
 }
 
 /* Segmented Role Switcher */
@@ -311,16 +330,10 @@
     min-height: 44px; /* HIG/WCAG touch target */
   }
 
-  /* Standalone presenter row: always visible on the Dashboard without
-     opening the nav menu (it's no longer inside the collapsible panel). */
-  .presenter-control {
-    width: 100%;
-    align-items: stretch;
-    margin-top: 10px;
-  }
-
-  .presenter-label {
-    text-align: center;
+  /* Floating demo pill sits above the mobile bottom tabs; the switcher keeps
+     its compact width inside the pill instead of stretching full-bleed. */
+  .demo-float {
+    bottom: 84px;
   }
 
   .role-segmented-switcher {
