@@ -22,71 +22,55 @@ export const DistrictLeaderboard: React.FC<DistrictLeaderboardProps> = ({
   };
 
   return (
-    <div style={{
-      backgroundColor: 'var(--bg-surface)',
-      borderRadius: '16px',
-      padding: '20px',
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-      border: '1px solid var(--border-color)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px', gap: '8px' }}>
+    <div className="hig-card app-leaderboard">
+      <div className="app-widget-header">
         <div>
-          <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--color-primary-50)', fontFamily: 'var(--font-family-heading)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <h3 className="hig-headline app-widget-title">
             🏆 Clasament Cartiere Sector 5
           </h3>
-          <p style={{ margin: '3px 0 0 0', fontSize: '11px', color: 'var(--color-text-muted)' }}>
+          <p className="hig-footnote hig-secondary app-widget-subtitle">
             EcoPuncte câștigate prin adopții și udări
           </p>
         </div>
-        <span style={{ flexShrink: 0, fontSize: '11px', backgroundColor: 'rgba(52, 216, 122, 0.1)', color: 'var(--color-primary-400)', padding: '4px 8px', borderRadius: '12px', fontWeight: 600 }}>
+        <span className="hig-tag">
           Actualizat Live
         </span>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div className="hig-list app-leaderboard-list">
         {sortedStats.map((stat, idx) => {
           const isSelected = selectedNeighborhood.toLowerCase() === stat.neighborhood.toLowerCase();
           const adoptionPct = Math.round((stat.adoptedTrees / stat.totalTrees) * 100);
 
           return (
-            <div
+            <button
               key={stat.neighborhood}
+              className={`hig-list-item ${isSelected ? 'app-list-item-selected' : ''}`}
               onClick={() => onSelectNeighborhood(isSelected ? 'ALL' : stat.neighborhood)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '12px 14px',
-                borderRadius: '12px',
-                backgroundColor: isSelected ? 'rgba(52, 216, 122, 0.08)' : 'var(--bg-surface-elevated)',
-                border: isSelected ? '1.5px solid var(--color-primary-500)' : '1px solid var(--border-color)',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '18px', fontWeight: 700, width: '28px', textAlign: 'center' }}>
-                  {getRankBadge(idx)}
-                </span>
-                <div>
-                  <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-primary-50)' }}>
-                    {stat.neighborhood}
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
-                    {stat.adoptedTrees}/{stat.totalTrees} Arbori Adoptați ({adoptionPct}%)
-                  </div>
+              <span className="hig-value app-leaderboard-rank">
+                {getRankBadge(idx)}
+              </span>
+              <div>
+                <div className="app-leaderboard-name">
+                  {stat.neighborhood}
+                </div>
+                <div className="hig-footnote hig-secondary">
+                  {stat.adoptedTrees}/{stat.totalTrees} Arbori Adoptați ({adoptionPct}%)
                 </div>
               </div>
 
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-primary-400)' }}>
+              <span className="hig-spacer" />
+
+              <div className="app-leaderboard-stat-group">
+                <div className="app-leaderboard-points">
                   {stat.ecoPoints.toLocaleString()} pct
                 </div>
-                <div style={{ fontSize: '11px', color: '#38BDF8', marginTop: '2px' }}>
+                <div className="hig-footnote hig-secondary">
                   💧 {stat.wateringsCount} Udări
                 </div>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { SEED_CHALLENGE, SEED_SPONSORS } from '../../data/gamificationSeedData';
 import { fetchChallengeApi } from '../../services/gamificationApi';
 import { Target } from 'lucide-react';
-import './GuardianCard.css';
 
 // Seasonal challenge (spec §3.6). Local-first: seed values render immediately,
 // live API numbers replace them when reachable.
@@ -40,23 +39,34 @@ export const ChallengeWidget: React.FC<{ detailed?: boolean }> = ({ detailed = f
   const sponsor = SEED_SPONSORS.find(s => s.id === SEED_CHALLENGE.sponsorId);
 
   return (
-    <section className="challenge-widget" aria-label={`Provocarea: ${SEED_CHALLENGE.name}`}>
-      <header className="challenge-header">
+    <section className="hig-card app-challenge-widget" aria-label={`Provocarea: ${SEED_CHALLENGE.name}`}>
+      <header className="app-challenge-header">
         <Target size={16} aria-hidden="true" />
-        <strong>{SEED_CHALLENGE.name}</strong>
+        <strong className="hig-subheadline">{SEED_CHALLENGE.name}</strong>
       </header>
-      <div className="challenge-progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-        <div className="challenge-progress-fill" style={{ transform: `scaleX(${pct / 100})` }} />
+      <div
+        className="hig-progress"
+        style={{ '--hig-progress': pct / 100 } as React.CSSProperties}
+        role="progressbar"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <div />
       </div>
-      <p className="challenge-numbers">{total} / {goal} udări în Sectorul 5</p>
+      <p className="hig-footnote hig-secondary">{total} / {goal} udări în Sectorul 5</p>
       {detailed && (
-        <ol className="challenge-hoods">
+        <ol className="hig-list app-challenge-hoods">
           {byNeighborhood.map(h => (
-            <li key={h.neighborhood}><span>{h.neighborhood}</span><span>{h.count}</span></li>
+            <li key={h.neighborhood} className="hig-list-item">
+              <span>{h.neighborhood}</span>
+              <span className="hig-spacer" />
+              <span className="hig-value">{h.count}</span>
+            </li>
           ))}
         </ol>
       )}
-      {sponsor && <p className="challenge-sponsor">susținut de {sponsor.name} <em>(sponsor demonstrativ)</em></p>}
+      {sponsor && <p className="hig-footnote hig-tertiary">susținut de {sponsor.name} <em>(sponsor demonstrativ)</em></p>}
     </section>
   );
 };

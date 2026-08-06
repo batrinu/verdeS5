@@ -512,6 +512,324 @@
   font-weight: 700;
 }
 
+/* --- Leaflet map popup (used by Sector5TreeMap, rendered on Dashboard) —
+   dark-skin the default white Leaflet popup chrome so it matches the app
+   instead of clashing with the theme. Selectors are Leaflet's own, not
+   renameable. --- */
+.leaflet-popup-content-wrapper {
+  background: var(--hig-bg-secondary);
+  color: var(--hig-label);
+  border-radius: var(--hig-radius-lg);
+  box-shadow: var(--hig-shadow-menu);
+}
+.leaflet-popup-tip { background: var(--hig-bg-secondary); }
+.leaflet-popup-close-button { color: var(--hig-label-secondary) !important; }
+.leaflet-popup-close-button:hover { color: var(--hig-label) !important; }
+
+/* --- Dashboard page (pages/Dashboard) — standalone pitch page, not routed
+   through the app-shell (Layout/app-content); it owns its own root/content
+   containers since App.tsx renders it directly at "/". --- */
+.app-dashboard {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--hig-bg);
+}
+.app-dashboard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hig-space-4);
+  padding: var(--hig-space-5) var(--hig-space-6);
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobile Map/Details view switcher (role=tablist) — segmented-control look */
+.app-view-tabs {
+  display: none;
+  background: var(--hig-fill-tertiary);
+  padding: 2px;
+  border-radius: 9px;
+  gap: 2px;
+  margin-bottom: var(--hig-space-2);
+}
+.app-view-tab {
+  flex: 1;
+  min-height: 44px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--hig-label-secondary);
+  font-family: inherit;
+  font-size: var(--hig-text-footnote);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hig-space-2);
+  transition: background var(--hig-duration-fast) var(--hig-ease-out), color var(--hig-duration-fast) var(--hig-ease-out);
+}
+.app-view-tab.active {
+  background: var(--hig-bg-secondary);
+  color: var(--hig-tint);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.04);
+}
+.app-view-tab.active.app-view-tab-council { color: var(--hig-blue); }
+
+.app-offline-banner {
+  background: color-mix(in srgb, var(--hig-orange) 12%, transparent);
+  color: var(--hig-orange);
+  padding: var(--hig-space-3) var(--hig-space-4);
+  border-radius: var(--hig-radius-lg);
+  font-size: var(--hig-text-footnote);
+  font-weight: 600;
+}
+
+.app-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--hig-space-5);
+  flex: 1;
+  min-height: calc(100vh - 135px);
+}
+.app-map-column { display: flex; flex-direction: column; height: 100%; position: relative; }
+.app-map-header {
+  margin-bottom: var(--hig-space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hig-space-3);
+  flex-wrap: wrap;
+}
+.app-district-select-group { display: flex; align-items: center; gap: var(--hig-space-2); }
+.app-district-select-group svg { color: var(--hig-label-tertiary); }
+.app-district-label { font-size: var(--hig-text-caption); color: var(--hig-label-secondary); font-weight: 600; }
+.app-district-select { width: auto; min-height: 40px; }
+/* First-timer hint: names the primary action so the map isn't a mystery */
+.app-map-hint { margin: 0; }
+.app-map-wrapper {
+  flex: 1;
+  min-height: 580px;
+  height: 100%;
+  position: relative;
+  border-radius: var(--hig-radius-xl);
+  overflow: hidden;
+}
+.app-cards-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hig-space-5);
+  /* Drop the cards so their top edge lines up with the MAP, not the selector
+     row above it. Offset = .app-map-header height + its margin. */
+  margin-top: 44px;
+}
+
+/* Loading skeletons — shown during the first data load instead of empty space */
+.app-skeleton-card { display: flex; flex-direction: column; gap: var(--hig-space-3); }
+.app-skeleton-line, .app-skeleton-row {
+  border-radius: var(--hig-radius-sm);
+  background: linear-gradient(90deg, var(--hig-fill-tertiary) 25%, var(--hig-fill-secondary) 37%, var(--hig-fill-tertiary) 63%);
+  background-size: 400% 100%;
+  animation: app-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+.app-skeleton-line { height: 14px; border-radius: var(--hig-radius-sm); width: 100%; }
+.app-skeleton-line-title { width: 55%; }
+.app-skeleton-row { height: 56px; border-radius: var(--hig-radius-lg); }
+@keyframes app-skeleton-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+@media (max-width: 768px) {
+  .app-dashboard-content { padding: var(--hig-space-3) var(--hig-space-3) var(--hig-space-6); }
+  .app-view-tabs { display: flex; }
+  .app-dashboard-grid { display: flex; flex-direction: column; min-height: auto; flex: 1; }
+  .app-map-column { display: none; width: 100%; height: calc(100dvh - 150px); }
+  .app-map-column.mobile-active { display: flex; flex-direction: column; height: calc(100dvh - 150px); }
+  .app-map-wrapper { flex: 1; min-height: 0; height: 100%; border-radius: var(--hig-radius-lg); }
+  .app-district-select { min-height: 44px; flex: 1; }
+  .app-cards-column { display: none; width: 100%; margin-top: 0; }
+  .app-cards-column.mobile-active { display: flex; flex-direction: column; width: 100%; }
+}
+
+/* --- PitchHeader (components/Pitch/PitchHeader) — compact one-line brand
+   bar (accepted live-mode "field mode" variant, preserved as-is): logo +
+   plain h1 title, primary nav, presenter demo pill. No gradient/hero
+   treatment, no subtitle (none existed in the compact variant being
+   converted). --- */
+.app-pitch-header {
+  padding: var(--hig-space-1) var(--hig-space-4);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--hig-material-border);
+}
+.app-pitch-header-top { display: flex; align-items: center; justify-content: space-between; }
+.app-pitch-brand { display: flex; align-items: center; gap: var(--hig-space-3); text-decoration: none; }
+.app-pitch-logo-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--hig-radius-md);
+  background: var(--hig-tint);
+  color: var(--hig-tint-contrast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.app-pitch-title {
+  font-size: var(--hig-text-headline);
+  font-weight: 700;
+  color: var(--hig-label);
+  margin: 0;
+  padding: 0;
+}
+.app-mobile-menu-trigger {
+  display: none;
+  min-height: 44px;
+  min-width: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--hig-fill-tertiary);
+  color: var(--hig-label);
+  border: none;
+  border-radius: var(--hig-radius-md);
+  cursor: pointer;
+}
+.app-pitch-controls-panel { display: flex; align-items: center; gap: var(--hig-space-5); }
+.app-pitch-nav { display: flex; align-items: center; gap: var(--hig-space-1); }
+.app-pitch-nav-link {
+  min-height: 36px;
+  padding: 0 var(--hig-space-3);
+  font-size: var(--hig-text-footnote);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  border-radius: var(--hig-radius-sm);
+  color: var(--hig-label-secondary);
+  text-decoration: none;
+  transition: background var(--hig-duration-fast) var(--hig-ease-out), color var(--hig-duration-fast) var(--hig-ease-out);
+}
+.app-pitch-nav-link:hover, .app-pitch-nav-link:focus-visible {
+  background: color-mix(in srgb, var(--hig-tint) 12%, transparent);
+  color: var(--hig-tint);
+}
+
+/* Presenter-only demo control (accepted live-mode "floating glass pill"
+   variant, preserved as-is): floating hig-glass pill, bottom-right, outside
+   product chrome. Portaled to <body> — the header's backdrop-filter would
+   otherwise trap position:fixed to the header instead of the viewport. */
+.app-demo-pill {
+  position: fixed;
+  right: var(--hig-space-4);
+  bottom: calc(84px + var(--hig-space-4));
+  border-radius: var(--hig-radius-full);
+  padding: var(--hig-space-2) var(--hig-space-4);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  color: var(--hig-label-secondary);
+  font-size: var(--hig-text-caption2);
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--hig-duration-fast) var(--hig-ease-out), color var(--hig-duration-fast) var(--hig-ease-out);
+}
+.app-demo-pill:hover, .app-demo-pill:focus-visible { opacity: 1; color: var(--hig-label); }
+.app-demo-pill:focus-visible { outline: 2px solid var(--hig-tint); outline-offset: 2px; }
+.app-demo-pill-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.app-demo-pill-dot.citizen { background: var(--hig-tint); }
+.app-demo-pill-dot.council { background: var(--hig-blue); }
+@media (prefers-reduced-motion: reduce) {
+  .app-demo-pill { transition: none; }
+}
+
+@media (max-width: 900px) {
+  .app-pitch-header { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: var(--hig-space-3); }
+  .app-mobile-menu-trigger { display: flex; }
+  .app-pitch-controls-panel {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--hig-space-2);
+    width: 100%;
+    margin-top: var(--hig-space-3);
+    padding-top: var(--hig-space-3);
+    border-top: 1px solid var(--hig-separator);
+  }
+  .app-pitch-controls-panel.mobile-open { display: flex; }
+  .app-pitch-nav { flex-direction: column; align-items: stretch; width: 100%; gap: 2px; }
+  .app-pitch-nav-link { justify-content: center; width: 100%; min-height: 44px; }
+}
+
+/* --- Shared widget-card header (ChallengeWidget, CitizenAlertsFeed,
+   CouncilAlertDispatcher, CouncilAnalyticsBoard, DistrictLeaderboard) --- */
+.app-widget-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--hig-space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--hig-space-4);
+}
+.app-widget-title { display: flex; align-items: center; gap: var(--hig-space-2); margin: 0; }
+.app-widget-subtitle { margin: 2px 0 0; }
+
+/* --- ChallengeWidget (components/Pitch/ChallengeWidget) --- */
+.app-challenge-widget { display: flex; flex-direction: column; gap: var(--hig-space-3); }
+.app-challenge-header { display: flex; align-items: center; gap: var(--hig-space-2); }
+.app-challenge-header svg { color: var(--hig-tint); }
+
+/* --- CitizenAlertsFeed (components/Pitch/CitizenAlertsFeed) — severity
+   signaled by an 8px dot per list item, not a colored card/icon avatar. --- */
+.app-alerts-feed { display: flex; flex-direction: column; }
+.app-alert-item { align-items: flex-start; gap: var(--hig-space-3); }
+.app-severity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.app-severity-red    { background: var(--hig-red); }
+.app-severity-blue   { background: var(--hig-blue); }
+.app-severity-orange { background: var(--hig-orange); }
+.app-severity-gray   { background: var(--hig-gray3); }
+.app-alert-icon { color: var(--hig-label-secondary); flex-shrink: 0; margin-top: 2px; }
+.app-alert-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.app-alert-row { display: flex; align-items: center; justify-content: space-between; gap: var(--hig-space-2); }
+.app-alert-label { font-weight: 700; }
+
+/* --- CouncilAlertDispatcher (components/Pitch/CouncilAlertDispatcher) --- */
+.app-full-width { width: 100%; }
+.app-tag-danger { background: color-mix(in srgb, var(--hig-red) 15%, transparent); color: var(--hig-red); }
+.app-form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--hig-space-3); margin-bottom: var(--hig-space-4); }
+.app-form-label { display: block; font-size: var(--hig-text-caption); font-weight: 600; color: var(--hig-label-secondary); margin-bottom: var(--hig-space-1); }
+.app-alert-dispatcher-sent { margin-top: var(--hig-space-2); }
+.app-alert-sent-list { max-height: 200px; overflow-y: auto; }
+.app-alert-sent-row { display: flex; align-items: center; justify-content: space-between; gap: var(--hig-space-2); width: 100%; }
+.app-alert-sent-item { flex-direction: column; align-items: flex-start; gap: 2px; }
+
+/* --- CouncilAnalyticsBoard (components/Pitch/CouncilAnalyticsBoard) —
+   KPI tiles reuse the shared StatCard component; chart series 1 uses the
+   app tint, other series use a neutral gray. --- */
+.app-analytics-board { display: flex; flex-direction: column; }
+.app-kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--hig-space-3); margin-bottom: var(--hig-space-6); }
+.app-chart-wrapper { height: 220px; width: 100%; }
+
+/* --- DistrictLeaderboard (components/Pitch/DistrictLeaderboard) — rank
+   rendered with hig-value typography; row selection is a background tint,
+   no new border. EcoPoints stays neutral (never green) per stat-number rule. --- */
+.app-leaderboard-rank { width: 28px; text-align: center; font-weight: 700; flex-shrink: 0; }
+.app-leaderboard-name { font-weight: 700; }
+.app-leaderboard-stat-group { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.app-leaderboard-points { font-weight: 700; font-variant-numeric: tabular-nums; }
+button.hig-list-item.app-list-item-selected { background: color-mix(in srgb, var(--hig-tint) 8%, transparent); }
+
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }

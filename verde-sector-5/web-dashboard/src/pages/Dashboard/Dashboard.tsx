@@ -16,7 +16,6 @@ import { PitchHeader } from '../../components/Pitch/PitchHeader';
 import { SelectedTreeSheet } from '../../components/Pitch/SelectedTreeSheet';
 import { usePresenter } from '../../context/PresenterContext';
 import { Map, Trophy, BarChart3, MapPin } from 'lucide-react';
-import './Dashboard.css';
 
 type MobileTab = 'MAP' | 'DETAILS';
 
@@ -203,16 +202,16 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="dashboard-root">
+    <div className="app-dashboard">
       <PitchHeader />
 
-      <div className="dashboard-main-container">
+      <div className="app-dashboard-content">
         {/* Mobile View Switcher Tabs (< 768px only) */}
-        <div className="mobile-view-tabs" role="tablist" aria-label="Navigare Mobil">
+        <div className="app-view-tabs" role="tablist" aria-label="Navigare Mobil">
           <button
             role="tab"
             aria-selected={mobileTab === 'MAP'}
-            className={`mobile-view-tab ${mobileTab === 'MAP' ? (role === 'COUNCIL_ADMIN' ? 'active council-active' : 'active') : ''}`}
+            className={`app-view-tab ${mobileTab === 'MAP' ? (role === 'COUNCIL_ADMIN' ? 'active app-view-tab-council' : 'active') : ''}`}
             onClick={() => setMobileTab('MAP')}
           >
             <Map size={15} />
@@ -222,7 +221,7 @@ export const Dashboard: React.FC = () => {
           <button
             role="tab"
             aria-selected={mobileTab === 'DETAILS'}
-            className={`mobile-view-tab ${mobileTab === 'DETAILS' ? (role === 'COUNCIL_ADMIN' ? 'active council-active' : 'active') : ''}`}
+            className={`app-view-tab ${mobileTab === 'DETAILS' ? (role === 'COUNCIL_ADMIN' ? 'active app-view-tab-council' : 'active') : ''}`}
             onClick={() => setMobileTab('DETAILS')}
           >
             {role === 'CITIZEN' ? (
@@ -241,25 +240,25 @@ export const Dashboard: React.FC = () => {
 
         {/* Offline / local-data notice */}
         {isOffline && (
-          <div className="offline-banner" role="status">
+          <div className="app-offline-banner" role="status">
             📡 Mod offline — nu ne-am putut conecta la server, afișăm date demonstrative locale.
           </div>
         )}
 
         {/* Dashboard Split-Screen Grid Layout */}
-        <div className="dashboard-grid">
+        <div className="app-dashboard-grid">
 
           {/* Left Column: Interactive Map */}
-          <div className={`dashboard-map-column ${mobileTab === 'MAP' ? 'mobile-active' : ''}`}>
-            <div className="map-column-header">
-              <div className="district-selector-group">
-                <MapPin size={16} color="#94a3b8" />
-                <label htmlFor="district-select" className="district-label">
+          <div className={`app-map-column ${mobileTab === 'MAP' ? 'mobile-active' : ''}`}>
+            <div className="app-map-header">
+              <div className="app-district-select-group">
+                <MapPin size={16} />
+                <label htmlFor="district-select" className="app-district-label">
                   Cartier:
                 </label>
                 <select
                   id="district-select"
-                  className="district-select-input"
+                  className="hig-field app-district-select"
                   value={selectedNeighborhood}
                   onChange={(e) => setSelectedNeighborhood(e.target.value as any)}
                   aria-label="Selectează cartierul din Sectorul 5"
@@ -273,12 +272,12 @@ export const Dashboard: React.FC = () => {
                 </select>
               </div>
 
-              <p className="map-hint">
+              <p className="hig-footnote hig-secondary app-map-hint">
                 💡 Apasă un copac de pe hartă pentru a-l adopta sau a-i loga o udare.
               </p>
             </div>
 
-            <div className="map-wrapper">
+            <div className="app-map-wrapper">
               <Sector5TreeMap
                 trees={trees}
                 selectedNeighborhood={selectedNeighborhood}
@@ -290,16 +289,16 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {/* Right Column: Persona-Specific Cards */}
-          <div className={`dashboard-cards-column ${mobileTab === 'DETAILS' ? 'mobile-active' : ''}`}>
+          <div className={`app-cards-column ${mobileTab === 'DETAILS' ? 'mobile-active' : ''}`}>
             {isLoading && stats.length === 0 ? (
               /* First-load skeleton so the column isn't blank while data arrives */
-              <div className="skeleton-card" aria-hidden="true">
-                <div className="skeleton-line" style={{ width: '55%' }} />
-                <div className="skeleton-row" />
-                <div className="skeleton-row" />
-                <div className="skeleton-row" />
-                <div className="skeleton-row" />
-                <div className="skeleton-row" />
+              <div className="hig-card app-skeleton-card" aria-hidden="true">
+                <div className="app-skeleton-line app-skeleton-line-title" />
+                <div className="app-skeleton-row" />
+                <div className="app-skeleton-row" />
+                <div className="app-skeleton-row" />
+                <div className="app-skeleton-row" />
+                <div className="app-skeleton-row" />
               </div>
             ) : role === 'CITIZEN' ? (
               /* Citizen Persona: Guardian Card, Challenge, Sector Impact, Leaderboard + Alerts */

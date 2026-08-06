@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { usePresenter } from '../../context/PresenterContext';
 import { Menu, X, TreePine } from 'lucide-react';
-import './PitchHeader.css';
 
 export const PitchHeader: React.FC = () => {
   const { role, setRole } = usePresenter();
@@ -28,22 +27,22 @@ export const PitchHeader: React.FC = () => {
   }, [role, setRole]);
 
   return (
-    <header className="pitch-header" role="banner">
+    <header className="app-pitch-header" role="banner">
       {/* Brand Header Section — compact field-mode header (accepted live-mode
           variant „Compact de teren", density packed): one line, no subtitle. */}
-      <div className="pitch-header-top">
-        <Link to="/" className="pitch-brand" aria-label="Verde în Sectorul 5 - Casă">
-          <div className="pitch-logo-badge" aria-hidden="true">
-            <TreePine size={18} color="#ffffff" />
+      <div className="app-pitch-header-top">
+        <Link to="/" className="app-pitch-brand" aria-label="Verde în Sectorul 5 - Casă">
+          <div className="app-pitch-logo-badge" aria-hidden="true">
+            <TreePine size={18} color="var(--hig-tint-contrast)" />
           </div>
-          <h1 className="pitch-title-text" style={{ margin: 0, padding: 0 }}>
+          <h1 className="app-pitch-title">
             Verde în Sectorul 5
           </h1>
         </Link>
 
         {/* Mobile Expand Trigger */}
         <button
-          className="mobile-menu-trigger"
+          className="app-mobile-menu-trigger"
           onClick={() => setMobileExpanded(!mobileExpanded)}
           aria-expanded={mobileExpanded}
           aria-label="Comută meniul de opțiuni demo"
@@ -53,11 +52,11 @@ export const PitchHeader: React.FC = () => {
       </div>
 
       {/* Desktop Nav & Mobile Collapsible Panel */}
-      <div className={`pitch-controls-panel ${mobileExpanded ? 'mobile-open' : ''}`}>
-        <nav className="pitch-nav" aria-label="Navigare principală">
-          <Link to="/rewards" className="pitch-nav-link" onClick={() => setMobileExpanded(false)}>Recompense</Link>
-          <Link to="/community" className="pitch-nav-link" onClick={() => setMobileExpanded(false)}>Comunitate</Link>
-          <Link to="/sponsors" className="pitch-nav-link" onClick={() => setMobileExpanded(false)}>Sponsori</Link>
+      <div className={`app-pitch-controls-panel ${mobileExpanded ? 'mobile-open' : ''}`}>
+        <nav className="app-pitch-nav" aria-label="Navigare principală">
+          <Link to="/rewards" className="app-pitch-nav-link" onClick={() => setMobileExpanded(false)}>Recompense</Link>
+          <Link to="/community" className="app-pitch-nav-link" onClick={() => setMobileExpanded(false)}>Comunitate</Link>
+          <Link to="/sponsors" className="app-pitch-nav-link" onClick={() => setMobileExpanded(false)}>Sponsori</Link>
         </nav>
       </div>
 
@@ -69,12 +68,12 @@ export const PitchHeader: React.FC = () => {
           viewport. Dashboard-only; „P" flips the persona too. */}
       {isDashboard && createPortal(
         <button
-          className="demo-toggle"
+          className="hig-glass app-demo-pill"
           onClick={() => setRole(role === 'CITIZEN' ? 'COUNCIL_ADMIN' : 'CITIZEN')}
           aria-label={`Mod prezentare: ${role === 'CITIZEN' ? 'Cetățean' : 'Consiliu Local'} — apasă pentru a comuta (tasta P)`}
           title="Comutator demo (tasta P)"
         >
-          <span className={`demo-toggle-dot ${role === 'CITIZEN' ? 'dot-citizen' : 'dot-council'}`} aria-hidden="true" />
+          <span className={`app-demo-pill-dot ${role === 'CITIZEN' ? 'citizen' : 'council'}`} aria-hidden="true" />
           <span>{role === 'CITIZEN' ? 'Cetățean' : 'Consiliu'}</span>
         </button>,
         document.body
