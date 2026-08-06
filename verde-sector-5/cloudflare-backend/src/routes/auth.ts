@@ -365,4 +365,27 @@ export const roleMiddleware = (...allowedRoles: string[]) => {
   };
 };
 
+// Like jwtMiddleware, but anonymous requests pass through without a user.
+// Used on public write endpoints (tree watering) so logged-in citizens still
+// earn points while the pitch demo keeps working unauthenticated.
+export const optionalJwtMiddleware = async (c: any, next: any) => {
+  try {
+    const authHeader = c.req.header('Authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1];
+      const { payload } = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET_KEY));
+      if (payload?.sub) {
+        c.set('user', {
+          id: payload.sub as string,
+          email: (payload as any).email,
+          role: (payload as any).role,
+        });
+      }
+    }
+  } catch {
+    // invalid/expired token on an optional route: proceed anonymously
+  }
+  await next();
+};
+
 export default auth;
