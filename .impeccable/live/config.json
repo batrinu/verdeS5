@@ -1,0 +1,6 @@
+{
+  "files": ["verde-sector-5/web-dashboard/index.html"],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}
