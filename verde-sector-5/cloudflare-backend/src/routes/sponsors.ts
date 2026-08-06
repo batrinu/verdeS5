@@ -82,7 +82,9 @@ sponsors.get('/:slug/dashboard', async (c) => {
         const tLogs = t.wateringLogs as any[];
         const photoCount = tLogs.filter((l) => l.photoProof).length;
         // Escape double quotes so nicknames can't break the CSV shape.
-        const nickname = `"${String(t.nickname ?? '').replace(/"/g, '""')}"`;
+        const raw = String(t.nickname ?? '');
+        const neutralized = /^[=+\-@\t\r]/.test(raw) ? `'${raw}` : raw;
+        const nickname = `"${neutralized.replace(/"/g, '""')}"`;
         return [t.id, nickname, t.species, t.latitude, t.longitude, t.healthStatus,
           tLogs.length, t.lastWateredAt ? new Date(t.lastWateredAt).toISOString() : '',
           photoCount, impact.co2KgPerYear].join(',');
