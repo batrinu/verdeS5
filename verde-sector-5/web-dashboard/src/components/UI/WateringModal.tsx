@@ -16,7 +16,7 @@ export interface WateringModalProps {
 }
 
 // Sample realistic demo watering image SVG data URL for instant simulation
-const DEMO_WATERING_IMAGE = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"><rect width="400" height="260" fill="%231e293b"/><path d="M0,180 Q100,160 200,190 T400,170 L400,260 L0,260 Z" fill="%2315803d"/><path d="M200,200 L200,110 Q200,100 190,90 Q180,80 160,85" stroke="%2378350f" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="160" cy="75" r="45" fill="%2322c55e" opacity="0.85"/><circle cx="190" cy="55" r="35" fill="%2316a34a" opacity="0.9"/><circle cx="130" cy="65" r="30" fill="%234ade80" opacity="0.8"/><rect x="250" y="100" width="50" height="60" rx="8" fill="%230284c7"/><path d="M275,100 L275,70 Q275,60 230,80 Q210,90 200,130" stroke="%2338bdf8" stroke-width="4" stroke-dasharray="6,4" fill="none"/><circle cx="210" cy="115" r="4" fill="%2338bdf8"/><circle cx="205" cy="130" r="5" fill="%2338bdf8"/><circle cx="202" cy="145" r="6" fill="%2338bdf8"/><text x="20" y="35" fill="%23f8fafc" font-family="sans-serif" font-weight="bold" font-size="16">📷 Verde S5 - Dovadă Udare Copac</text><text x="20" y="245" fill="%23cbd5e1" font-family="sans-serif" font-size="12">GPS: 44.4170 N, 26.0750 E • Verified AI</text></svg>`;
+const DEMO_WATERING_IMAGE = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"><rect width="400" height="260" fill="%231e293b"/><path d="M0,180 Q100,160 200,190 T400,170 L400,260 L0,260 Z" fill="%2315803d"/><path d="M200,200 L200,110 Q200,100 190,90 Q180,80 160,85" stroke="%2378350f" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="160" cy="75" r="45" fill="%2322c55e" opacity="0.85"/><circle cx="190" cy="55" r="35" fill="%2316a34a" opacity="0.9"/><circle cx="130" cy="65" r="30" fill="%234ade80" opacity="0.8"/><rect x="250" y="100" width="50" height="60" rx="8" fill="%230284c7"/><path d="M275,100 L275,70 Q275,60 230,80 Q210,90 200,130" stroke="%2338bdf8" stroke-width="4" stroke-dasharray="6,4" fill="none"/><circle cx="210" cy="115" r="4" fill="%2338bdf8"/><circle cx="205" cy="130" r="5" fill="%2338bdf8"/><circle cx="202" cy="145" r="6" fill="%2338bdf8"/><text x="20" y="35" fill="%23f8fafc" font-family="sans-serif" font-weight="bold" font-size="16">📷 Verde S5 - Dovadă Udare Copac</text><text x="20" y="245" fill="%23cbd5e1" font-family="sans-serif" font-size="12">GPS: 44.4170 N, 26.0750 E • Sector 5</text></svg>`;
 
 // Compress + downscale an uploaded image into a small JPEG data-URL blob so it
 // fits comfortably in the database (and, later, R2). See docs/photo-storage.md.
@@ -157,10 +157,12 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
         backgroundColor: 'rgba(15, 23, 42, 0.75)',
         backdropFilter: 'blur(6px)',
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
         zIndex: 9999,
-        padding: '16px',
+        // Safe-area aware padding; the overlay scrolls so a tall modal is never
+        // clipped at the top/bottom on short phone screens.
+        padding: 'max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom))',
         overflowY: 'auto',
       }}
       onClick={(e) => {
@@ -173,6 +175,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
           borderRadius: '24px',
           maxWidth: '480px',
           width: '100%',
+          margin: 'auto', // centers when it fits, keeps top reachable when it doesn't
           padding: '28px',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
           border: '1px solid rgba(226, 232, 240, 0.8)',
@@ -199,7 +202,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
               <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: '#0f172a' }}>
                 Udare & Verificare Foto
               </h3>
-              <span style={{ fontSize: '12px', color: '#64748b' }}>Simulare AI Verde Sector 5</span>
+              <span style={{ fontSize: '12px', color: '#64748b' }}>Verde în Sectorul 5</span>
             </div>
           </div>
           <button
@@ -300,7 +303,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <label style={{ fontSize: '13px', fontWeight: 700, color: '#334155', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Camera size={16} color="#0284c7" />
-                Dovadă Foto Udare (Simulator AI Cloudflare)
+                Dovadă Foto Udare
               </label>
               <span style={{ fontSize: '11px', color: '#16a34a', fontWeight: 700, backgroundColor: '#dcfce7', padding: '2px 8px', borderRadius: '10px' }}>
                 +50 Puncte Bonus
@@ -339,10 +342,10 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                   Apasă sau trage poza cu udarea aici
                 </div>
                 <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-                  Format JPG, PNG • Comprimată și stocată în siguranță
+                  Format JPG sau PNG
                 </div>
 
-                {/* Simulator Button */}
+                {/* Demo photo button */}
                 <div style={{ marginTop: '12px' }}>
                   <button
                     type="button"
@@ -366,7 +369,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                     }}
                   >
                     <Sparkles size={14} color="#0284c7" />
-                    Simulează Încărcare Foto (Demonstrație Live)
+                    Folosește o poză demonstrativă
                   </button>
                 </div>
               </div>
@@ -409,7 +412,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#0284c7' }}>
                       <RefreshCw size={18} className="spin-icon" style={{ animation: 'spin 1s linear infinite' }} />
                       <span style={{ fontSize: '13px', fontWeight: 600 }}>
-                        Verificare în curs de către AI Sector 5...
+                        Se verifică poza...
                       </span>
                     </div>
                   ) : isPhotoVerified ? (
@@ -428,11 +431,11 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                         marginBottom: '6px',
                       }}>
                         <Sparkles size={16} />
-                        <span>Verification AI: Foto Validată! +50 EcoPuncte Bonus</span>
+                        <span>Poză validată! +50 EcoPuncte Bonus</span>
                       </div>
                       <div style={{ fontSize: '11px', color: '#166534', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <CheckCircle2 size={13} />
-                        Sistemul AI a detectat recipentul cu apă și arborele în imagine (Scor: 99.4%)
+                        Poza cu udarea a fost confirmată. Mulțumim!
                       </div>
                     </div>
                   ) : null}

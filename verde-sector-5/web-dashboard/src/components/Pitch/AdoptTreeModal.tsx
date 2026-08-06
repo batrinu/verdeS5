@@ -27,16 +27,20 @@ export const AdoptTreeModal: React.FC<AdoptTreeModalProps> = ({ tree, onClose, o
       backgroundColor: 'rgba(15, 23, 42, 0.65)',
       backdropFilter: 'blur(4px)',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'center',
       zIndex: 9999,
-      padding: '16px',
+      // Safe-area aware padding + scrollable overlay so the modal is never
+      // clipped at the top/bottom on short phone screens.
+      padding: 'max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom))',
+      overflowY: 'auto',
     }}>
       <div style={{
         backgroundColor: '#ffffff',
         borderRadius: '20px',
         maxWidth: '440px',
         width: '100%',
+        margin: 'auto', // centers when it fits, keeps top reachable when it doesn't
         padding: '28px',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       }}>

@@ -74,7 +74,7 @@ const CreateReport: React.FC = () => {
               required
             />
             <div className="location-picker-mock">
-              <span>📍 Selectează pe hartă (Mock)</span>
+              <span>📍 Selectează pe hartă</span>
             </div>
           </div>
 
