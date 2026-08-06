@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
 import { usePresenter } from '../../context/PresenterContext';
-import { Menu, X, Trophy, Droplets, MapPin, Shield } from 'lucide-react';
+import { Menu, X, Shield } from 'lucide-react';
 import './PitchHeader.css';
 
 export const PitchHeader: React.FC = () => {
-  const {
-    role,
-    setRole,
-    selectedNeighborhood,
-    setSelectedNeighborhood,
-    userPoints,
-    userWaterings,
-  } = usePresenter();
-
+  const { role, setRole } = usePresenter();
   const [mobileExpanded, setMobileExpanded] = useState(false);
 
   return (
@@ -46,28 +38,6 @@ export const PitchHeader: React.FC = () => {
 
       {/* Desktop Controls & Mobile Collapsible Panel */}
       <div className={`pitch-controls-panel ${mobileExpanded ? 'mobile-open' : ''}`}>
-        {/* District Selector */}
-        <div className="district-selector-group">
-          <MapPin size={16} color="#94a3b8" />
-          <label htmlFor="district-select" className="district-label">
-            Cartier:
-          </label>
-          <select
-            id="district-select"
-            className="district-select-input"
-            value={selectedNeighborhood}
-            onChange={(e) => setSelectedNeighborhood(e.target.value)}
-            aria-label="Selectează cartierul din Sectorul 5"
-          >
-            <option value="ALL">Toate Cartierele (Sector 5)</option>
-            <option value="Cotroceni">Cotroceni</option>
-            <option value="Rahova">Rahova</option>
-            <option value="Ferentari">Ferentari</option>
-            <option value="Sebastian">Sebastian</option>
-            <option value="Izvor">Izvor</option>
-          </select>
-        </div>
-
         {/* Segmented Presenter Role Switcher */}
         <div className="role-segmented-switcher" role="tablist" aria-label="Comută rolul prezentării">
           <button
@@ -89,20 +59,6 @@ export const PitchHeader: React.FC = () => {
             <Shield size={14} />
             <span>Mod Consiliu Local</span>
           </button>
-        </div>
-
-        {/* Live Eco Ticker */}
-        <div className="pitch-ticker-group">
-          <div className="ticker-badge ticker-eco" title="Puncte ecologice acumulate prin îngrijirea arborilor">
-            <span className="pulse-dot" aria-hidden="true" />
-            <Trophy size={15} color="#4ade80" />
-            <span>{userPoints} EcoPuncte</span>
-          </div>
-
-          <div className="ticker-badge ticker-water" title="Numărul total de udări înregistrate">
-            <Droplets size={15} color="#38bdf8" />
-            <span>{userWaterings} Udări Logate</span>
-          </div>
         </div>
       </div>
     </header>

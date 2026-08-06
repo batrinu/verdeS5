@@ -12,13 +12,13 @@ import { CouncilAnalyticsBoard } from '../../components/Pitch/CouncilAnalyticsBo
 import { PitchHeader } from '../../components/Pitch/PitchHeader';
 import { SelectedTreeSheet } from '../../components/Pitch/SelectedTreeSheet';
 import { usePresenter } from '../../context/PresenterContext';
-import { Map, Trophy, BarChart3 } from 'lucide-react';
+import { Map, Trophy, BarChart3, MapPin } from 'lucide-react';
 import './Dashboard.css';
 
 type MobileTab = 'MAP' | 'DETAILS';
 
 export const Dashboard: React.FC = () => {
-  const { role, selectedNeighborhood, addPoints, incrementWaterings } = usePresenter();
+  const { role, selectedNeighborhood, setSelectedNeighborhood, addPoints, incrementWaterings } = usePresenter();
 
   const [trees, setTrees] = useState<TreeItem[]>([]);
   const [alerts, setAlerts] = useState<CareAlertItem[]>([]);
@@ -166,6 +166,26 @@ export const Dashboard: React.FC = () => {
               <h2 className="map-title">
                 🗺️ Registrul Interactiv al Arborilor
               </h2>
+              <div className="district-selector-group">
+                <MapPin size={16} color="#94a3b8" />
+                <label htmlFor="district-select" className="district-label">
+                  Cartier:
+                </label>
+                <select
+                  id="district-select"
+                  className="district-select-input"
+                  value={selectedNeighborhood}
+                  onChange={(e) => setSelectedNeighborhood(e.target.value as any)}
+                  aria-label="Selectează cartierul din Sectorul 5"
+                >
+                  <option value="ALL">Toate Cartierele (Sector 5)</option>
+                  <option value="Cotroceni">Cotroceni</option>
+                  <option value="Rahova">Rahova</option>
+                  <option value="Ferentari">Ferentari</option>
+                  <option value="Sebastian">Sebastian</option>
+                  <option value="Izvor">Izvor</option>
+                </select>
+              </div>
             </div>
 
             <div className="map-wrapper">
