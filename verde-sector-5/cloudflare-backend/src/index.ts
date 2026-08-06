@@ -17,6 +17,7 @@ import alertRoutes from './routes/alerts';
 import neighborhoodRoutes from './routes/neighborhoods';
 import rewardRoutes from './routes/rewards';
 import sponsorRoutes from './routes/sponsors';
+import { leaderboard as leaderboardRoutes, challenges as challengeRoutes } from './routes/community';
 import { createPrismaClient } from './lib/prisma';
 
 // Extend Hono context with our bindings and variables
@@ -84,6 +85,8 @@ app.route('/api/v1/alerts', alertRoutes);
 app.route('/api/v1/neighborhoods', neighborhoodRoutes);
 app.route('/api/v1/rewards', rewardRoutes);
 app.route('/api/v1/sponsors', sponsorRoutes);
+app.route('/api/v1/leaderboard', leaderboardRoutes);
+app.route('/api/v1/challenges', challengeRoutes);
 
 // Error handling
 app.onError((err, c) => {
