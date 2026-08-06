@@ -6,7 +6,8 @@
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  padding: 12px 24px;
+  /* Compact field-mode header (accepted live variant, density packed) */
+  padding: 4px 16px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -25,9 +26,9 @@
 }
 
 .pitch-logo-badge {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   background: linear-gradient(135deg, #34D87A, #1A7A4A);
   display: flex;
   align-items: center;
@@ -43,19 +44,12 @@
 
 .pitch-title-text {
   font-family: var(--font-family-heading);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: -0.4px;
   background: linear-gradient(90deg, #6EE7A0, #38BDF8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.pitch-subtitle-text {
-  font-size: 11px;
-  color: #94A3B8;
-  margin-top: -2px;
-  letter-spacing: 0.02em;
 }
 
 /* Center Controls */
@@ -115,8 +109,9 @@
 }
 
 .pitch-nav-link {
-  padding: 8px 14px;
-  min-height: 40px;
+  padding: 6px 12px;
+  min-height: 36px;
+  font-size: 12.5px;
   display: flex;
   align-items: center;
   border-radius: 8px;
@@ -145,14 +140,6 @@
   justify-self: end;
 }
 
-.presenter-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: #64748b;
-}
-
 .presenter-control .role-segmented-switcher {
   opacity: 0.72;
   transition: opacity 0.2s ease;
@@ -174,8 +161,8 @@
 }
 
 .role-tab-btn {
-  padding: 8px 16px;
-  min-height: 40px;
+  padding: 6px 12px;
+  min-height: 36px;
   border-radius: 8px;
   border: none;
   background-color: transparent;
