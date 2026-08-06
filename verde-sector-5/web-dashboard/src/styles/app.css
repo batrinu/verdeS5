@@ -154,6 +154,364 @@
 .app-toast-drought  .app-toast-progress-bar { background: var(--hig-orange); }
 .app-toast-default  .app-toast-progress-bar { background: var(--hig-green); }
 
+/* --- Sheet chrome shared by the five modals (AdoptTreeModal, WateringModal,
+   AdoptionCertificateModal, SelectedTreeSheet) — header row + icon-only
+   close button + row-of-buttons action bar. hig.css supplies .hig-scrim/
+   .hig-sheet/.hig-button/.hig-form-row/.hig-field; these fill the gaps. --- */
+.app-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hig-space-3);
+  margin-bottom: var(--hig-space-4);
+}
+.app-sheet-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--hig-radius-full);
+  background: var(--hig-fill-tertiary);
+  color: var(--hig-label-secondary);
+  cursor: pointer;
+  transition: background var(--hig-duration-fast) var(--hig-ease-out), color var(--hig-duration-fast) var(--hig-ease-out);
+}
+.app-sheet-close:hover { background: var(--hig-fill); color: var(--hig-label); }
+.app-sheet-actions { display: flex; gap: var(--hig-space-3); margin-top: var(--hig-space-2); }
+.app-sheet-actions .hig-button { flex: 1; }
+/* Sheets taller than a short viewport scroll internally instead of clipping
+   off-screen (hig-sheet centers via fixed + translate with no max-height). */
+.app-sheet-scroll { max-height: calc(100vh - 64px); overflow-y: auto; }
+.app-sheet-tree-card {
+  background: color-mix(in srgb, var(--hig-tint) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hig-tint) 15%, transparent);
+  padding: var(--hig-space-3) var(--hig-space-4);
+  border-radius: var(--hig-radius-lg);
+  margin-bottom: var(--hig-space-5);
+}
+.app-sheet-tree-card-label { font-size: var(--hig-text-caption); color: var(--hig-tint); font-weight: 700; }
+.app-sheet-tree-card-name { font-size: var(--hig-text-headline); font-weight: 700; color: var(--hig-label); margin-top: 2px; }
+
+/* --- WateringModal (components/UI/WateringModal, reused by
+   components/Pitch/LogWateringModal) — blue "water" accent throughout,
+   distinct from the app's green tint, matching the toast container's own
+   per-alert-type token mapping (watering -> --hig-blue). --- */
+.app-watering-title-group { display: flex; align-items: center; gap: var(--hig-space-3); }
+.app-watering-title-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--hig-radius-md);
+  background: color-mix(in srgb, var(--hig-blue) 12%, transparent);
+  color: var(--hig-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.app-watering-tree-card {
+  background: color-mix(in srgb, var(--hig-blue) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hig-blue) 15%, transparent);
+  padding: var(--hig-space-3) var(--hig-space-4);
+  border-radius: var(--hig-radius-lg);
+  margin-bottom: var(--hig-space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hig-space-3);
+}
+.app-watering-tree-card-label {
+  font-size: var(--hig-text-caption2);
+  color: var(--hig-blue);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.app-watering-tree-card-code { font-size: var(--hig-text-subheadline); font-weight: 600; color: var(--hig-blue); }
+.app-watering-count-pill {
+  background: color-mix(in srgb, var(--hig-blue) 12%, transparent);
+  padding: 6px var(--hig-space-3);
+  border-radius: var(--hig-radius-full);
+  font-size: var(--hig-text-caption);
+  font-weight: 700;
+  color: var(--hig-blue);
+  white-space: nowrap;
+}
+.app-liters-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--hig-space-2); }
+.app-liters-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--hig-space-3) 6px;
+  border-radius: var(--hig-radius-md);
+  border: 1px solid var(--hig-separator);
+  background: var(--hig-fill-tertiary);
+  color: var(--hig-label-secondary);
+  font-weight: 800;
+  font-size: var(--hig-text-subheadline);
+  cursor: pointer;
+  transition: background var(--hig-duration-fast) var(--hig-ease-out),
+              border-color var(--hig-duration-fast) var(--hig-ease-out),
+              color var(--hig-duration-fast) var(--hig-ease-out);
+}
+.app-liters-btn.selected {
+  border: 2px solid var(--hig-blue);
+  background: color-mix(in srgb, var(--hig-blue) 12%, transparent);
+  color: var(--hig-blue);
+}
+.app-liters-btn-points { font-size: var(--hig-text-caption2); opacity: 0.8; font-weight: 600; }
+.app-watering-photo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--hig-space-2); }
+.app-watering-photo-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--hig-text-subheadline);
+  font-weight: 700;
+  color: var(--hig-label-secondary);
+}
+.app-watering-photo-label svg { color: var(--hig-blue); }
+.app-watering-bonus-pill {
+  font-size: var(--hig-text-caption);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--hig-green) 12%, transparent);
+  color: var(--hig-green);
+  padding: 2px var(--hig-space-2);
+  border-radius: var(--hig-radius-full);
+}
+.app-watering-dropzone {
+  border: 2px dashed var(--hig-separator);
+  background: var(--hig-fill-tertiary);
+  border-radius: var(--hig-radius-lg);
+  padding: var(--hig-space-5) var(--hig-space-4);
+  text-align: center;
+  cursor: pointer;
+  transition: background var(--hig-duration-fast) var(--hig-ease-out), border-color var(--hig-duration-fast) var(--hig-ease-out);
+}
+.app-watering-dropzone.dragging {
+  border-color: var(--hig-blue);
+  background: color-mix(in srgb, var(--hig-blue) 8%, transparent);
+}
+.app-watering-dropzone-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--hig-radius-full);
+  background: color-mix(in srgb, var(--hig-blue) 12%, transparent);
+  color: var(--hig-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--hig-space-3);
+}
+.app-watering-dropzone-title { font-size: var(--hig-text-subheadline); font-weight: 700; color: var(--hig-label); }
+.app-watering-demo-btn-wrap { margin-top: var(--hig-space-3); }
+.app-watering-demo-btn {
+  padding: 7px var(--hig-space-4);
+  border-radius: var(--hig-radius-full);
+  border: 1px solid color-mix(in srgb, var(--hig-blue) 30%, transparent);
+  background: color-mix(in srgb, var(--hig-blue) 10%, transparent);
+  color: var(--hig-blue);
+  font-size: var(--hig-text-caption);
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.app-watering-photo-preview {
+  border-radius: var(--hig-radius-lg);
+  border: 1px solid var(--hig-separator);
+  overflow: hidden;
+  background: var(--hig-fill-tertiary);
+}
+.app-watering-photo-thumb { position: relative; width: 100%; height: 160px; background: var(--hig-bg); }
+.app-watering-photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Fixed dark-scrim + white icon, deliberately theme-independent: this button
+   sits on top of an arbitrary uploaded photo, not app chrome, so it needs
+   guaranteed contrast against unpredictable photo content rather than a
+   theme token (same reasoning hig.css itself uses for the switch thumb's
+   hardcoded #fff). */
+.app-watering-photo-remove {
+  position: absolute;
+  top: var(--hig-space-2);
+  right: var(--hig-space-2);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border: none;
+  border-radius: var(--hig-radius-full);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.app-watering-verify-status { padding: var(--hig-space-3) var(--hig-space-4); }
+.app-watering-verifying {
+  display: flex;
+  align-items: center;
+  gap: var(--hig-space-2);
+  color: var(--hig-blue);
+  font-size: var(--hig-text-footnote);
+  font-weight: 600;
+}
+.app-watering-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: color-mix(in srgb, var(--hig-green) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hig-green) 30%, transparent);
+  color: var(--hig-green);
+  padding: 6px var(--hig-space-3);
+  border-radius: var(--hig-radius-full);
+  font-size: var(--hig-text-footnote);
+  font-weight: 800;
+  margin-bottom: var(--hig-space-2);
+}
+.app-watering-verified-note { font-size: var(--hig-text-caption); color: var(--hig-green); display: flex; align-items: center; gap: 4px; }
+.app-watering-points-banner {
+  background: color-mix(in srgb, var(--hig-yellow) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hig-yellow) 25%, transparent);
+  padding: var(--hig-space-3) var(--hig-space-4);
+  border-radius: var(--hig-radius-lg);
+  margin-bottom: var(--hig-space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hig-space-3);
+}
+.app-watering-points-left { display: flex; align-items: center; gap: var(--hig-space-3); }
+.app-watering-points-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--hig-radius-md);
+  background: color-mix(in srgb, var(--hig-yellow) 18%, transparent);
+  color: var(--hig-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.app-watering-points-total { font-size: var(--hig-text-subheadline); font-weight: 800; color: var(--hig-label); }
+.app-watering-points-hint { font-size: var(--hig-text-caption); color: var(--hig-yellow); font-style: italic; }
+
+/* --- AdoptionCertificateModal (components/UI/AdoptionCertificateModal) —
+   modal chrome only; the printed-certificate <canvas> drawing itself (an
+   Emerald & Gold official-document look) is left as-is, out of scope for a
+   CSS token pass. --- */
+.app-certificate-modal {
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hig-space-5);
+}
+.app-certificate-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hig-space-3);
+  border-bottom: 1px solid var(--hig-separator);
+  padding-bottom: var(--hig-space-3);
+}
+.app-certificate-title-group { display: flex; align-items: center; gap: var(--hig-space-2); }
+.app-certificate-title-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--hig-radius-md);
+  background: var(--hig-tint);
+  color: var(--hig-tint-contrast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.app-certificate-title-text { margin: 0; font-size: var(--hig-text-headline); font-weight: 700; color: var(--hig-label); }
+.app-certificate-subtitle { margin: 2px 0 0; font-size: var(--hig-text-caption); color: var(--hig-label-secondary); }
+.app-certificate-canvas-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hig-fill-quaternary);
+  border-radius: var(--hig-radius-lg);
+  padding: var(--hig-space-3);
+  border: 1px dashed var(--hig-separator);
+}
+.app-certificate-canvas { max-width: 100%; height: auto; border-radius: var(--hig-radius-sm); box-shadow: var(--hig-shadow-menu); }
+.app-certificate-actions { display: flex; gap: var(--hig-space-3); justify-content: flex-end; }
+
+/* --- SelectedTreeSheet (components/Pitch/SelectedTreeSheet) — hig-sheet
+   centered on desktop; below the app-shell's own 899px breakpoint it's
+   re-pointed at hig-sheet.bottom's geometry via media query, since the
+   component itself doesn't switch classes per viewport. --- */
+.app-tree-sheet {
+  max-width: 540px;
+  max-height: min(720px, 90vh);
+  overflow-y: auto;
+}
+@media (max-width: 899px) {
+  .app-tree-sheet {
+    top: auto;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: var(--hig-radius-xl) var(--hig-radius-xl) 0 0;
+    padding-bottom: max(var(--hig-space-5), env(safe-area-inset-bottom));
+  }
+}
+.app-tree-sheet-handle {
+  width: 40px;
+  height: 5px;
+  background: var(--hig-fill);
+  border-radius: var(--hig-radius-sm);
+  margin: 0 auto var(--hig-space-4);
+}
+.app-tree-sheet-badges { display: flex; align-items: center; gap: var(--hig-space-2); flex-wrap: wrap; margin-bottom: 6px; }
+.app-tree-sheet-code {
+  font-size: var(--hig-text-caption);
+  font-weight: 700;
+  color: var(--hig-tint);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+}
+.app-health-badge { font-size: var(--hig-text-caption); font-weight: 700; padding: 3px var(--hig-space-2); border-radius: var(--hig-radius-full); }
+.app-health-excellent { background: color-mix(in srgb, var(--hig-green) 18%, transparent); color: var(--hig-green); }
+.app-health-good { background: color-mix(in srgb, var(--hig-green) 10%, transparent); color: var(--hig-green); }
+.app-health-needs-water { background: color-mix(in srgb, var(--hig-blue) 15%, transparent); color: var(--hig-blue); }
+.app-health-attention { background: color-mix(in srgb, var(--hig-red) 12%, transparent); color: var(--hig-red); }
+.app-tree-sheet-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--hig-space-3);
+  background: var(--hig-fill-quaternary);
+  padding: var(--hig-space-4);
+  border-radius: var(--hig-radius-lg);
+  margin-bottom: var(--hig-space-5);
+}
+.app-tree-sheet-info-item { display: flex; flex-direction: column; gap: 2px; }
+.app-tree-sheet-info-item-wide { grid-column: span 2; }
+.app-tree-sheet-info-value { font-size: var(--hig-text-subheadline); font-weight: 700; color: var(--hig-label); }
+.app-tree-sheet-actions { display: flex; flex-direction: column; gap: var(--hig-space-2); margin-top: var(--hig-space-5); }
+.app-tree-sheet-actions .hig-button { width: 100%; }
+.app-tree-sheet-adopted-group { display: flex; flex-direction: column; gap: var(--hig-space-2); }
+.app-tree-sheet-adopted-banner {
+  background: color-mix(in srgb, var(--hig-green) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hig-green) 30%, transparent);
+  padding: var(--hig-space-2) var(--hig-space-3);
+  border-radius: var(--hig-radius-md);
+  display: flex;
+  align-items: center;
+  gap: var(--hig-space-2);
+  color: var(--hig-green);
+  font-size: var(--hig-text-footnote);
+  font-weight: 700;
+}
+
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }

@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Download, X, Award } from 'lucide-react';
 import type { TreeItem } from '../../types/tree';
 import { useModalA11y } from '../../hooks/useModalA11y';
-import './AdoptionCertificateModal.css';
 
 export interface AdoptionCertificateData {
   adopterName: string;
@@ -283,53 +282,53 @@ export const AdoptionCertificateModal: React.FC<AdoptionCertificateModalProps> =
   };
 
   return (
-    <div className="adoption-cert-overlay" onClick={onClose}>
+    <>
+      <div className="hig-scrim" onClick={onClose} />
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Certificat de adopție"
         tabIndex={-1}
-        className="adoption-cert-modal"
-        onClick={(e) => e.stopPropagation()}
+        className="hig-sheet app-certificate-modal"
       >
         {/* Header */}
-        <div className="adoption-cert-header">
-          <div className="adoption-cert-title-group">
-            <div className="adoption-cert-title-icon">
+        <div className="app-certificate-header">
+          <div className="app-certificate-title-group">
+            <div className="app-certificate-title-icon">
               <Award size={20} />
             </div>
             <div>
-              <h3 className="adoption-cert-title-text">
+              <h3 className="app-certificate-title-text">
                 Certificat Oficial de Adopție — Verde în Sectorul 5
               </h3>
-              <p className="adoption-cert-subtitle">
+              <p className="app-certificate-subtitle">
                 Afișare și descărcare certificat digital oficial pentru {certData.treeCode}
               </p>
             </div>
           </div>
-          <button className="adoption-cert-close-btn" onClick={onClose} aria-label="Închide">
+          <button className="app-sheet-close" onClick={onClose} aria-label="Închide">
             <X size={18} />
           </button>
         </div>
 
         {/* Canvas Display */}
-        <div className="adoption-cert-canvas-wrapper">
-          <canvas ref={canvasRef} className="adoption-cert-canvas" />
+        <div className="app-certificate-canvas-wrapper">
+          <canvas ref={canvasRef} className="app-certificate-canvas" />
         </div>
 
         {/* Action Buttons */}
-        <div className="adoption-cert-actions">
-          <button className="btn-cert-close" onClick={onClose}>
+        <div className="app-certificate-actions">
+          <button className="hig-button plain" onClick={onClose}>
             Închide
           </button>
-          <button className="btn-cert-download" onClick={handleDownload}>
+          <button className="hig-button" onClick={handleDownload}>
             <Download size={18} />
             Descarcă Certificat PNG
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

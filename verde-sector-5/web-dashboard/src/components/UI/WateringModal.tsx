@@ -152,170 +152,75 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        backgroundColor: 'rgba(15, 23, 42, 0.75)',
-        backdropFilter: 'blur(6px)',
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        zIndex: 9999,
-        // Safe-area aware padding; the overlay scrolls so a tall modal is never
-        // clipped at the top/bottom on short phone screens.
-        padding: 'max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom))',
-        overflowY: 'auto',
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <>
+      <div className="hig-scrim" onClick={onClose} />
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Udare și dovadă foto"
         tabIndex={-1}
-        style={{
-          backgroundColor: 'var(--bg-surface)',
-          borderRadius: '24px',
-          maxWidth: '480px',
-          width: '100%',
-          margin: 'auto', // centers when it fits, keeps top reachable when it doesn't
-          padding: '28px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-          border: '1px solid var(--border-color)',
-          position: 'relative',
-          outline: 'none',
-          animation: 'fadeInModal 0.25s ease-out',
-        }}
+        className="hig-sheet app-sheet-scroll"
       >
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: '12px',
-              backgroundColor: 'rgba(56, 189, 248, 0.12)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#38BDF8',
-            }}>
+        <div className="app-sheet-header">
+          <div className="app-watering-title-group">
+            <div className="app-watering-title-icon">
               <Droplets size={24} />
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: 'var(--color-primary-50)', fontFamily: 'var(--font-family-heading)' }}>
-                Udare & Verificare Foto
-              </h3>
-              <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>Verde în Sectorul 5</span>
+              <h3>Udare & Verificare Foto</h3>
+              <span className="hig-caption hig-secondary">Verde în Sectorul 5</span>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'var(--bg-surface-elevated)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '50%',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: 'var(--color-text-muted)',
-              transition: 'all 0.2s',
-            }}
-            aria-label="Închide"
-          >
+          <button onClick={onClose} aria-label="Închide" className="app-sheet-close">
             <X size={18} />
           </button>
         </div>
 
         {/* Selected Tree Info Card */}
-        <div
-          style={{
-            backgroundColor: 'rgba(56, 189, 248, 0.08)',
-            border: '1px solid rgba(56, 189, 248, 0.15)',
-            padding: '14px 16px',
-            borderRadius: '16px',
-            marginBottom: '20px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
+        <div className="app-watering-tree-card">
           <div>
-            <span style={{ fontSize: '11px', color: '#38BDF8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Copac Selectat
-            </span>
-            <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--color-primary-50)', marginTop: '2px' }}>
-              {tree.nickname || tree.species} <span style={{ fontSize: '13px', fontWeight: 600, color: '#38BDF8' }}>({tree.code})</span>
+            <span className="app-watering-tree-card-label">Copac Selectat</span>
+            <div className="app-sheet-tree-card-name">
+              {tree.nickname || tree.species} <span className="app-watering-tree-card-code">({tree.code})</span>
             </div>
-            <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+            <div className="hig-footnote hig-secondary">
               📍 Cartier <strong>{tree.neighborhood}</strong> • Specie: {tree.species}
             </div>
           </div>
-          <div style={{
-            backgroundColor: 'rgba(56, 189, 248, 0.12)',
-            padding: '6px 12px',
-            borderRadius: '20px',
-            fontSize: '12px',
-            fontWeight: 700,
-            color: '#38BDF8',
-          }}>
+          <div className="app-watering-count-pill">
             💧 {tree.wateringsCount || 0} Udări
           </div>
         </div>
 
         <form onSubmit={handleSubmit}>
           {/* Liters Selector */}
-          <div style={{ marginBottom: '22px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: '10px' }}>
-              💧 Cantitate udare (Litri de apă):
-            </label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+          <div className="hig-form-row">
+            <label>💧 Cantitate udare (Litri de apă):</label>
+            <div className="app-liters-grid">
               {[5, 10, 15, 20].map((amt) => (
                 <button
                   key={amt}
                   type="button"
                   onClick={() => setLiters(amt)}
-                  style={{
-                    padding: '12px 6px',
-                    borderRadius: '12px',
-                    border: liters === amt ? '2px solid #0EA5E9' : '1px solid var(--border-color)',
-                    backgroundColor: liters === amt ? 'rgba(56, 189, 248, 0.12)' : 'var(--bg-surface-elevated)',
-                    color: liters === amt ? '#38BDF8' : 'var(--color-text-muted)',
-                    fontWeight: 800,
-                    fontSize: '14px',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    boxShadow: liters === amt ? '0 2px 8px rgba(14, 165, 233, 0.25)' : 'none',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '2px',
-                  }}
+                  className={`app-liters-btn${liters === amt ? ' selected' : ''}`}
                 >
                   <span>{amt} L</span>
-                  <span style={{ fontSize: '10px', opacity: 0.8, fontWeight: 600 }}>+{amt * 5} pct</span>
+                  <span className="app-liters-btn-points">+{amt * 5} pct</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Photo Proof Verification Section */}
-          <div style={{ marginBottom: '22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <label style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Camera size={16} color="#38BDF8" />
+          <div className="hig-form-row">
+            <div className="app-watering-photo-header">
+              <label className="app-watering-photo-label">
+                <Camera size={16} />
                 Dovadă Foto Udare
               </label>
-              <span style={{ fontSize: '11px', color: 'var(--color-primary-400)', fontWeight: 700, backgroundColor: 'rgba(52, 216, 122, 0.12)', padding: '2px 8px', borderRadius: '10px' }}>
-                +50 Puncte Bonus
-              </span>
+              <span className="app-watering-bonus-pill">+50 Puncte Bonus</span>
             </div>
 
             <input
@@ -333,80 +238,45 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                style={{
-                  border: isDragging ? '2px dashed #0EA5E9' : '2px dashed var(--border-color)',
-                  backgroundColor: isDragging ? 'rgba(56, 189, 248, 0.08)' : 'var(--bg-surface-elevated)',
-                  borderRadius: '16px',
-                  padding: '20px 16px',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                }}
+                className={`app-watering-dropzone${isDragging ? ' dragging' : ''}`}
               >
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(56, 189, 248, 0.12)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', color: '#38BDF8', margin: '0 auto 10px' }}>
+                <div className="app-watering-dropzone-icon">
                   <Upload size={22} />
                 </div>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-primary-50)' }}>
+                <div className="app-watering-dropzone-title">
                   Apasă sau trage poza cu udarea aici
                 </div>
-                <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+                <div className="hig-footnote hig-secondary">
                   Format JPG sau PNG
                 </div>
 
                 {/* Demo photo button */}
-                <div style={{ marginTop: '12px' }}>
+                <div className="app-watering-demo-btn-wrap">
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       simulatePhotoUpload();
                     }}
-                    style={{
-                      padding: '7px 14px',
-                      borderRadius: '20px',
-                      border: '1px solid rgba(56, 189, 248, 0.3)',
-                      backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                      color: '#38BDF8',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
+                    className="app-watering-demo-btn"
                   >
-                    <Sparkles size={14} color="#38BDF8" />
+                    <Sparkles size={14} />
                     Folosește o poză demonstrativă
                   </button>
                 </div>
               </div>
             ) : (
-              <div style={{ borderRadius: '16px', border: '1px solid var(--border-color)', overflow: 'hidden', backgroundColor: 'var(--bg-surface-elevated)' }}>
+              <div className="app-watering-photo-preview">
                 {/* Photo Thumbnail Container */}
-                <div style={{ position: 'relative', width: '100%', height: '160px', backgroundColor: '#060f0e' }}>
+                <div className="app-watering-photo-thumb">
                   <img
                     src={photoPreview}
                     alt="Dovadă udare"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                   <button
                     type="button"
                     onClick={handleRemovePhoto}
-                    style={{
-                      position: 'absolute',
-                      top: '8px',
-                      right: '8px',
-                      backgroundColor: 'rgba(15, 23, 42, 0.75)',
-                      color: '#ffffff',
-                      border: 'none',
-                      borderRadius: '50%',
-                      width: '28px',
-                      height: '28px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                    }}
+                    className="app-watering-photo-remove"
                     title="Șterge foto"
                   >
                     <X size={16} />
@@ -414,33 +284,21 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                 </div>
 
                 {/* AI Verification Status Box */}
-                <div style={{ padding: '12px 16px' }}>
+                <div className="app-watering-verify-status">
                   {isVerifying ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#38BDF8' }}>
-                      <RefreshCw size={18} className="spin-icon" style={{ animation: 'spin 1s linear infinite' }} />
-                      <span style={{ fontSize: '13px', fontWeight: 600 }}>
+                    <div className="app-watering-verifying">
+                      <RefreshCw size={18} />
+                      <span>
                         Se verifică poza...
                       </span>
                     </div>
                   ) : isPhotoVerified ? (
                     <div>
-                      <div style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        backgroundColor: 'rgba(52, 216, 122, 0.12)',
-                        border: '1px solid rgba(52, 216, 122, 0.3)',
-                        color: 'var(--color-primary-400)',
-                        padding: '6px 12px',
-                        borderRadius: '20px',
-                        fontSize: '13px',
-                        fontWeight: 800,
-                        marginBottom: '6px',
-                      }}>
+                      <div className="app-watering-verified-badge">
                         <Sparkles size={16} />
                         <span>Poză validată! +50 EcoPuncte Bonus</span>
                       </div>
-                      <div style={{ fontSize: '11px', color: 'var(--color-primary-400)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <div className="app-watering-verified-note">
                         <CheckCircle2 size={13} />
                         Poza cu udarea a fost confirmată. Mulțumim!
                       </div>
@@ -452,94 +310,42 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
           </div>
 
           {/* EcoPoints Total Banner */}
-          <div
-            style={{
-              backgroundColor: 'rgba(251, 191, 36, 0.08)',
-              border: '1px solid rgba(251, 191, 36, 0.2)',
-              padding: '14px 16px',
-              borderRadius: '16px',
-              marginBottom: '24px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(251, 191, 36, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '20px',
-              }}>
-                <Trophy size={22} color="#FBBF24" />
+          <div className="app-watering-points-banner">
+            <div className="app-watering-points-left">
+              <div className="app-watering-points-icon">
+                <Trophy size={22} />
               </div>
               <div>
-                <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--color-primary-50)' }}>
+                <div className="app-watering-points-total">
                   Total: +{totalPoints} EcoPuncte!
                 </div>
-                <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
+                <div className="hig-footnote hig-secondary">
                   Bază: +{basePoints} pct ({liters}L) {isPhotoVerified ? '• Bonus Foto: +50 pct' : ''}
                 </div>
               </div>
             </div>
 
             {!isPhotoVerified && (
-              <span style={{ fontSize: '11px', color: '#FBBF24', fontStyle: 'italic' }}>
+              <span className="app-watering-points-hint">
                 Adaugă foto pt. +50 bonus
               </span>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button
-              type="button"
-              onClick={onClose}
-              style={{
-                flex: 1,
-                padding: '12px',
-                borderRadius: '14px',
-                border: '1px solid var(--border-color)',
-                backgroundColor: 'var(--bg-surface-elevated)',
-                color: 'var(--color-text-muted)',
-                fontWeight: 700,
-                fontSize: '14px',
-                cursor: 'pointer',
-              }}
-            >
+          <div className="app-sheet-actions">
+            <button type="button" onClick={onClose} className="hig-button plain">
               Anulează
             </button>
 
-            <button
-              type="submit"
-              style={{
-                flex: 1.5,
-                padding: '12px',
-                borderRadius: '14px',
-                border: 'none',
-                backgroundColor: '#0EA5E9',
-                color: '#ffffff',
-                fontWeight: 800,
-                fontSize: '14px',
-                cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(14, 165, 233, 0.35)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-              }}
-            >
+            <button type="submit" className="hig-button">
               <span>Salvează Udarea</span>
               <span>💧 (+{totalPoints} pct)</span>
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </>
   );
 };
 

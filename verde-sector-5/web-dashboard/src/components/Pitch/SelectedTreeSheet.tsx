@@ -2,7 +2,6 @@ import React from 'react';
 import type { TreeItem } from '../../types/tree';
 import { X, Sprout, Droplets, MapPin, ShieldCheck } from 'lucide-react';
 import { TreeCareDetails } from './TreeCareDetails';
-import './SelectedTreeSheet.css';
 
 interface SelectedTreeSheetProps {
   tree: TreeItem | null;
@@ -24,126 +23,111 @@ export const SelectedTreeSheet: React.FC<SelectedTreeSheetProps> = ({
   const getHealthBadge = (health: string) => {
     switch (health) {
       case 'EXCELLENT':
-        return { label: 'Stare Excelentă 🌿', bg: '#dcfce7', color: '#166534' };
+        return { label: 'Stare Excelentă 🌿', className: 'app-health-excellent' };
       case 'GOOD':
-        return { label: 'Stare Bună 🌱', bg: '#f0fdf4', color: '#15803d' };
+        return { label: 'Stare Bună 🌱', className: 'app-health-good' };
       case 'NEEDS_WATER':
-        return { label: 'Necesită Udare 💧', bg: '#e0f2fe', color: '#0369a1' };
+        return { label: 'Necesită Udare 💧', className: 'app-health-needs-water' };
       default:
-        return { label: 'Atenție Necesară ⚠️', bg: '#fef2f2', color: '#991b1b' };
+        return { label: 'Atenție Necesară ⚠️', className: 'app-health-attention' };
     }
   };
 
   const healthBadge = getHealthBadge(tree.healthStatus);
 
   return (
-    <div className="selected-tree-sheet-overlay" onClick={onClose}>
-      <div className="selected-tree-sheet" onClick={(e) => e.stopPropagation()}>
-        <div className="sheet-handle-bar" />
-        
-        <div className="sheet-header">
+    <>
+      <div className="hig-scrim" onClick={onClose} />
+      <div className="hig-sheet app-tree-sheet">
+        <div className="app-tree-sheet-handle" />
+
+        <div className="app-sheet-header">
           <div>
-            <div className="sheet-badge-group">
-              <span className="sheet-neighborhood-code">
+            <div className="app-tree-sheet-badges">
+              <span className="app-tree-sheet-code">
                 <MapPin size={12} /> {tree.neighborhood} • {tree.code}
               </span>
-              <span className="sheet-health-badge" style={{ backgroundColor: healthBadge.bg, color: healthBadge.color }}>
+              <span className={`app-health-badge ${healthBadge.className}`}>
                 {healthBadge.label}
               </span>
             </div>
-            <h3 className="sheet-tree-name">{tree.nickname || `Copac Specia ${tree.species}`}</h3>
+            <h3>{tree.nickname || `Copac Specia ${tree.species}`}</h3>
           </div>
-          <button className="sheet-close-btn" onClick={onClose} aria-label="Închide detalii copac">
+          <button className="app-sheet-close" onClick={onClose} aria-label="Închide detalii copac">
             <X size={20} />
           </button>
         </div>
 
-        <div className="sheet-body">
-          <div className="sheet-info-grid">
-            <div className="sheet-info-item">
-              <span className="sheet-info-label">Specie Arboricolă</span>
-              <span className="sheet-info-value">{tree.species}</span>
-            </div>
-            <div className="sheet-info-item">
-              <span className="sheet-info-label">Statut Adopție</span>
-              <span className="sheet-info-value">
-                {tree.isAdopted ? `🌟 Adoptat de ${tree.adopterName}` : '🟢 Disponibil'}
-              </span>
-            </div>
-            <div className="sheet-info-item">
-              <span className="sheet-info-label">Total Udări Logate</span>
-              <span className="sheet-info-value">💧 {tree.wateringsCount || 0} udări</span>
-            </div>
-            {tree.notes && (
-              <div className="sheet-info-item" style={{ gridColumn: 'span 2' }}>
-                <span className="sheet-info-label">Adresă / Locație Teren</span>
-                <span className="sheet-info-value">{tree.notes}</span>
-              </div>
-            )}
+        <div className="app-tree-sheet-info-grid">
+          <div className="app-tree-sheet-info-item">
+            <span className="hig-caption hig-secondary">Specie Arboricolă</span>
+            <span className="app-tree-sheet-info-value">{tree.species}</span>
           </div>
+          <div className="app-tree-sheet-info-item">
+            <span className="hig-caption hig-secondary">Statut Adopție</span>
+            <span className="app-tree-sheet-info-value">
+              {tree.isAdopted ? `🌟 Adoptat de ${tree.adopterName}` : '🟢 Disponibil'}
+            </span>
+          </div>
+          <div className="app-tree-sheet-info-item">
+            <span className="hig-caption hig-secondary">Total Udări Logate</span>
+            <span className="app-tree-sheet-info-value">💧 {tree.wateringsCount || 0} udări</span>
+          </div>
+          {tree.notes && (
+            <div className="app-tree-sheet-info-item app-tree-sheet-info-item-wide">
+              <span className="hig-caption hig-secondary">Adresă / Locație Teren</span>
+              <span className="app-tree-sheet-info-value">{tree.notes}</span>
+            </div>
+          )}
+        </div>
 
-          <TreeCareDetails tree={tree} />
+        <TreeCareDetails tree={tree} />
 
-          {/* Action Buttons */}
-          <div className="sheet-actions">
-            {!tree.isAdopted ? (
-              <button
-                className="btn-sheet-adopt"
-                onClick={() => {
-                  onClose();
-                  onAdoptClick(tree);
-                }}
-              >
-                <Sprout size={16} />
-                <span>Adoptă Copacul (+100 EcoPuncte)</span>
-              </button>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
-                <div className="adopted-status-banner">
-                  <ShieldCheck size={18} color="#22c55e" />
-                  <span>Copac Adoptat & Îngrijit Comunitar</span>
-                </div>
-                {onCertClick && (
-                  <button
-                    onClick={() => {
-                      onClose();
-                      onCertClick(tree);
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: '10px',
-                      borderRadius: '12px',
-                      backgroundColor: '#059669',
-                      color: '#ffffff',
-                      border: 'none',
-                      fontWeight: 700,
-                      fontSize: '13px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    📜 Afișează & Descarcă Certificat Adopție
-                  </button>
-                )}
-              </div>
-            )}
-
+        {/* Action Buttons */}
+        <div className="app-tree-sheet-actions">
+          {!tree.isAdopted ? (
             <button
-              className="btn-sheet-water"
+              className="hig-button"
               onClick={() => {
                 onClose();
-                onWaterClick(tree);
+                onAdoptClick(tree);
               }}
             >
-              <Droplets size={16} />
-              <span>Loghează Udare (+50 EcoPuncte)</span>
+              <Sprout size={16} />
+              <span>Adoptă Copacul (+100 EcoPuncte)</span>
             </button>
-          </div>
+          ) : (
+            <div className="app-tree-sheet-adopted-group">
+              <div className="app-tree-sheet-adopted-banner">
+                <ShieldCheck size={18} />
+                <span>Copac Adoptat & Îngrijit Comunitar</span>
+              </div>
+              {onCertClick && (
+                <button
+                  className="hig-button"
+                  onClick={() => {
+                    onClose();
+                    onCertClick(tree);
+                  }}
+                >
+                  📜 Afișează & Descarcă Certificat Adopție
+                </button>
+              )}
+            </div>
+          )}
+
+          <button
+            className="hig-button tinted"
+            onClick={() => {
+              onClose();
+              onWaterClick(tree);
+            }}
+          >
+            <Droplets size={16} />
+            <span>Loghează Udare (+50 EcoPuncte)</span>
+          </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
