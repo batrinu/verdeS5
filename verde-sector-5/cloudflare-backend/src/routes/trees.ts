@@ -4,6 +4,10 @@ import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
 import { AppEnv } from '../types/hono';
 import { storePhoto } from '../lib/photoStore';
+import { optionalJwtMiddleware } from './auth';
+import { awardPoints, POINTS } from '../lib/points';
+import { composeTreeMessage } from '../lib/treeMessages';
+import { computeWaterStatus } from '../lib/waterStatus';
 
 const trees = new Hono<AppEnv>();
 
@@ -247,7 +251,7 @@ trees.post('/:id/adopt', jwtMiddleware, async (c) => {
 });
 
 // Water tree
-trees.post('/:id/water', async (c) => {
+trees.post('/:id/water', optionalJwtMiddleware, async (c) => {
   const prisma = c.get('prisma');
   const id = c.req.param('id');
 
@@ -300,7 +304,50 @@ trees.post('/:id/water', async (c) => {
       },
     });
 
-    return c.json({ tree: updatedTree, wateringLog });
+    // Voice of the tree (spec §3.2): status BEFORE this watering drives the tone.
+    const statusBefore = computeWaterStatus({
+      species: tree.species,
+      plantingDate: tree.plantingDate,
+      lastWateredAt: tree.lastWateredAt,
+    });
+    const treeMessage = composeTreeMessage({
+      nickname: tree.nickname,
+      waterStatusBefore: statusBefore,
+      month: new Date().getMonth(),
+      liters,
+    });
+    await prisma.treeMessage.create({
+      data: { treeId: id, text: treeMessage },
+    }).catch(() => {});
+
+    // Notify the adopter that their tree "wrote" to them.
+    if (tree.adoptedById) {
+      await prisma.notification.create({
+        data: {
+          userId: tree.adoptedById,
+          title: 'Mesaj de la copacul tău 🌳',
+          message: treeMessage,
+          notificationType: 'TREE_MESSAGE',
+          relatedObjectId: id,
+          relatedObjectType: 'TREE',
+        },
+      }).catch(() => {});
+    }
+
+    // Personal points only for authenticated citizens (spec §3.5); anonymous
+    // waterings still count for the tree, neighborhood and challenge.
+    const user = c.get('user') as { id: string } | undefined;
+    if (user?.id) {
+      await awardPoints(prisma, {
+        userId: user.id,
+        action: 'WATERING',
+        points: earnedPoints,
+        refType: 'WATERING_LOG',
+        refId: wateringLog.id,
+      }).catch((err) => console.error('awardPoints failed:', err));
+    }
+
+    return c.json({ tree: updatedTree, wateringLog, treeMessage });
   } catch (error) {
     console.error('Water tree error:', error);
     return c.json({ error: 'Failed to log tree watering' }, 500);

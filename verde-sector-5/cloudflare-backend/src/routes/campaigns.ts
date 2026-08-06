@@ -3,6 +3,7 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
 import { AppEnv } from '../types/hono';
+import { awardPoints, POINTS } from '../lib/points';
 
 const campaigns = new Hono<AppEnv>();
 
@@ -235,6 +236,14 @@ campaigns.post('/:id/join', jwtMiddleware, async (c) => {
         relatedObjectType: 'PLANTING_CAMPAIGN',
       },
     });
+
+    await awardPoints(prisma, {
+      userId: user.id,
+      action: 'CAMPAIGN_JOIN',
+      points: POINTS.CAMPAIGN_JOIN,
+      refType: 'PLANTING_CAMPAIGN',
+      refId: campaign.id,
+    }).catch((err) => console.error('awardPoints failed:', err));
 
     return c.json({ message: 'Successfully joined campaign' });
   } catch (error) {
