@@ -44,10 +44,48 @@ CREATE TABLE IF NOT EXISTS trees (
   greenSpaceId TEXT REFERENCES green_spaces(id),
   notes TEXT,
   photos TEXT NOT NULL DEFAULT '[]',
+  neighborhood TEXT NOT NULL DEFAULT 'RAHOVA',
+  nickname TEXT,
+  lastWateredAt DATETIME,
   createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_trees_location ON trees(latitude, longitude);
+CREATE INDEX IF NOT EXISTS idx_trees_neighborhood ON trees(neighborhood);
+
+-- Watering logs table
+CREATE TABLE IF NOT EXISTS watering_logs (
+  id TEXT PRIMARY KEY,
+  treeId TEXT NOT NULL REFERENCES trees(id) ON DELETE CASCADE,
+  userName TEXT NOT NULL,
+  liters INTEGER NOT NULL DEFAULT 10,
+  earnedPoints INTEGER NOT NULL DEFAULT 50,
+  loggedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_watering_logs_treeId ON watering_logs(treeId);
+
+-- Care alerts table
+CREATE TABLE IF NOT EXISTS care_alerts (
+  id TEXT PRIMARY KEY,
+  neighborhood TEXT NOT NULL,
+  alertType TEXT NOT NULL DEFAULT 'HEATWAVE_DRYNESS',
+  message TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'ACTIVE',
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_care_alerts_neighborhood ON care_alerts(neighborhood);
+CREATE INDEX IF NOT EXISTS idx_care_alerts_status ON care_alerts(status);
+
+-- Neighborhood stats table
+CREATE TABLE IF NOT EXISTS neighborhood_stats (
+  id TEXT PRIMARY KEY,
+  neighborhood TEXT UNIQUE NOT NULL,
+  totalTrees INTEGER NOT NULL DEFAULT 0,
+  adoptedTrees INTEGER NOT NULL DEFAULT 0,
+  wateringsCount INTEGER NOT NULL DEFAULT 0,
+  ecoPoints INTEGER NOT NULL DEFAULT 0,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Reports table
 CREATE TABLE IF NOT EXISTS reports (
@@ -89,14 +127,6 @@ CREATE TABLE IF NOT EXISTS report_assignments (
 CREATE INDEX IF NOT EXISTS idx_report_assignments_reportId ON report_assignments(reportId);
 CREATE INDEX IF NOT EXISTS idx_report_assignments_fieldWorkerId ON report_assignments(fieldWorkerId);
 
--- M2M join table for campaign volunteers
-CREATE TABLE IF NOT EXISTS _CampaignVolunteers (
-  A TEXT NOT NULL REFERENCES planting_campaigns(id),
-  B TEXT NOT NULL REFERENCES users(id),
-  UNIQUE(A, B)
-);
-CREATE INDEX IF NOT EXISTS idx_campaign_volunteers_B ON _CampaignVolunteers(B);
-
 -- Planting campaigns table
 CREATE TABLE IF NOT EXISTS planting_campaigns (
   id TEXT PRIMARY KEY,
@@ -120,6 +150,14 @@ CREATE TABLE IF NOT EXISTS planting_campaigns (
 );
 CREATE INDEX IF NOT EXISTS idx_planting_campaigns_status ON planting_campaigns(status);
 CREATE INDEX IF NOT EXISTS idx_planting_campaigns_startDate ON planting_campaigns(startDate);
+
+-- M2M join table for campaign volunteers
+CREATE TABLE IF NOT EXISTS _CampaignVolunteers (
+  A TEXT NOT NULL REFERENCES planting_campaigns(id),
+  B TEXT NOT NULL REFERENCES users(id),
+  UNIQUE(A, B)
+);
+CREATE INDEX IF NOT EXISTS idx_campaign_volunteers_B ON _CampaignVolunteers(B);
 
 -- Notifications table
 CREATE TABLE IF NOT EXISTS notifications (
