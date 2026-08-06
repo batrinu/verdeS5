@@ -40,7 +40,7 @@ const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 app.use('*', logger());
 app.use('*', secureHeaders());
 app.use('*', cors({
-  origin: ['http://localhost:3000', 'https://verde-sector5.ro', 'https://staging.verde-sector5.ro'],
+  origin: ['http://localhost:3000', 'https://verde-sector5.ro', 'https://staging.verde-sector5.ro', 'https://verde-sector-5.pages.dev'],
   allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

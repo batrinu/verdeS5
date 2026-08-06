@@ -12,11 +12,13 @@ REFRESH_TOKEN_EXPIRY = "30d"
 [[d1_databases]]
 binding = "DB"
 database_name = "verde-sector-5-db"
-database_id = "local"
+database_id = "c9685e24-748a-412c-955e-37a46b8bb063"
 
-[[r2_buckets]]
-binding = "PHOTOS"
-bucket_name = "verde-sector-5-photos"
+# R2 not yet enabled on the account (photo uploads only). Re-enable this binding
+# after activating R2 in the Cloudflare dashboard.
+# [[r2_buckets]]
+# binding = "PHOTOS"
+# bucket_name = "verde-sector-5-photos"
 
 [env.production]
 [env.production.vars]
