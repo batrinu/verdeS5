@@ -1,6 +1,15 @@
 import type { TreeItem, CareAlertItem, DistrictStat } from '../types/tree';
 import { API_BASE_URL } from '../config';
 
+function getAuthHeaders(): Record<string, string> {
+  const token = localStorage.getItem('verde_s5_jwt_token') || localStorage.getItem('verde_s5_token');
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
 export async function fetchTreesFromApi(neighborhood?: string): Promise<TreeItem[] | null> {
   try {
     const url = neighborhood && neighborhood !== 'ALL'
@@ -23,7 +32,7 @@ export async function adoptTreeApi(treeId: string, adopterName: string, nickname
   try {
     const res = await fetch(`${API_BASE_URL}/trees/${encodeURIComponent(treeId)}/adopt`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ adopterName, nickname }),
     });
     if (res.ok) {
@@ -46,7 +55,7 @@ export async function waterTreeApi(
   try {
     const res = await fetch(`${API_BASE_URL}/trees/${encodeURIComponent(treeId)}/water`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ liters, userName, photoProofUrl, isPhotoVerified }),
     });
     if (res.ok) {
@@ -90,7 +99,7 @@ export async function createAlertApi(
     };
     const res = await fetch(`${API_BASE_URL}/alerts`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
       body: JSON.stringify(newAlert),
     });
     if (res.ok) {

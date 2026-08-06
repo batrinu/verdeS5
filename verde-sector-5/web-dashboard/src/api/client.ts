@@ -1,20 +1,25 @@
 import { API_BASE_URL } from '../config';
 
-const TOKEN_KEY = 'verde_s5_token';
+const TOKEN_KEY = 'verde_s5_jwt_token';
+const LEGACY_TOKEN_KEY = 'verde_s5_token';
 const REFRESH_TOKEN_KEY = 'verde_s5_refresh_token';
 
 export const setTokens = (token: string, refreshToken?: string) => {
-  localStorage.setItem(TOKEN_KEY, token);
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(LEGACY_TOKEN_KEY, token);
+  }
   if (refreshToken) {
     localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
   }
 };
 
-export const getToken = () => localStorage.getItem(TOKEN_KEY);
+export const getToken = () => localStorage.getItem(TOKEN_KEY) || localStorage.getItem(LEGACY_TOKEN_KEY);
 export const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN_KEY);
 
 export const clearTokens = () => {
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(LEGACY_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
 };
 
