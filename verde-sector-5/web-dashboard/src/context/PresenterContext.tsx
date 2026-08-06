@@ -9,6 +9,8 @@ interface PresenterContextType {
   setSelectedNeighborhood: (neighborhood: string) => void;
   userPoints: number;
   addPoints: (amount: number) => void;
+  lifetimePoints: number;
+  spendPoints: (amount: number) => boolean;
   userWaterings: number;
   incrementWaterings: () => void;
   userName: string;
@@ -20,12 +22,22 @@ const PresenterContext = createContext<PresenterContextType | undefined>(undefin
 export const PresenterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [role, setRole] = useState<PitchRole>('CITIZEN');
   const [selectedNeighborhood, setSelectedNeighborhood] = useState<string>('ALL');
-  const [userPoints, setUserPoints] = useState<number>(350);
+  const [userPoints, setUserPoints] = useState<number>(780);
+  const [lifetimePoints, setLifetimePoints] = useState<number>(780);
   const [userWaterings, setUserWaterings] = useState<number>(7);
   const [userName, setUserName] = useState<string>('Elena Popa');
 
-  const addPoints = (amount: number) => setUserPoints(prev => prev + amount);
+  const addPoints = (amount: number) => {
+    setUserPoints(prev => prev + amount);
+    setLifetimePoints(prev => prev + amount);
+  };
   const incrementWaterings = () => setUserWaterings(prev => prev + 1);
+
+  const spendPoints = (amount: number): boolean => {
+    if (userPoints < amount) return false;
+    setUserPoints(prev => prev - amount);
+    return true;
+  };
 
   return (
     <PresenterContext.Provider
@@ -36,6 +48,8 @@ export const PresenterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setSelectedNeighborhood,
         userPoints,
         addPoints,
+        lifetimePoints,
+        spendPoints,
         userWaterings,
         incrementWaterings,
         userName,

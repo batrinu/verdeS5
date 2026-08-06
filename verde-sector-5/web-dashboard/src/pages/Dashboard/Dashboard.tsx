@@ -8,6 +8,8 @@ import { AdoptionCertificateModal } from '../../components/UI/AdoptionCertificat
 import { ToastContainer, type ToastAlert } from '../../components/UI/ToastContainer';
 import { DistrictLeaderboard } from '../../components/Pitch/DistrictLeaderboard';
 import { CitizenAlertsFeed } from '../../components/Pitch/CitizenAlertsFeed';
+import { GuardianCard, SectorImpactStrip } from '../../components/Pitch/GuardianCard';
+import { ChallengeWidget } from '../../components/Pitch/ChallengeWidget';
 import { CouncilAlertDispatcher } from '../../components/Pitch/CouncilAlertDispatcher';
 import { CouncilAnalyticsBoard } from '../../components/Pitch/CouncilAnalyticsBoard';
 import { PitchHeader } from '../../components/Pitch/PitchHeader';
@@ -300,8 +302,11 @@ export const Dashboard: React.FC = () => {
                 <div className="skeleton-row" />
               </div>
             ) : role === 'CITIZEN' ? (
-              /* Citizen Persona: District Leaderboard + Active Alerts Feed */
+              /* Citizen Persona: Guardian Card, Challenge, Sector Impact, Leaderboard + Alerts */
               <>
+                <GuardianCard />
+                <ChallengeWidget />
+                <SectorImpactStrip trees={trees} />
                 <DistrictLeaderboard
                   stats={stats}
                   selectedNeighborhood={selectedNeighborhood}

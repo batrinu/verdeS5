@@ -1,0 +1,167 @@
+/* Shared styles for GuardianCard, SectorImpactStrip and ChallengeWidget
+   (spec §3.4 guardian card, §3.6 seasonal challenge, §7 sector impact rollup).
+   Width transitions on progress fills are skipped under prefers-reduced-motion
+   via the global guard in src/index.css. */
+
+.guardian-card,
+.challenge-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+/* Guardian card */
+
+.guardian-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-primary-400);
+}
+
+.guardian-header div {
+  display: flex;
+  flex-direction: column;
+}
+
+.guardian-header strong {
+  font-size: 14px;
+  color: var(--color-primary-50);
+  font-family: var(--font-family-heading);
+}
+
+.guardian-level-title {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.guardian-next {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.guardian-privilege {
+  margin: 0;
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.guardian-stats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.guardian-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.guardian-rewards-link {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary-400);
+  text-decoration: none;
+}
+
+.guardian-rewards-link:hover {
+  color: var(--color-primary-300);
+  text-decoration: underline;
+}
+
+/* Progress tracks (shared shape, guardian + challenge) */
+
+.guardian-progress,
+.challenge-progress {
+  height: 8px;
+  border-radius: 999px;
+  background-color: var(--bg-surface-elevated);
+  overflow: hidden;
+}
+
+.guardian-progress-fill,
+.challenge-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-primary-600), var(--color-primary-400));
+  transition: width var(--transition-normal);
+}
+
+/* Sector impact strip (spec §7) */
+
+.sector-impact-strip {
+  margin: 0;
+  padding: 8px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.sector-impact-strip em {
+  font-style: normal;
+}
+
+/* Challenge widget */
+
+.challenge-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-primary-400);
+}
+
+.challenge-header strong {
+  font-size: 14px;
+  color: var(--color-primary-50);
+  font-family: var(--font-family-heading);
+}
+
+.challenge-numbers {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.challenge-hoods {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.challenge-hoods li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.challenge-hoods li span:last-child {
+  color: var(--color-text-muted);
+}
+
+.challenge-sponsor {
+  margin: 0;
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.challenge-sponsor em {
+  font-style: normal;
+}
