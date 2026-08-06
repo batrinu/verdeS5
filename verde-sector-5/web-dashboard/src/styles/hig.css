@@ -1,0 +1,707 @@
+/* ==========================================================================
+   hig.css — Apple Human Interface Guidelines for web & desktop UIs
+   Drop-in stylesheet: design tokens + components, light & dark themes.
+   Theme switching: automatic via prefers-color-scheme; force with
+   <html data-theme="light"> or <html data-theme="dark">.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKENS — light theme (default)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Palette (iOS/macOS system colors) — use for tint/accent only */
+  --hig-blue:   #007AFF;
+  --hig-green:  #34C759;
+  --hig-indigo: #5856D6;
+  --hig-orange: #FF9500;
+  --hig-pink:   #FF2D55;
+  --hig-purple: #AF52DE;
+  --hig-red:    #FF3B30;
+  --hig-teal:   #30B0C7;
+  --hig-yellow: #FFCC00;
+  --hig-mint:   #00C7BE;
+  --hig-cyan:   #32ADE6;
+  --hig-brown:  #A2845E;
+
+  /* Grays */
+  --hig-gray:   #8E8E93;
+  --hig-gray2:  #AEAEB2;
+  --hig-gray3:  #C7C7CC;
+  --hig-gray4:  #D1D1D6;
+  --hig-gray5:  #E5E5EA;
+  --hig-gray6:  #F2F2F7;
+
+  /* Semantic: the app's single accent (change this to re-tint everything) */
+  --hig-tint:          var(--hig-blue);
+  --hig-tint-contrast: #FFFFFF;
+
+  /* Labels (text) */
+  --hig-label:            rgba(0, 0, 0, 1);
+  --hig-label-secondary:  rgba(60, 60, 67, 0.60);
+  --hig-label-tertiary:   rgba(60, 60, 67, 0.30);
+  --hig-label-quaternary: rgba(60, 60, 67, 0.18);
+
+  /* Fills (control backgrounds over any content) */
+  --hig-fill:            rgba(120, 120, 128, 0.20);
+  --hig-fill-secondary:  rgba(120, 120, 128, 0.16);
+  --hig-fill-tertiary:   rgba(120, 120, 128, 0.12);
+  --hig-fill-quaternary: rgba(120, 120, 128, 0.08);
+
+  /* Backgrounds — grouped style (settings-like screens) */
+  --hig-bg:           #F2F2F7;  /* page */
+  --hig-bg-secondary: #FFFFFF;  /* cards, list groups */
+  --hig-bg-tertiary:  #F2F2F7;  /* nested fills inside cards */
+  /* Backgrounds — plain style (content screens: mail list, editors) */
+  --hig-bg-plain:           #FFFFFF;
+  --hig-bg-plain-secondary: #F2F2F7;
+
+  --hig-separator:        rgba(60, 60, 67, 0.29);
+  --hig-separator-opaque: #C6C6C8;
+
+  /* Material (translucent bars/sidebars) */
+  --hig-material:        rgba(249, 249, 249, 0.78);
+  --hig-material-border: rgba(0, 0, 0, 0.10);
+
+  /* Typography */
+  --hig-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+              Roboto, "Helvetica Neue", Arial, sans-serif;
+  --hig-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  --hig-text-large-title: 34px;  /* weight 700, one per screen */
+  --hig-text-title1:      28px;  /* 700 */
+  --hig-text-title2:      22px;  /* 700 */
+  --hig-text-title3:      20px;  /* 600 */
+  --hig-text-headline:    17px;  /* 600 — emphasized body */
+  --hig-text-body:        17px;  /* 400 */
+  --hig-text-callout:     16px;  /* 400 */
+  --hig-text-subheadline: 15px;  /* 400 */
+  --hig-text-footnote:    13px;  /* 400 */
+  --hig-text-caption:     12px;  /* 400 */
+  --hig-text-caption2:    11px;  /* 400 */
+
+  /* Spacing (8pt grid) */
+  --hig-space-1: 4px;
+  --hig-space-2: 8px;
+  --hig-space-3: 12px;
+  --hig-space-4: 16px;
+  --hig-space-5: 20px;
+  --hig-space-6: 24px;
+  --hig-space-8: 32px;
+
+  /* Radii */
+  --hig-radius-sm:   6px;   /* small controls, tags */
+  --hig-radius-md:   10px;  /* buttons, fields, segmented */
+  --hig-radius-lg:   12px;  /* cards, list groups */
+  --hig-radius-xl:   16px;  /* sheets, large panels */
+  --hig-radius-full: 980px; /* pills, switches */
+
+  /* Elevation (only for things that float) */
+  --hig-shadow-menu:  0 0 0 0.5px rgba(0,0,0,0.05), 0 5px 30px rgba(0,0,0,0.18);
+  --hig-shadow-sheet: 0 0 0 0.5px rgba(0,0,0,0.05), 0 10px 60px rgba(0,0,0,0.25);
+
+  /* Motion */
+  --hig-ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --hig-duration-fast: 150ms;
+  --hig-duration:      250ms;
+
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   2. TOKENS — dark theme
+   -------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hig-blue:   #0A84FF;
+    --hig-green:  #30D158;
+    --hig-indigo: #5E5CE6;
+    --hig-orange: #FF9F0A;
+    --hig-pink:   #FF375F;
+    --hig-purple: #BF5AF2;
+    --hig-red:    #FF453A;
+    --hig-teal:   #40C8E0;
+    --hig-yellow: #FFD60A;
+    --hig-mint:   #63E6E2;
+    --hig-cyan:   #64D2FF;
+    --hig-brown:  #AC8E68;
+
+    --hig-gray2: #636366;
+    --hig-gray3: #48484A;
+    --hig-gray4: #3A3A3C;
+    --hig-gray5: #2C2C2E;
+    --hig-gray6: #1C1C1E;
+
+    --hig-label:            rgba(255, 255, 255, 1);
+    --hig-label-secondary:  rgba(235, 235, 245, 0.60);
+    --hig-label-tertiary:   rgba(235, 235, 245, 0.30);
+    --hig-label-quaternary: rgba(235, 235, 245, 0.16);
+
+    --hig-fill:            rgba(120, 120, 128, 0.36);
+    --hig-fill-secondary:  rgba(120, 120, 128, 0.32);
+    --hig-fill-tertiary:   rgba(120, 120, 128, 0.24);
+    --hig-fill-quaternary: rgba(120, 120, 128, 0.18);
+
+    --hig-bg:           #000000;
+    --hig-bg-secondary: #1C1C1E;
+    --hig-bg-tertiary:  #2C2C2E;
+    --hig-bg-plain:           #000000;
+    --hig-bg-plain-secondary: #1C1C1E;
+
+    --hig-separator:        rgba(84, 84, 88, 0.60);
+    --hig-separator-opaque: #38383A;
+
+    --hig-material:        rgba(30, 30, 30, 0.72);
+    --hig-material-border: rgba(255, 255, 255, 0.10);
+
+    --hig-shadow-menu:  0 0 0 0.5px rgba(255,255,255,0.08), 0 5px 30px rgba(0,0,0,0.55);
+    --hig-shadow-sheet: 0 0 0 0.5px rgba(255,255,255,0.08), 0 10px 60px rgba(0,0,0,0.65);
+
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --hig-blue:   #0A84FF;
+  --hig-green:  #30D158;
+  --hig-indigo: #5E5CE6;
+  --hig-orange: #FF9F0A;
+  --hig-pink:   #FF375F;
+  --hig-purple: #BF5AF2;
+  --hig-red:    #FF453A;
+  --hig-teal:   #40C8E0;
+  --hig-yellow: #FFD60A;
+  --hig-mint:   #63E6E2;
+  --hig-cyan:   #64D2FF;
+  --hig-brown:  #AC8E68;
+
+  --hig-gray2: #636366;
+  --hig-gray3: #48484A;
+  --hig-gray4: #3A3A3C;
+  --hig-gray5: #2C2C2E;
+  --hig-gray6: #1C1C1E;
+
+  --hig-label:            rgba(255, 255, 255, 1);
+  --hig-label-secondary:  rgba(235, 235, 245, 0.60);
+  --hig-label-tertiary:   rgba(235, 235, 245, 0.30);
+  --hig-label-quaternary: rgba(235, 235, 245, 0.16);
+
+  --hig-fill:            rgba(120, 120, 128, 0.36);
+  --hig-fill-secondary:  rgba(120, 120, 128, 0.32);
+  --hig-fill-tertiary:   rgba(120, 120, 128, 0.24);
+  --hig-fill-quaternary: rgba(120, 120, 128, 0.18);
+
+  --hig-bg:           #000000;
+  --hig-bg-secondary: #1C1C1E;
+  --hig-bg-tertiary:  #2C2C2E;
+  --hig-bg-plain:           #000000;
+  --hig-bg-plain-secondary: #1C1C1E;
+
+  --hig-separator:        rgba(84, 84, 88, 0.60);
+  --hig-separator-opaque: #38383A;
+
+  --hig-material:        rgba(30, 30, 30, 0.72);
+  --hig-material-border: rgba(255, 255, 255, 0.10);
+
+  --hig-shadow-menu:  0 0 0 0.5px rgba(255,255,255,0.08), 0 5px 30px rgba(0,0,0,0.55);
+  --hig-shadow-sheet: 0 0 0 0.5px rgba(255,255,255,0.08), 0 10px 60px rgba(0,0,0,0.65);
+
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   2b. DESKTOP DENSITY — add class "hig-desktop" to <html> for macOS-scale
+   typography and control sizing (Electron/desktop apps). Per HIG, desktop
+   default body is 13px vs 17px on touch platforms; 17px body on desktop
+   reads as inflated and non-native.
+   -------------------------------------------------------------------------- */
+.hig-desktop {
+  --hig-text-large-title: 26px;
+  --hig-text-title1:      22px;
+  --hig-text-title2:      17px;
+  --hig-text-title3:      15px;
+  --hig-text-headline:    13px;  /* bold on macOS */
+  --hig-text-body:        13px;
+  --hig-text-callout:     12px;
+  --hig-text-subheadline: 11px;
+  --hig-text-footnote:    10px;
+  --hig-text-caption:     10px;
+  --hig-text-caption2:    10px;
+}
+.hig-desktop .hig-headline { font-weight: 700; }
+.hig-desktop .hig-button { min-height: 28px; font-size: 13px; border-radius: var(--hig-radius-sm); }
+.hig-desktop .hig-button.large { min-height: 36px; font-size: 13px; }
+.hig-desktop .hig-field { min-height: 28px; font-size: 13px; }
+.hig-desktop .hig-list-item { min-height: 32px; font-size: 13px; }
+.hig-desktop .hig-sidebar-item { min-height: 28px; font-size: 13px; }
+.hig-desktop .hig-switch span { width: 40px; height: 24px; }
+.hig-desktop .hig-switch span::after { width: 20px; height: 20px; }
+.hig-desktop .hig-switch input:checked + span::after { transform: translateX(16px); }
+
+/* --------------------------------------------------------------------------
+   3. BASE
+   -------------------------------------------------------------------------- */
+.hig, .hig body, body.hig {
+  font-family: var(--hig-font);
+  font-size: var(--hig-text-body);
+  line-height: 1.4;
+  color: var(--hig-label);
+  background: var(--hig-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* No manual letter-spacing: SF tracking is negative only at 13-23px and the
+   -apple-system font handles it per-size automatically (HIG tracking tables) */
+.hig h1 { font-size: var(--hig-text-large-title); font-weight: 700; }
+.hig h2 { font-size: var(--hig-text-title1); font-weight: 700; }
+.hig h3 { font-size: var(--hig-text-title2); font-weight: 700; }
+.hig h4 { font-size: var(--hig-text-title3); font-weight: 600; }
+
+.hig-headline    { font-size: var(--hig-text-headline); font-weight: 600; }
+.hig-subheadline { font-size: var(--hig-text-subheadline); }
+.hig-footnote    { font-size: var(--hig-text-footnote); }
+.hig-caption     { font-size: var(--hig-text-caption); }
+.hig-secondary   { color: var(--hig-label-secondary); }
+.hig-tertiary    { color: var(--hig-label-tertiary); }
+
+.hig a { color: var(--hig-tint); text-decoration: none; }
+.hig a:hover { text-decoration: underline; }
+
+.hig :focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--hig-tint) 45%, transparent);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hig *, .hig *::before, .hig *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. BUTTONS
+   .hig-button          — filled (primary; one per view)
+   .hig-button.tinted   — tinted background, tint text (secondary)
+   .hig-button.gray     — neutral fill (tertiary)
+   .hig-button.plain    — text only (toolbar/inline)
+   .hig-button.destructive — red variants of filled/plain
+   sizes: .small (28px) / default (36px) / .large (50px, full-width friendly)
+   -------------------------------------------------------------------------- */
+.hig-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 var(--hig-space-4);
+  border: none;
+  border-radius: var(--hig-radius-md);
+  font-family: inherit;
+  font-size: var(--hig-text-subheadline);
+  font-weight: 600;
+  color: var(--hig-tint-contrast);
+  background: var(--hig-tint);
+  cursor: pointer;
+  user-select: none;
+  transition: opacity var(--hig-duration-fast) var(--hig-ease-out),
+              transform var(--hig-duration-fast) var(--hig-ease-out);
+}
+.hig-button:hover  { opacity: 0.85; }
+.hig-button:active { opacity: 0.7; transform: scale(0.98); }
+.hig-button:disabled {
+  background: var(--hig-fill-tertiary);
+  color: var(--hig-label-tertiary);
+  cursor: default;
+  transform: none;
+}
+
+.hig-button.tinted {
+  background: color-mix(in srgb, var(--hig-tint) 15%, transparent);
+  color: var(--hig-tint);
+}
+.hig-button.gray {
+  background: var(--hig-fill-tertiary);
+  color: var(--hig-tint);
+}
+.hig-button.plain {
+  background: transparent;
+  color: var(--hig-tint);
+  font-weight: 400;
+}
+.hig-button.destructive { background: var(--hig-red); color: #fff; }
+.hig-button.destructive.plain,
+.hig-button.destructive.tinted { color: var(--hig-red); background: transparent; }
+.hig-button.destructive.tinted { background: color-mix(in srgb, var(--hig-red) 15%, transparent); }
+
+.hig-button.small { min-height: 28px; padding: 0 var(--hig-space-3); font-size: var(--hig-text-footnote); border-radius: var(--hig-radius-sm); }
+.hig-button.large { min-height: 50px; padding: 0 var(--hig-space-5); font-size: var(--hig-text-body); border-radius: 12px; width: 100%; }
+
+/* --------------------------------------------------------------------------
+   5. CARDS & GROUPED LISTS (inset grouped, like iOS Settings)
+   -------------------------------------------------------------------------- */
+.hig-card {
+  background: var(--hig-bg-secondary);
+  border-radius: var(--hig-radius-lg);
+  padding: var(--hig-space-4);
+}
+
+.hig-list {
+  background: var(--hig-bg-secondary);
+  border-radius: var(--hig-radius-lg);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hig-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--hig-space-3);
+  min-height: 44px;
+  padding: var(--hig-space-2) var(--hig-space-4);
+  font-size: var(--hig-text-body);
+  color: var(--hig-label);
+  position: relative;
+}
+.hig-list-item + .hig-list-item::before {
+  content: "";
+  position: absolute;
+  top: 0; left: var(--hig-space-4); right: 0;
+  height: 1px;
+  background: var(--hig-separator);
+  transform: scaleY(0.5);
+  transform-origin: top;
+}
+.hig-list-item .hig-spacer { flex: 1; }
+.hig-list-item .hig-value { color: var(--hig-label-secondary); }
+a.hig-list-item, button.hig-list-item {
+  width: 100%; border: none; background: none; font-family: inherit;
+  text-align: left; text-decoration: none; cursor: pointer;
+}
+a.hig-list-item:hover, button.hig-list-item:hover { background: var(--hig-fill-quaternary); }
+.hig-chevron { color: var(--hig-gray3); font-size: var(--hig-text-subheadline); }
+
+/* Section header/footer around a list group */
+.hig-section-header {
+  font-size: var(--hig-text-footnote);
+  color: var(--hig-label-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0 var(--hig-space-4);
+  margin: var(--hig-space-6) 0 var(--hig-space-2);
+}
+.hig-section-footer {
+  font-size: var(--hig-text-footnote);
+  color: var(--hig-label-secondary);
+  padding: 0 var(--hig-space-4);
+  margin: var(--hig-space-2) 0 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. FORMS
+   -------------------------------------------------------------------------- */
+.hig-field {
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  padding: var(--hig-space-2) var(--hig-space-3);
+  border: none;
+  border-radius: var(--hig-radius-md);
+  font-family: inherit;
+  font-size: var(--hig-text-body);
+  color: var(--hig-label);
+  background: var(--hig-fill-tertiary);
+  transition: box-shadow var(--hig-duration-fast) var(--hig-ease-out);
+}
+.hig-field::placeholder { color: var(--hig-label-tertiary); }
+.hig-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--hig-tint) 35%, transparent);
+}
+textarea.hig-field { min-height: 80px; resize: vertical; }
+select.hig-field { appearance: auto; }
+
+.hig-form-row { margin-bottom: var(--hig-space-4); }
+.hig-form-row > label {
+  display: block;
+  font-size: var(--hig-text-subheadline);
+  font-weight: 500;
+  margin-bottom: var(--hig-space-1);
+}
+
+/* --------------------------------------------------------------------------
+   7. SWITCH (toggle) — <label class="hig-switch"><input type="checkbox"><span></span></label>
+   -------------------------------------------------------------------------- */
+.hig-switch { display: inline-flex; align-items: center; cursor: pointer; }
+.hig-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.hig-switch span {
+  width: 51px; height: 31px;
+  border-radius: var(--hig-radius-full);
+  background: var(--hig-fill);
+  position: relative;
+  transition: background var(--hig-duration) var(--hig-ease-out);
+  flex-shrink: 0;
+}
+.hig-switch span::after {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 27px; height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25), 0 0 0 0.5px rgba(0,0,0,0.04);
+  transition: transform var(--hig-duration) var(--hig-ease-out);
+}
+.hig-switch input:checked + span { background: var(--hig-green); }
+.hig-switch input:checked + span::after { transform: translateX(20px); }
+.hig-switch input:focus-visible + span {
+  outline: 3px solid color-mix(in srgb, var(--hig-tint) 45%, transparent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   8. SEGMENTED CONTROL — radios inside .hig-segmented
+   <div class="hig-segmented">
+     <label><input type="radio" name="x" checked><span>Day</span></label> ...
+   </div>
+   -------------------------------------------------------------------------- */
+.hig-segmented {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 9px;
+  background: var(--hig-fill-tertiary);
+  gap: 2px;
+}
+.hig-segmented label { position: relative; }
+.hig-segmented input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.hig-segmented span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 var(--hig-space-4);
+  border-radius: 7px;
+  font-size: var(--hig-text-footnote);
+  font-weight: 500;
+  color: var(--hig-label);
+  cursor: pointer;
+  transition: background var(--hig-duration-fast) var(--hig-ease-out);
+}
+.hig-segmented input:checked + span {
+  background: var(--hig-bg-secondary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.04);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   9. NAVIGATION — top bar, toolbar, sidebar (materials)
+   -------------------------------------------------------------------------- */
+.hig-material {
+  background: var(--hig-material);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Liquid Glass (2025+ design language): floating controls/navigation layer ONLY
+   (tab bars, toolbars, sidebars, action clusters) — never on content like cards
+   or page backgrounds. Use sparingly: reserve for the few most important
+   floating elements. Glass has no inherent color; for one primary CTA you may
+   tint it: background: color-mix(in srgb, var(--hig-tint) 75%, transparent). */
+.hig-glass {
+  position: relative;
+  background: var(--hig-material);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15),
+              inset 0 0 0 0.5px rgba(255,255,255,0.08),
+              0 8px 32px rgba(0,0,0,0.12);
+}
+/* 2-3% noise dithering makes the surface feel physical, not just blurry */
+.hig-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='128' height='128' filter='url(%23n)'/></svg>");
+}
+/* Solid fallback when backdrop-filter is unsupported */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hig-material, .hig-glass { background: var(--hig-bg-secondary); }
+}
+
+.hig-navbar {
+  display: flex;
+  align-items: center;
+  gap: var(--hig-space-3);
+  min-height: 52px;
+  padding: 0 var(--hig-space-4);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--hig-material-border);
+}
+.hig-navbar .hig-navbar-title {
+  font-size: var(--hig-text-headline);
+  font-weight: 600;
+  flex: 1;
+  text-align: center;
+}
+.hig-navbar > :first-child, .hig-navbar > :last-child { min-width: 60px; }
+.hig-navbar > :last-child { text-align: right; }
+
+.hig-sidebar {
+  width: 260px;
+  padding: var(--hig-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-right: 1px solid var(--hig-material-border);
+  overflow-y: auto;
+}
+.hig-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--hig-space-3);
+  min-height: 36px;
+  padding: 0 var(--hig-space-3);
+  border-radius: var(--hig-radius-sm);
+  font-size: var(--hig-text-subheadline);
+  color: var(--hig-label);
+  text-decoration: none;
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+.hig-sidebar-item:hover { background: var(--hig-fill-quaternary); }
+.hig-sidebar-item.active {
+  background: color-mix(in srgb, var(--hig-tint) 18%, transparent);
+  color: var(--hig-tint);
+  font-weight: 500;
+}
+.hig-sidebar-heading {
+  font-size: var(--hig-text-caption);
+  font-weight: 600;
+  color: var(--hig-label-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: var(--hig-space-4) var(--hig-space-3) var(--hig-space-1);
+}
+
+/* --------------------------------------------------------------------------
+   10. SHEETS / MODALS / MENUS
+   -------------------------------------------------------------------------- */
+.hig-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 40;
+}
+.hig-sheet {
+  background: var(--hig-bg-secondary);
+  border-radius: var(--hig-radius-xl);
+  box-shadow: var(--hig-shadow-sheet);
+  padding: var(--hig-space-5);
+  max-width: 480px;
+  width: calc(100% - 32px);
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.hig-sheet.bottom {
+  top: auto;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: var(--hig-radius-xl) var(--hig-radius-xl) 0 0;
+  padding-bottom: max(var(--hig-space-5), env(safe-area-inset-bottom));
+}
+.hig-menu {
+  background: var(--hig-bg-secondary);
+  border-radius: var(--hig-radius-lg);
+  box-shadow: var(--hig-shadow-menu);
+  padding: var(--hig-space-1);
+  min-width: 200px;
+}
+.hig-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--hig-space-2);
+  width: 100%;
+  min-height: 32px;
+  padding: 0 var(--hig-space-3);
+  border: none;
+  border-radius: var(--hig-radius-sm);
+  background: none;
+  font-family: inherit;
+  font-size: var(--hig-text-subheadline);
+  color: var(--hig-label);
+  cursor: pointer;
+  text-align: left;
+}
+.hig-menu-item:hover { background: var(--hig-tint); color: var(--hig-tint-contrast); }
+.hig-menu-item.destructive { color: var(--hig-red); }
+.hig-menu-item.destructive:hover { background: var(--hig-red); color: #fff; }
+.hig-menu-separator { height: 1px; background: var(--hig-separator); margin: var(--hig-space-1) 0; }
+
+/* --------------------------------------------------------------------------
+   11. MISC — badges, tags, progress, empty state
+   -------------------------------------------------------------------------- */
+.hig-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: var(--hig-radius-full);
+  font-size: var(--hig-text-caption);
+  font-weight: 600;
+  background: var(--hig-red);
+  color: #fff;
+}
+.hig-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: var(--hig-radius-full);
+  font-size: var(--hig-text-caption);
+  font-weight: 500;
+  background: color-mix(in srgb, var(--hig-tint) 15%, transparent);
+  color: var(--hig-tint);
+}
+
+.hig-progress {
+  width: 100%; height: 4px;
+  border-radius: 2px;
+  background: var(--hig-fill-tertiary);
+  overflow: hidden;
+}
+/* Set fill via --hig-progress (0–1), e.g. style="--hig-progress: 0.6" */
+.hig-progress > div {
+  height: 100%;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--hig-tint);
+  transform-origin: left;
+  transform: scaleX(var(--hig-progress, 0));
+  transition: transform var(--hig-duration) var(--hig-ease-out);
+}
+
+.hig-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hig-space-2);
+  padding: var(--hig-space-8) var(--hig-space-4);
+  text-align: center;
+  color: var(--hig-label-secondary);
+}
+.hig-empty .hig-empty-icon { font-size: 44px; color: var(--hig-label-tertiary); }
+.hig-empty .hig-empty-title { font-size: var(--hig-text-title3); font-weight: 600; color: var(--hig-label); }

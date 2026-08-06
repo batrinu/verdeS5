@@ -1,0 +1,47 @@
+/* ==========================================================================
+   verdeS5 app layer over hig.css. hig.css is never edited.
+   ========================================================================== */
+
+/* 1. TINT — the app's single accent (WCAG AA verified, see plan Task 1) */
+:root {
+  --hig-tint: #1F7A36;
+  --hig-tint-contrast: #FFFFFF;
+}
+:root[data-theme="dark"] {
+  --hig-tint: #30D158;
+  --hig-tint-contrast: #04250F;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hig-tint: #30D158;
+    --hig-tint-contrast: #04250F;
+  }
+}
+
+/* 2. APP COMPONENTS — pieces hig.css cannot cover (map, tree visuals,
+   toasts, certificate). Populated by later tasks. */
+
+/* 3. SHELL — sidebar/content grid and mobile tab bar */
+.app-shell { display: flex; min-height: 100vh; }
+.app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
+.app-content { flex: 1; min-width: 0; padding: var(--hig-space-6); max-width: 1200px; }
+.app-tabbar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
+  display: flex;
+  border-top: 0.5px solid var(--hig-material-border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.app-tabbar-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; min-height: 49px; padding-top: 6px;
+  font-size: var(--hig-text-caption2);
+  color: var(--hig-label-secondary); text-decoration: none;
+}
+.app-tabbar-item.active { color: var(--hig-tint); }
+@media (max-width: 899px) {
+  .app-sidebar { display: none; }
+  .app-content { padding: var(--hig-space-4); padding-bottom: 84px; }
+}
+@media (min-width: 900px) {
+  .app-tabbar, .app-mobile-navbar { display: none; }
+}
