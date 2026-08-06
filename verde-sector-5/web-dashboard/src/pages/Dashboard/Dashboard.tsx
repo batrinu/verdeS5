@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TreeService } from '../../api/treeService';
 import type { TreeItem, CareAlertItem, DistrictStat, Sector5Neighborhood } from '../../types/tree';
 import { Sector5TreeMap } from '../../components/Pitch/Sector5TreeMap';
 import { AdoptTreeModal } from '../../components/Pitch/AdoptTreeModal';
 import { LogWateringModal } from '../../components/Pitch/LogWateringModal';
 import { AdoptionCertificateModal } from '../../components/UI/AdoptionCertificateModal';
+import { ToastContainer, type ToastAlert } from '../../components/UI/ToastContainer';
 import { DistrictLeaderboard } from '../../components/Pitch/DistrictLeaderboard';
 import { CouncilAlertDispatcher } from '../../components/Pitch/CouncilAlertDispatcher';
 import { CouncilAnalyticsBoard } from '../../components/Pitch/CouncilAnalyticsBoard';
@@ -22,6 +23,7 @@ export const Dashboard: React.FC = () => {
   const [trees, setTrees] = useState<TreeItem[]>([]);
   const [alerts, setAlerts] = useState<CareAlertItem[]>([]);
   const [stats, setStats] = useState<DistrictStat[]>([]);
+  const [toastAlerts, setToastAlerts] = useState<ToastAlert[]>([]);
 
   // Mobile active tab state
   const [mobileTab, setMobileTab] = useState<MobileTab>('MAP');
@@ -34,7 +36,7 @@ export const Dashboard: React.FC = () => {
   const [waterTreeModalTarget, setWaterTreeModalTarget] = useState<TreeItem | null>(null);
   const [adoptionCertModalTarget, setAdoptionCertModalTarget] = useState<TreeItem | null>(null);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const [fetchedTrees, fetchedAlerts, fetchedStats] = await Promise.all([
         TreeService.getTrees(selectedNeighborhood),
@@ -44,14 +46,27 @@ export const Dashboard: React.FC = () => {
       setTrees(fetchedTrees);
       setAlerts(fetchedAlerts);
       setStats(fetchedStats);
+
+      const matchingAlerts = fetchedAlerts.filter(
+        a => selectedNeighborhood === 'ALL' || a.neighborhood.toLowerCase() === selectedNeighborhood.toLowerCase()
+      );
+      if (matchingAlerts.length > 0) {
+        setToastAlerts(matchingAlerts.map(a => ({
+          id: `toast-dash-${a.id}-${Date.now()}`,
+          neighborhood: a.neighborhood,
+          alertType: a.alertType,
+          message: a.message,
+          autoDismissMs: 5000,
+        })));
+      }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
     }
-  };
+  }, [selectedNeighborhood]);
 
   useEffect(() => {
     loadData();
-  }, [selectedNeighborhood]);
+  }, [loadData]);
 
   const handleAdoptConfirm = async (treeId: string, adopterName: string, nickname: string) => {
     await TreeService.adoptTree(treeId, adopterName, nickname);
@@ -235,6 +250,12 @@ export const Dashboard: React.FC = () => {
           onClose={() => setAdoptionCertModalTarget(null)}
         />
       )}
+
+      {/* Real-time Municipal Heatwave Toast Notification Engine */}
+      <ToastContainer
+        toasts={toastAlerts}
+        onDismiss={(id) => setToastAlerts(prev => prev.filter(t => t.id !== id))}
+      />
     </div>
   );
 };

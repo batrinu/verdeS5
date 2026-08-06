@@ -27,7 +27,16 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [isPhotoVerified, setIsPhotoVerified] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   if (!tree) return null;
 
@@ -43,8 +52,13 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
     const reader = new FileReader();
     reader.onload = (e) => {
       const result = e.target?.result as string;
-      setPhotoPreview(result);
-      runAiVerification();
+      if (result) {
+        setPhotoPreview(result);
+        runAiVerification();
+      }
+    };
+    reader.onerror = (err) => {
+      console.error('Eroare la citirea fișierului imagine:', err);
     };
     reader.readAsDataURL(file);
   };
@@ -79,15 +93,21 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
   };
 
   const runAiVerification = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
     setIsVerifying(true);
     setIsPhotoVerified(false);
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setIsVerifying(false);
       setIsPhotoVerified(true);
     }, 600);
   };
 
   const handleRemovePhoto = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
     setPhotoPreview(null);
     setIsPhotoVerified(false);
     setIsVerifying(false);

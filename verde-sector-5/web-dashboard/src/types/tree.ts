@@ -30,7 +30,7 @@ export interface WateringLogEntry {
 export interface CareAlertItem {
   id: string;
   neighborhood: Sector5Neighborhood;
-  alertType: 'HEATWAVE_DRYNESS' | 'YOUNG_TREE_WATERING' | 'STORM_RISK';
+  alertType: 'HEATWAVE_DRYNESS' | 'YOUNG_TREE_WATERING' | 'STORM_RISK' | 'DROUGHT_WARNING';
   message: string;
   status: 'ACTIVE' | 'RESOLVED';
   createdAt: string;

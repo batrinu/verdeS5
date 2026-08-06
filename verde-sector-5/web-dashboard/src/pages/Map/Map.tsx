@@ -3,7 +3,9 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AdoptionCertificateModal } from '../../components/UI/AdoptionCertificateModal';
-import type { TreeItem } from '../../types/tree';
+import { ToastContainer, type ToastAlert } from '../../components/UI/ToastContainer';
+import { TreeService } from '../../api/treeService';
+import type { TreeItem, CareAlertItem } from '../../types/tree';
 import './Map.css';
 
 // Fix for default leaflet icons in react
@@ -46,58 +48,119 @@ const Map: React.FC = () => {
   const center: [number, number] = [44.4168, 26.0764]; // Sector 5, Bucharest
   const [trees, setTrees] = useState<TreeItem[]>([]);
   const [reports, setReports] = useState<any[]>([]);
-  const [filterSpecies, setFilterSpecies] = useState('toate');
-  const [filterHealth, setFilterHealth] = useState('toate');
+  const [rawAlerts, setRawAlerts] = useState<CareAlertItem[]>([]);
+  const [toastAlerts, setToastAlerts] = useState<ToastAlert[]>([]);
+  
+  const [filterNeighborhood, setFilterNeighborhood] = useState<string>('toate');
+  const [filterSpecies, setFilterSpecies] = useState<string>('toate');
+  const [filterHealth, setFilterHealth] = useState<string>('toate');
   const [certModalTree, setCertModalTree] = useState<TreeItem | null>(null);
 
   useEffect(() => {
-    // Mock fetch for markers with adoption details
-    setTrees([
-      {
-        id: '1',
-        code: 'S5-COT-001',
-        latitude: 44.4170,
-        longitude: 26.0750,
-        species: 'Platan',
-        nickname: 'Platanul Marelui Parc',
-        neighborhood: 'Cotroceni',
-        healthStatus: 'EXCELLENT',
-        isAdopted: true,
-        adopterName: 'Elena Popa',
-        wateringsCount: 14,
-      },
-      {
-        id: '2',
-        code: 'S5-RAH-014',
-        latitude: 44.4150,
-        longitude: 26.0780,
-        species: 'Tei',
-        nickname: 'Teiul Parcului Sebastian',
-        neighborhood: 'Rahova',
-        healthStatus: 'NEEDS_WATER',
-        isAdopted: false,
-        wateringsCount: 3,
-      },
-      {
-        id: '3',
-        code: 'S5-FER-008',
-        latitude: 44.4180,
-        longitude: 26.0740,
-        species: 'Castan',
-        nickname: 'Castanul Ferentari',
-        neighborhood: 'Ferentari',
-        healthStatus: 'GOOD',
-        isAdopted: true,
-        adopterName: 'Andrei Ionescu',
-        wateringsCount: 9,
-      },
-    ]);
-    
+    const fetchData = async () => {
+      try {
+        const fetchedTrees = await TreeService.getTrees();
+        const fetchedAlerts = await TreeService.getAlerts();
+        
+        setTrees(fetchedTrees.length > 0 ? fetchedTrees : [
+          {
+            id: '1',
+            code: 'S5-COT-001',
+            latitude: 44.4170,
+            longitude: 26.0750,
+            species: 'Platan',
+            nickname: 'Platanul Marelui Parc',
+            neighborhood: 'Cotroceni',
+            healthStatus: 'EXCELLENT',
+            isAdopted: true,
+            adopterName: 'Elena Popa',
+            wateringsCount: 14,
+          },
+          {
+            id: '2',
+            code: 'S5-RAH-014',
+            latitude: 44.4150,
+            longitude: 26.0780,
+            species: 'Tei',
+            nickname: 'Teiul Parcului Sebastian',
+            neighborhood: 'Rahova',
+            healthStatus: 'NEEDS_WATER',
+            isAdopted: false,
+            wateringsCount: 3,
+          },
+          {
+            id: '3',
+            code: 'S5-FER-008',
+            latitude: 44.4180,
+            longitude: 26.0740,
+            species: 'Castan',
+            nickname: 'Castanul Ferentari',
+            neighborhood: 'Ferentari',
+            healthStatus: 'GOOD',
+            isAdopted: true,
+            adopterName: 'Andrei Ionescu',
+            wateringsCount: 9,
+          },
+        ]);
+
+        setRawAlerts(fetchedAlerts);
+
+        // Display active alerts upon entering the map
+        const initialToasts: ToastAlert[] = fetchedAlerts.map(alert => ({
+          id: `toast-${alert.id}-${Date.now()}`,
+          neighborhood: alert.neighborhood,
+          alertType: alert.alertType,
+          message: alert.message,
+          autoDismissMs: 6000,
+        }));
+
+        setToastAlerts(initialToasts);
+
+      } catch (error) {
+        console.error('Failed to load map data:', error);
+      }
+    };
+
+    fetchData();
+
     setReports([
       { id: 101, lat: 44.4160, lng: 26.0760, title: 'Copac căzut', status: 'Nou' },
       { id: 102, lat: 44.4190, lng: 26.0790, title: 'Crengi pe carosabil', status: 'În lucru' },
     ]);
   }, []);
+
+  const handleNeighborhoodChange = (neighborhood: string) => {
+    setFilterNeighborhood(neighborhood);
+
+    if (neighborhood === 'toate') {
+      const activeToasts: ToastAlert[] = rawAlerts.map(alert => ({
+        id: `toast-${alert.id}-${Date.now()}`,
+        neighborhood: alert.neighborhood,
+        alertType: alert.alertType,
+        message: alert.message,
+        autoDismissMs: 5000,
+      }));
+      setToastAlerts(activeToasts);
+    } else {
+      const matchingAlerts = rawAlerts.filter(
+        a => a.neighborhood.toLowerCase() === neighborhood.toLowerCase()
+      );
+      if (matchingAlerts.length > 0) {
+        const newToasts: ToastAlert[] = matchingAlerts.map(alert => ({
+          id: `toast-${alert.id}-${Date.now()}`,
+          neighborhood: alert.neighborhood,
+          alertType: alert.alertType,
+          message: alert.message,
+          autoDismissMs: 5000,
+        }));
+        setToastAlerts(newToasts);
+      }
+    }
+  };
+
+  const handleDismissToast = (id: string) => {
+    setToastAlerts(prev => prev.filter(t => t.id !== id));
+  };
 
   const handleAdoptTree = (treeToAdopt: TreeItem) => {
     const updatedTree: TreeItem = {
@@ -111,8 +174,9 @@ const Map: React.FC = () => {
   };
 
   const filteredTrees = trees.filter(tree => {
-    if (filterSpecies !== 'toate' && tree.species.toLowerCase() !== filterSpecies) return false;
-    if (filterHealth !== 'toate' && tree.healthStatus.toLowerCase() !== filterHealth) return false;
+    if (filterNeighborhood !== 'toate' && tree.neighborhood.toLowerCase() !== filterNeighborhood.toLowerCase()) return false;
+    if (filterSpecies !== 'toate' && tree.species.toLowerCase() !== filterSpecies.toLowerCase()) return false;
+    if (filterHealth !== 'toate' && tree.healthStatus.toLowerCase() !== filterHealth.toLowerCase()) return false;
     return true;
   });
 
@@ -122,22 +186,37 @@ const Map: React.FC = () => {
         <h3>Filtre Hartă</h3>
         
         <div className="filter-group">
+          <label>Cartier Sector 5</label>
+          <select value={filterNeighborhood} onChange={e => handleNeighborhoodChange(e.target.value)}>
+            <option value="toate">Toate cartierele</option>
+            <option value="Cotroceni">Cotroceni</option>
+            <option value="Rahova">Rahova</option>
+            <option value="Ferentari">Ferentari</option>
+            <option value="Sebastian">Sebastian</option>
+            <option value="Izvor">Izvor</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
           <label>Specie</label>
           <select value={filterSpecies} onChange={e => setFilterSpecies(e.target.value)}>
-            <option value="toate">Toate</option>
+            <option value="toate">Toate speciile</option>
             <option value="platan">Platan</option>
             <option value="tei">Tei</option>
             <option value="castan">Castan</option>
+            <option value="stejar">Stejar</option>
+            <option value="arțar">Arțar</option>
           </select>
         </div>
 
         <div className="filter-group">
           <label>Stare Sănătate</label>
           <select value={filterHealth} onChange={e => setFilterHealth(e.target.value)}>
-            <option value="toate">Toate</option>
+            <option value="toate">Toate stările</option>
             <option value="excellent">Excelentă</option>
             <option value="good">Bună</option>
             <option value="needs_water">Necesită apă</option>
+            <option value="attention_required">Atenție sporită</option>
           </select>
         </div>
 
@@ -243,9 +322,13 @@ const Map: React.FC = () => {
           onClose={() => setCertModalTree(null)}
         />
       )}
+
+      {/* Real-time Municipal Heatwave & Care Toast Notification Banner Engine */}
+      <ToastContainer toasts={toastAlerts} onDismiss={handleDismissToast} />
     </div>
   );
 };
 
 export default Map;
+
 
