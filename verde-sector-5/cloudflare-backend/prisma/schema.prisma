@@ -24,7 +24,9 @@ model User {
   passwordHash String
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
-  
+  pointsBalance Int      @default(0)
+  careScore     Int      @default(0)
+
   reports            Report[]           @relation("ReportAuthor")
   adoptedTrees       Tree[]
   assignedReports    Report[]           @relation("ReportAssignee")
@@ -33,7 +35,9 @@ model User {
   volunteerCampaigns PlantingCampaign[] @relation("CampaignVolunteers")
   notifications      Notification[]
   auditLogs          AuditLog[]
-  
+  pointsEvents       PointsEvent[]
+  redemptions        Redemption[]
+
   @@map("users")
 }
 
@@ -75,8 +79,11 @@ model Tree {
   lastWateredAt DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+  grove         Grove?    @relation(fields: [groveId], references: [id])
+  groveId       String?
+
   wateringLogs  WateringLog[]
+  messages      TreeMessage[]
 
   @@map("trees")
   @@index([latitude, longitude])
@@ -192,7 +199,9 @@ model PlantingCampaign {
   notes             String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  
+  sponsor           Sponsor? @relation(fields: [sponsorId], references: [id])
+  sponsorId         String?
+
   @@map("planting_campaigns")
   @@index([status])
   @@index([startDate])
@@ -232,4 +241,105 @@ model AuditLog {
   @@index([userId])
   @@index([createdAt])
   @@index([entityType, entityId])
+}
+
+model Sponsor {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  tier        String   // BRONZE | SILVER | GOLD
+  logoSvg     String?
+  description String?
+  website     String?
+  createdAt   DateTime @default(now())
+
+  groves      Grove[]
+  rewards     Reward[]
+  campaigns   PlantingCampaign[]
+  challenges  Challenge[]
+
+  @@map("sponsors")
+}
+
+model Grove {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  sponsor     Sponsor? @relation(fields: [sponsorId], references: [id])
+  sponsorId   String?
+  createdAt   DateTime @default(now())
+
+  trees       Tree[]
+
+  @@map("groves")
+}
+
+model Reward {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  merchantName String
+  sponsor      Sponsor? @relation(fields: [sponsorId], references: [id])
+  sponsorId    String?
+  costPoints   Int
+  stock        Int      @default(10)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  redemptions  Redemption[]
+
+  @@map("rewards")
+}
+
+model Redemption {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  reward    Reward   @relation(fields: [rewardId], references: [id])
+  rewardId  String
+  code      String   @unique
+  status    String   @default("ISSUED") // ISSUED | USED
+  createdAt DateTime @default(now())
+
+  @@map("redemptions")
+  @@index([userId])
+}
+
+model PointsEvent {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  action    String   // WATERING | CAMPAIGN_JOIN | REDEMPTION
+  points    Int      // signed: negative for REDEMPTION
+  refType   String?
+  refId     String?
+  createdAt DateTime @default(now())
+
+  @@map("points_events")
+  @@index([userId, createdAt])
+}
+
+model TreeMessage {
+  id        String   @id @default(cuid())
+  tree      Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
+  treeId    String
+  text      String
+  createdAt DateTime @default(now())
+
+  @@map("tree_messages")
+  @@index([treeId])
+}
+
+model Challenge {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  metric      String   @default("WATERINGS")
+  goal        Int
+  startsAt    DateTime
+  endsAt      DateTime
+  sponsor     Sponsor? @relation(fields: [sponsorId], references: [id])
+  sponsorId   String?
+
+  @@map("challenges")
 }
