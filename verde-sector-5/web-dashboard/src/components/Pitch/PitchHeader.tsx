@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { usePresenter } from '../../context/PresenterContext';
+import { Menu, X, Trophy, Droplets, MapPin, Shield } from 'lucide-react';
+import './PitchHeader.css';
 
 export const PitchHeader: React.FC = () => {
   const {
@@ -11,62 +13,57 @@ export const PitchHeader: React.FC = () => {
     userWaterings,
   } = usePresenter();
 
+  const [mobileExpanded, setMobileExpanded] = useState(false);
+
   return (
-    <header style={{
-      backgroundColor: '#0f172a',
-      color: '#ffffff',
-      padding: '12px 24px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-      position: 'sticky',
-      top: 0,
-      zIndex: 1000,
-    }}>
-      {/* Brand */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <div style={{
-          width: '38px',
-          height: '38px',
-          borderRadius: '10px',
-          backgroundColor: '#22c55e',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '20px',
-          boxShadow: '0 0 15px rgba(34, 197, 94, 0.4)',
-        }}>
-          🌿
-        </div>
-        <div>
-          <div style={{ fontSize: '17px', fontWeight: 800, letterSpacing: '-0.3px', background: 'linear-gradient(90deg, #4ade80, #38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Verde în Sectorul 5
+    <header className="pitch-header" role="banner">
+      {/* Brand Header Section */}
+      <div className="pitch-header-top">
+        <a href="/" className="pitch-brand" aria-label="Verde în Sectorul 5 - Casă">
+          <div className="pitch-logo-badge" aria-hidden="true">
+            🌿
           </div>
-          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '-2px' }}>
-            Platformă Comunitară & Registrul Spațiilor Verzi
+          <div>
+            <h1 className="pitch-title-text" style={{ margin: 0, padding: 0 }}>
+              Verde în Sectorul 5
+            </h1>
+            <div className="pitch-subtitle-text">
+              Platformă Comunitară & Registrul Spațiilor Verzi
+            </div>
           </div>
-        </div>
+        </a>
+
+        {/* Mobile Expand Trigger */}
+        <button
+          className="mobile-menu-trigger"
+          onClick={() => setMobileExpanded(!mobileExpanded)}
+          aria-expanded={mobileExpanded}
+          aria-label="Comută meniul de opțiuni demo"
+        >
+          {mobileExpanded ? <X size={18} /> : <Menu size={18} />}
+          <span>Control Demo</span>
+        </button>
       </div>
 
-      {/* District Selector & Role Switcher */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        {/* District Filter */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: 600 }}>Cartier:</span>
+      {/* Desktop & Mobile Responsive Controls */}
+      <div
+        className="pitch-controls"
+        style={{
+          display: mobileExpanded || window.innerWidth > 900 ? 'flex' : 'none',
+        }}
+      >
+        {/* District Selector */}
+        <div className="district-selector-group">
+          <MapPin size={16} color="#94a3b8" />
+          <label htmlFor="district-select" className="district-label">
+            Cartier:
+          </label>
           <select
+            id="district-select"
+            className="district-select-input"
             value={selectedNeighborhood}
             onChange={(e) => setSelectedNeighborhood(e.target.value)}
-            style={{
-              backgroundColor: '#1e293b',
-              color: '#f8fafc',
-              border: '1px solid #334155',
-              padding: '6px 12px',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
+            aria-label="Selectează cartierul din Sectorul 5"
           >
             <option value="ALL">Toate Cartierele (Sector 5)</option>
             <option value="Cotroceni">Cotroceni</option>
@@ -77,81 +74,46 @@ export const PitchHeader: React.FC = () => {
           </select>
         </div>
 
-        {/* Presenter Role Toggle Bar */}
-        <div style={{
-          backgroundColor: '#1e293b',
-          padding: '4px',
-          borderRadius: '10px',
-          border: '1px solid #334155',
-          display: 'flex',
-          gap: '4px',
-        }}>
+        {/* Segmented Presenter Role Switcher */}
+        <div className="role-segmented-switcher" role="tablist" aria-label="Comută rolul prezentării">
           <button
+            role="tab"
+            aria-selected={role === 'CITIZEN'}
             onClick={() => setRole('CITIZEN')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '7px',
-              border: 'none',
-              backgroundColor: role === 'CITIZEN' ? '#22c55e' : 'transparent',
-              color: role === 'CITIZEN' ? '#ffffff' : '#94a3b8',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
+            className={`role-tab-btn ${role === 'CITIZEN' ? 'active-citizen' : ''}`}
           >
-            👤 Mod Cetățean
+            <Shield size={14} />
+            <span>Mod Cetățean</span>
           </button>
 
           <button
+            role="tab"
+            aria-selected={role === 'COUNCIL_ADMIN'}
             onClick={() => setRole('COUNCIL_ADMIN')}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '7px',
-              border: 'none',
-              backgroundColor: role === 'COUNCIL_ADMIN' ? '#0284c7' : 'transparent',
-              color: role === 'COUNCIL_ADMIN' ? '#ffffff' : '#94a3b8',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
+            className={`role-tab-btn ${role === 'COUNCIL_ADMIN' ? 'active-council' : ''}`}
           >
-            🏛️ Mod Consiliu Local
+            <Shield size={14} />
+            <span>Mod Consiliu Local</span>
           </button>
         </div>
       </div>
 
-      {/* User Eco Ticker */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        <div style={{
-          backgroundColor: 'rgba(34, 197, 94, 0.1)',
-          border: '1px solid rgba(34, 197, 94, 0.3)',
-          padding: '6px 12px',
-          borderRadius: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-        }}>
-          <span style={{ fontSize: '14px' }}>🏆</span>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: '#4ade80' }}>
-            {userPoints} EcoPuncte
-          </span>
+      {/* Live Eco Ticker */}
+      <div
+        className="pitch-ticker-group"
+        style={{
+          display: mobileExpanded || window.innerWidth > 900 ? 'flex' : 'none',
+        }}
+      >
+        <div className="ticker-badge ticker-eco" title="Puncte ecologice acumulate prin îngrijirea arborilor">
+          <span className="pulse-dot" aria-hidden="true" />
+          <Trophy size={15} color="#4ade80" />
+          <span>{userPoints} EcoPuncte</span>
         </div>
 
-        <div style={{
-          backgroundColor: 'rgba(56, 189, 248, 0.1)',
-          border: '1px solid rgba(56, 189, 248, 0.3)',
-          padding: '6px 12px',
-          borderRadius: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-        }}>
-          <span style={{ fontSize: '14px' }}>💧</span>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: '#38bdf8' }}>
-            {userWaterings} Udări Logate
-          </span>
+        <div className="ticker-badge ticker-water" title="Numărul total de udări înregistrate">
+          <Droplets size={15} color="#38bdf8" />
+          <span>{userWaterings} Udări Logate</span>
         </div>
       </div>
     </header>
