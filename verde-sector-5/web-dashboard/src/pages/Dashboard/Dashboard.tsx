@@ -68,7 +68,7 @@ export const Dashboard: React.FC = () => {
     loadData();
   };
 
-  const handleCreateAlert = async (neighborhood: Sector5Neighborhood, alertType: any, message: string) => {
+  const handleCreateAlert = async (neighborhood: Sector5Neighborhood, alertType: CareAlertItem['alertType'], message: string) => {
     await TreeService.createAlert(neighborhood, alertType, message);
     loadData();
   };

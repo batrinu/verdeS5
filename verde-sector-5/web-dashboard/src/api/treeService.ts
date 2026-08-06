@@ -63,7 +63,11 @@ export const TreeService = {
     return getStoredAlerts();
   },
 
-  async createAlert(neighborhood: any, alertType: any, message: string): Promise<CareAlertItem> {
+  async createAlert(
+    neighborhood: CareAlertItem['neighborhood'],
+    alertType: CareAlertItem['alertType'],
+    message: string
+  ): Promise<CareAlertItem> {
     const newAlert: CareAlertItem = {
       id: `alert-${Date.now()}`,
       neighborhood,

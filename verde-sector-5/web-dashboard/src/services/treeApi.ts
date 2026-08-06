@@ -68,7 +68,11 @@ export async function fetchAlertsApi(): Promise<CareAlertItem[] | null> {
   return null;
 }
 
-export async function createAlertApi(neighborhood: any, alertType: any, message: string): Promise<CareAlertItem | null> {
+export async function createAlertApi(
+  neighborhood: CareAlertItem['neighborhood'],
+  alertType: CareAlertItem['alertType'],
+  message: string
+): Promise<CareAlertItem | null> {
   try {
     const newAlert: CareAlertItem = {
       id: `alert-${Date.now()}`,
