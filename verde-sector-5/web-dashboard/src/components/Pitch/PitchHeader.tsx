@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { usePresenter } from '../../context/PresenterContext';
-import { Menu, X, Shield, TreePine } from 'lucide-react';
+import { Menu, X, TreePine } from 'lucide-react';
 import './PitchHeader.css';
 
 export const PitchHeader: React.FC = () => {
@@ -68,19 +68,15 @@ export const PitchHeader: React.FC = () => {
           position: fixed and pin the pill to the header instead of the
           viewport. Dashboard-only; „P" flips the persona too. */}
       {isDashboard && createPortal(
-        <div className="demo-float" role="group" aria-label="Comutator de prezentare (doar demo)">
-          <span className="demo-float-tag">Demo</span>
-          <div className="role-segmented-switcher" role="tablist" aria-label="Comută rolul prezentării" title="Comutator de prezentare (tasta P)">
-            <button role="tab" aria-selected={role === 'CITIZEN'} onClick={() => setRole('CITIZEN')} className={`role-tab-btn ${role === 'CITIZEN' ? 'active-citizen' : ''}`}>
-              <Shield size={13} />
-              <span>Cetățean</span>
-            </button>
-            <button role="tab" aria-selected={role === 'COUNCIL_ADMIN'} onClick={() => setRole('COUNCIL_ADMIN')} className={`role-tab-btn ${role === 'COUNCIL_ADMIN' ? 'active-council' : ''}`}>
-              <Shield size={13} />
-              <span>Consiliu</span>
-            </button>
-          </div>
-        </div>,
+        <button
+          className="demo-toggle"
+          onClick={() => setRole(role === 'CITIZEN' ? 'COUNCIL_ADMIN' : 'CITIZEN')}
+          aria-label={`Mod prezentare: ${role === 'CITIZEN' ? 'Cetățean' : 'Consiliu Local'} — apasă pentru a comuta (tasta P)`}
+          title="Comutator demo (tasta P)"
+        >
+          <span className={`demo-toggle-dot ${role === 'CITIZEN' ? 'dot-citizen' : 'dot-council'}`} aria-hidden="true" />
+          <span>{role === 'CITIZEN' ? 'Cetățean' : 'Consiliu'}</span>
+        </button>,
         document.body
       )}
     </header>
