@@ -5361,6 +5361,8 @@ export namespace Prisma {
     userName: string | null
     liters: number | null
     earnedPoints: number | null
+    photoProof: string | null
+    photoVerified: boolean | null
     loggedAt: Date | null
   }
 
@@ -5370,6 +5372,8 @@ export namespace Prisma {
     userName: string | null
     liters: number | null
     earnedPoints: number | null
+    photoProof: string | null
+    photoVerified: boolean | null
     loggedAt: Date | null
   }
 
@@ -5379,6 +5383,8 @@ export namespace Prisma {
     userName: number
     liters: number
     earnedPoints: number
+    photoProof: number
+    photoVerified: number
     loggedAt: number
     _all: number
   }
@@ -5400,6 +5406,8 @@ export namespace Prisma {
     userName?: true
     liters?: true
     earnedPoints?: true
+    photoProof?: true
+    photoVerified?: true
     loggedAt?: true
   }
 
@@ -5409,6 +5417,8 @@ export namespace Prisma {
     userName?: true
     liters?: true
     earnedPoints?: true
+    photoProof?: true
+    photoVerified?: true
     loggedAt?: true
   }
 
@@ -5418,6 +5428,8 @@ export namespace Prisma {
     userName?: true
     liters?: true
     earnedPoints?: true
+    photoProof?: true
+    photoVerified?: true
     loggedAt?: true
     _all?: true
   }
@@ -5514,6 +5526,8 @@ export namespace Prisma {
     userName: string
     liters: number
     earnedPoints: number
+    photoProof: string | null
+    photoVerified: boolean
     loggedAt: Date
     _count: WateringLogCountAggregateOutputType | null
     _avg: WateringLogAvgAggregateOutputType | null
@@ -5542,6 +5556,8 @@ export namespace Prisma {
     userName?: boolean
     liters?: boolean
     earnedPoints?: boolean
+    photoProof?: boolean
+    photoVerified?: boolean
     loggedAt?: boolean
     tree?: boolean | TreeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wateringLog"]>
@@ -5552,6 +5568,8 @@ export namespace Prisma {
     userName?: boolean
     liters?: boolean
     earnedPoints?: boolean
+    photoProof?: boolean
+    photoVerified?: boolean
     loggedAt?: boolean
     tree?: boolean | TreeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["wateringLog"]>
@@ -5562,6 +5580,8 @@ export namespace Prisma {
     userName?: boolean
     liters?: boolean
     earnedPoints?: boolean
+    photoProof?: boolean
+    photoVerified?: boolean
     loggedAt?: boolean
   }
 
@@ -5583,6 +5603,8 @@ export namespace Prisma {
       userName: string
       liters: number
       earnedPoints: number
+      photoProof: string | null
+      photoVerified: boolean
       loggedAt: Date
     }, ExtArgs["result"]["wateringLog"]>
     composites: {}
@@ -5983,6 +6005,8 @@ export namespace Prisma {
     readonly userName: FieldRef<"WateringLog", 'String'>
     readonly liters: FieldRef<"WateringLog", 'Int'>
     readonly earnedPoints: FieldRef<"WateringLog", 'Int'>
+    readonly photoProof: FieldRef<"WateringLog", 'String'>
+    readonly photoVerified: FieldRef<"WateringLog", 'Boolean'>
     readonly loggedAt: FieldRef<"WateringLog", 'DateTime'>
   }
     
@@ -13529,6 +13553,8 @@ export namespace Prisma {
     userName: 'userName',
     liters: 'liters',
     earnedPoints: 'earnedPoints',
+    photoProof: 'photoProof',
+    photoVerified: 'photoVerified',
     loggedAt: 'loggedAt'
   };
 
@@ -14032,6 +14058,8 @@ export namespace Prisma {
     userName?: StringFilter<"WateringLog"> | string
     liters?: IntFilter<"WateringLog"> | number
     earnedPoints?: IntFilter<"WateringLog"> | number
+    photoProof?: StringNullableFilter<"WateringLog"> | string | null
+    photoVerified?: BoolFilter<"WateringLog"> | boolean
     loggedAt?: DateTimeFilter<"WateringLog"> | Date | string
     tree?: XOR<TreeRelationFilter, TreeWhereInput>
   }
@@ -14042,6 +14070,8 @@ export namespace Prisma {
     userName?: SortOrder
     liters?: SortOrder
     earnedPoints?: SortOrder
+    photoProof?: SortOrderInput | SortOrder
+    photoVerified?: SortOrder
     loggedAt?: SortOrder
     tree?: TreeOrderByWithRelationInput
   }
@@ -14055,6 +14085,8 @@ export namespace Prisma {
     userName?: StringFilter<"WateringLog"> | string
     liters?: IntFilter<"WateringLog"> | number
     earnedPoints?: IntFilter<"WateringLog"> | number
+    photoProof?: StringNullableFilter<"WateringLog"> | string | null
+    photoVerified?: BoolFilter<"WateringLog"> | boolean
     loggedAt?: DateTimeFilter<"WateringLog"> | Date | string
     tree?: XOR<TreeRelationFilter, TreeWhereInput>
   }, "id">
@@ -14065,6 +14097,8 @@ export namespace Prisma {
     userName?: SortOrder
     liters?: SortOrder
     earnedPoints?: SortOrder
+    photoProof?: SortOrderInput | SortOrder
+    photoVerified?: SortOrder
     loggedAt?: SortOrder
     _count?: WateringLogCountOrderByAggregateInput
     _avg?: WateringLogAvgOrderByAggregateInput
@@ -14082,6 +14116,8 @@ export namespace Prisma {
     userName?: StringWithAggregatesFilter<"WateringLog"> | string
     liters?: IntWithAggregatesFilter<"WateringLog"> | number
     earnedPoints?: IntWithAggregatesFilter<"WateringLog"> | number
+    photoProof?: StringNullableWithAggregatesFilter<"WateringLog"> | string | null
+    photoVerified?: BoolWithAggregatesFilter<"WateringLog"> | boolean
     loggedAt?: DateTimeWithAggregatesFilter<"WateringLog"> | Date | string
   }
 
@@ -15059,6 +15095,8 @@ export namespace Prisma {
     userName: string
     liters?: number
     earnedPoints?: number
+    photoProof?: string | null
+    photoVerified?: boolean
     loggedAt?: Date | string
     tree: TreeCreateNestedOneWithoutWateringLogsInput
   }
@@ -15069,6 +15107,8 @@ export namespace Prisma {
     userName: string
     liters?: number
     earnedPoints?: number
+    photoProof?: string | null
+    photoVerified?: boolean
     loggedAt?: Date | string
   }
 
@@ -15077,6 +15117,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     liters?: IntFieldUpdateOperationsInput | number
     earnedPoints?: IntFieldUpdateOperationsInput | number
+    photoProof?: NullableStringFieldUpdateOperationsInput | string | null
+    photoVerified?: BoolFieldUpdateOperationsInput | boolean
     loggedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tree?: TreeUpdateOneRequiredWithoutWateringLogsNestedInput
   }
@@ -15087,6 +15129,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     liters?: IntFieldUpdateOperationsInput | number
     earnedPoints?: IntFieldUpdateOperationsInput | number
+    photoProof?: NullableStringFieldUpdateOperationsInput | string | null
+    photoVerified?: BoolFieldUpdateOperationsInput | boolean
     loggedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -15096,6 +15140,8 @@ export namespace Prisma {
     userName: string
     liters?: number
     earnedPoints?: number
+    photoProof?: string | null
+    photoVerified?: boolean
     loggedAt?: Date | string
   }
 
@@ -15104,6 +15150,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     liters?: IntFieldUpdateOperationsInput | number
     earnedPoints?: IntFieldUpdateOperationsInput | number
+    photoProof?: NullableStringFieldUpdateOperationsInput | string | null
+    photoVerified?: BoolFieldUpdateOperationsInput | boolean
     loggedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -15113,6 +15161,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     liters?: IntFieldUpdateOperationsInput | number
     earnedPoints?: IntFieldUpdateOperationsInput | number
+    photoProof?: NullableStringFieldUpdateOperationsInput | string | null
+    photoVerified?: BoolFieldUpdateOperationsInput | boolean
     loggedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -16221,6 +16271,11 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type TreeRelationFilter = {
     is?: TreeWhereInput
     isNot?: TreeWhereInput
@@ -16232,6 +16287,8 @@ export namespace Prisma {
     userName?: SortOrder
     liters?: SortOrder
     earnedPoints?: SortOrder
+    photoProof?: SortOrder
+    photoVerified?: SortOrder
     loggedAt?: SortOrder
   }
 
@@ -16246,6 +16303,8 @@ export namespace Prisma {
     userName?: SortOrder
     liters?: SortOrder
     earnedPoints?: SortOrder
+    photoProof?: SortOrder
+    photoVerified?: SortOrder
     loggedAt?: SortOrder
   }
 
@@ -16255,6 +16314,8 @@ export namespace Prisma {
     userName?: SortOrder
     liters?: SortOrder
     earnedPoints?: SortOrder
+    photoProof?: SortOrder
+    photoVerified?: SortOrder
     loggedAt?: SortOrder
   }
 
@@ -16277,6 +16338,14 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type CareAlertCountOrderByAggregateInput = {
@@ -16555,11 +16624,6 @@ export namespace Prisma {
     budget?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NotificationCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -16597,14 +16661,6 @@ export namespace Prisma {
     isRead?: SortOrder
     sentAt?: SortOrder
     readAt?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type AuditLogCountOrderByAggregateInput = {
@@ -17137,6 +17193,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type TreeUpdateOneRequiredWithoutWateringLogsNestedInput = {
     create?: XOR<TreeCreateWithoutWateringLogsInput, TreeUncheckedCreateWithoutWateringLogsInput>
     connectOrCreate?: TreeCreateOrConnectWithoutWateringLogsInput
@@ -17303,10 +17363,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
@@ -17521,6 +17577,11 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -17535,11 +17596,6 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -18294,6 +18350,8 @@ export namespace Prisma {
     userName: string
     liters?: number
     earnedPoints?: number
+    photoProof?: string | null
+    photoVerified?: boolean
     loggedAt?: Date | string
   }
 
@@ -18302,6 +18360,8 @@ export namespace Prisma {
     userName: string
     liters?: number
     earnedPoints?: number
+    photoProof?: string | null
+    photoVerified?: boolean
     loggedAt?: Date | string
   }
 
@@ -18425,6 +18485,8 @@ export namespace Prisma {
     userName?: StringFilter<"WateringLog"> | string
     liters?: IntFilter<"WateringLog"> | number
     earnedPoints?: IntFilter<"WateringLog"> | number
+    photoProof?: StringNullableFilter<"WateringLog"> | string | null
+    photoVerified?: BoolFilter<"WateringLog"> | boolean
     loggedAt?: DateTimeFilter<"WateringLog"> | Date | string
   }
 
@@ -19960,6 +20022,8 @@ export namespace Prisma {
     userName: string
     liters?: number
     earnedPoints?: number
+    photoProof?: string | null
+    photoVerified?: boolean
     loggedAt?: Date | string
   }
 
@@ -19968,6 +20032,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     liters?: IntFieldUpdateOperationsInput | number
     earnedPoints?: IntFieldUpdateOperationsInput | number
+    photoProof?: NullableStringFieldUpdateOperationsInput | string | null
+    photoVerified?: BoolFieldUpdateOperationsInput | boolean
     loggedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -19976,6 +20042,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     liters?: IntFieldUpdateOperationsInput | number
     earnedPoints?: IntFieldUpdateOperationsInput | number
+    photoProof?: NullableStringFieldUpdateOperationsInput | string | null
+    photoVerified?: BoolFieldUpdateOperationsInput | boolean
     loggedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -19984,6 +20052,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     liters?: IntFieldUpdateOperationsInput | number
     earnedPoints?: IntFieldUpdateOperationsInput | number
+    photoProof?: NullableStringFieldUpdateOperationsInput | string | null
+    photoVerified?: BoolFieldUpdateOperationsInput | boolean
     loggedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

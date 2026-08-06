@@ -84,13 +84,15 @@ model Tree {
 }
 
 model WateringLog {
-  id           String   @id @default(cuid())
-  tree         Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
-  treeId       String
-  userName     String
-  liters       Int      @default(10)
-  earnedPoints Int      @default(50)
-  loggedAt     DateTime @default(now())
+  id            String   @id @default(cuid())
+  tree          Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
+  treeId        String
+  userName      String
+  liters        Int      @default(10)
+  earnedPoints  Int      @default(50)
+  photoProof    String? // data-URL blob now; swap to an R2 https URL later (see docs/photo-storage.md)
+  photoVerified Boolean  @default(false)
+  loggedAt      DateTime @default(now())
 
   @@index([treeId])
   @@map("watering_logs")

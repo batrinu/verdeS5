@@ -18,6 +18,38 @@ export interface WateringModalProps {
 // Sample realistic demo watering image SVG data URL for instant simulation
 const DEMO_WATERING_IMAGE = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"><rect width="400" height="260" fill="%231e293b"/><path d="M0,180 Q100,160 200,190 T400,170 L400,260 L0,260 Z" fill="%2315803d"/><path d="M200,200 L200,110 Q200,100 190,90 Q180,80 160,85" stroke="%2378350f" stroke-width="12" stroke-linecap="round" fill="none"/><circle cx="160" cy="75" r="45" fill="%2322c55e" opacity="0.85"/><circle cx="190" cy="55" r="35" fill="%2316a34a" opacity="0.9"/><circle cx="130" cy="65" r="30" fill="%234ade80" opacity="0.8"/><rect x="250" y="100" width="50" height="60" rx="8" fill="%230284c7"/><path d="M275,100 L275,70 Q275,60 230,80 Q210,90 200,130" stroke="%2338bdf8" stroke-width="4" stroke-dasharray="6,4" fill="none"/><circle cx="210" cy="115" r="4" fill="%2338bdf8"/><circle cx="205" cy="130" r="5" fill="%2338bdf8"/><circle cx="202" cy="145" r="6" fill="%2338bdf8"/><text x="20" y="35" fill="%23f8fafc" font-family="sans-serif" font-weight="bold" font-size="16">📷 Verde S5 - Dovadă Udare Copac</text><text x="20" y="245" fill="%23cbd5e1" font-family="sans-serif" font-size="12">GPS: 44.4170 N, 26.0750 E • Verified AI</text></svg>`;
 
+// Compress + downscale an uploaded image into a small JPEG data-URL blob so it
+// fits comfortably in the database (and, later, R2). See docs/photo-storage.md.
+const compressImage = (file: File, maxDim = 1000, quality = 0.7): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error);
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Nu s-a putut încărca imaginea.'));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          const scale = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Canvas indisponibil.'));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+
 export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onConfirm }) => {
   const { userName } = usePresenter();
   const [liters, setLiters] = useState<number>(10);
@@ -49,18 +81,14 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
       alert('Vă rugăm să încărcați un fișier imagine valid (JPG, PNG, WebP).');
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      if (result) {
-        setPhotoPreview(result);
+    compressImage(file)
+      .then((dataUrl) => {
+        setPhotoPreview(dataUrl);
         runAiVerification();
-      }
-    };
-    reader.onerror = (err) => {
-      console.error('Eroare la citirea fișierului imagine:', err);
-    };
-    reader.readAsDataURL(file);
+      })
+      .catch((err) => {
+        console.error('Eroare la procesarea imaginii:', err);
+      });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -311,7 +339,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
                   Apasă sau trage poza cu udarea aici
                 </div>
                 <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
-                  Format JPG, PNG • Stocare securizată Cloudflare R2
+                  Format JPG, PNG • Comprimată și stocată în siguranță
                 </div>
 
                 {/* Simulator Button */}

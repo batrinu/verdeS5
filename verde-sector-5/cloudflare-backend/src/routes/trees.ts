@@ -3,6 +3,7 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
 import { AppEnv } from '../types/hono';
+import { storePhoto } from '../lib/photoStore';
 
 const trees = new Hono<AppEnv>();
 
@@ -254,6 +255,12 @@ trees.post('/:id/water', async (c) => {
     const body = await c.req.json().catch(() => ({}));
     const liters = body.liters || 10;
     const userName = body.userName || 'Cetățean Anonim';
+    const photoVerified = Boolean(body.isPhotoVerified);
+    // Blob mode: persist the compressed data URL inline (see lib/photoStore).
+    const photoProof = body.photoProofUrl
+      ? await storePhoto(String(body.photoProofUrl), c.env)
+      : null;
+    const earnedPoints = liters * 5 + (photoVerified ? 50 : 0);
 
     let tree = await prisma.tree.findUnique({ where: { id } });
     if (!tree) {
@@ -282,7 +289,9 @@ trees.post('/:id/water', async (c) => {
         treeId: id,
         userName,
         liters,
-        earnedPoints: 50,
+        earnedPoints,
+        photoProof,
+        photoVerified,
       },
     });
 

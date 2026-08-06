@@ -172,6 +172,8 @@ exports.Prisma.WateringLogScalarFieldEnum = {
   userName: 'userName',
   liters: 'liters',
   earnedPoints: 'earnedPoints',
+  photoProof: 'photoProof',
+  photoVerified: 'photoVerified',
   loggedAt: 'loggedAt'
 };
 
