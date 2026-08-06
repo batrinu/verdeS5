@@ -1,0 +1,125 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: 🌿
+      - generic [ref=e7]:
+        - generic [ref=e8]: Verde în Sectorul 5
+        - generic [ref=e9]: Platformă Comunitară & Registrul Spațiilor Verzi
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: "Cartier:"
+        - combobox [ref=e13] [cursor=pointer]:
+          - option "Toate Cartierele (Sector 5)"
+          - option "Cotroceni" [selected]
+          - option "Rahova"
+          - option "Ferentari"
+          - option "Sebastian"
+          - option "Izvor"
+      - generic [ref=e14]:
+        - button "👤 Mod Cetățean" [ref=e15] [cursor=pointer]
+        - button "🏛️ Mod Consiliu Local" [ref=e16] [cursor=pointer]
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]: 🏆
+        - generic [ref=e20]: 350 EcoPuncte
+      - generic [ref=e21]:
+        - generic [ref=e22]: 💧
+        - generic [ref=e23]: 7 Udări Logate
+  - generic [ref=e24]:
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - generic [ref=e58]: 🚨
+        - generic [ref=e59]:
+          - strong [ref=e60]: "ALERTĂ CANICULĂ SECTOR 5:"
+          - text: "Alerte Caniculă: 15 tei tineri pe Calea Rahovei necesită udare de urgență (15L/copac)."
+      - generic [ref=e61]: Acțiune Necesară
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - heading "🗺️ Registrul Interactiv al Arborilor din Sectorul 5" [level=2] [ref=e28]
+          - generic [ref=e29]: 8 Arbori Afișați
+        - generic [ref=e31]:
+          - generic:
+            - generic:
+              - button "Marker" [ref=e62] [cursor=pointer]
+              - button "Marker" [ref=e63] [cursor=pointer]
+              - button "Marker" [ref=e64] [cursor=pointer]
+              - button "Marker" [ref=e65] [cursor=pointer]
+              - button "Marker" [ref=e66] [cursor=pointer]
+              - button "Marker" [ref=e67] [cursor=pointer]
+              - button "Marker" [ref=e68] [cursor=pointer]
+              - button "Marker" [ref=e69] [cursor=pointer]
+          - generic:
+            - generic [ref=e70]:
+              - button "Zoom in" [ref=e71] [cursor=pointer]: +
+              - button "Zoom out" [ref=e72] [cursor=pointer]: −
+            - generic [ref=e73]:
+              - link "Leaflet" [ref=e74] [cursor=pointer]:
+                - /url: https://leafletjs.com
+              - text: "| ©"
+              - link "OpenStreetMap" [ref=e79] [cursor=pointer]:
+                - /url: https://www.openstreetmap.org/copyright
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - heading "🏆 Clasament Cartiere Sector 5" [level=3] [ref=e45]
+            - generic [ref=e46]: Actualizat Live
+          - generic [ref=e80]:
+            - generic [ref=e81] [cursor=pointer]:
+              - generic [ref=e82]:
+                - generic [ref=e83]: 🥇
+                - generic [ref=e84]:
+                  - generic [ref=e85]: Cotroceni
+                  - generic [ref=e86]: 112/145 Arbori Adoptați (77%)
+              - generic [ref=e87]:
+                - generic [ref=e88]: 17,000 pct
+                - generic [ref=e89]: 💧 340 Udări
+            - generic [ref=e90] [cursor=pointer]:
+              - generic [ref=e91]:
+                - generic [ref=e92]: 🥈
+                - generic [ref=e93]:
+                  - generic [ref=e94]: Sebastian
+                  - generic [ref=e95]: 85/130 Arbori Adoptați (65%)
+              - generic [ref=e96]:
+                - generic [ref=e97]: 13,000 pct
+                - generic [ref=e98]: 💧 260 Udări
+            - generic [ref=e99] [cursor=pointer]:
+              - generic [ref=e100]:
+                - generic [ref=e101]: 🥉
+                - generic [ref=e102]:
+                  - generic [ref=e103]: Rahova
+                  - generic [ref=e104]: 95/210 Arbori Adoptați (45%)
+              - generic [ref=e105]:
+                - generic [ref=e106]: 11,000 pct
+                - generic [ref=e107]: 💧 220 Udări
+            - generic [ref=e108] [cursor=pointer]:
+              - generic [ref=e109]:
+                - generic [ref=e110]: "#4"
+                - generic [ref=e111]:
+                  - generic [ref=e112]: Ferentari
+                  - generic [ref=e113]: 78/180 Arbori Adoptați (43%)
+              - generic [ref=e114]:
+                - generic [ref=e115]: 9,750 pct
+                - generic [ref=e116]: 💧 195 Udări
+            - generic [ref=e117] [cursor=pointer]:
+              - generic [ref=e118]:
+                - generic [ref=e119]: "#5"
+                - generic [ref=e120]:
+                  - generic [ref=e121]: Izvor
+                  - generic [ref=e122]: 62/95 Arbori Adoptați (65%)
+              - generic [ref=e123]:
+                - generic [ref=e124]: 9,000 pct
+                - generic [ref=e125]: 💧 180 Udări
+        - generic [ref=e47]:
+          - heading "💡 Cum Funcționează Rețeaua Verde?" [level=3] [ref=e48]
+          - list [ref=e49]:
+            - listitem [ref=e50]: Alege un copac din cartierul tău pe hartă.
+            - listitem [ref=e51]:
+              - text: Apasă pe
+              - strong [ref=e52]: "\"Adoptă\""
+              - text: pentru a-i da un nume și a avea grijă de el.
+            - listitem [ref=e53]:
+              - text: Udă copacul în zilele de caniculă și apasă
+              - strong [ref=e54]: "\"Udă Copacul\""
+              - text: .
+            - listitem [ref=e55]: "Urcă în clasament și adu cartierul tău pe locul #1 în Sectorul 5!"
