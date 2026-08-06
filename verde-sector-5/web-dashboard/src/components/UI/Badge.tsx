@@ -9,38 +9,17 @@ interface BadgeProps {
 }
 
 export const Badge: React.FC<BadgeProps> = ({ children, variant = 'default', className = '' }) => {
-  const baseStyle = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    padding: '0.125rem 0.5rem',
-    borderRadius: '9999px',
-    fontSize: '0.75rem',
-    fontWeight: 500,
-    lineHeight: 1.5,
-  };
-
-  const getVariantStyles = (): React.CSSProperties => {
-    switch (variant) {
-      case 'success':
-        return { backgroundColor: 'rgba(16, 185, 129, 0.1)', color: 'var(--color-success)', border: '1px solid rgba(16, 185, 129, 0.2)' };
-      case 'warning':
-        return { backgroundColor: 'rgba(245, 158, 11, 0.1)', color: 'var(--color-warning)', border: '1px solid rgba(245, 158, 11, 0.2)' };
-      case 'danger':
-        return { backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--color-danger)', border: '1px solid rgba(239, 68, 68, 0.2)' };
-      case 'info':
-        return { backgroundColor: 'rgba(59, 130, 246, 0.1)', color: 'var(--color-info)', border: '1px solid rgba(59, 130, 246, 0.2)' };
-      case 'default':
-      default:
-        return { backgroundColor: 'var(--bg-surface-elevated)', color: 'var(--color-text-secondary)', border: '1px solid var(--border-color)' };
-    }
-  };
-
+  // danger reads as an alert/count — the solid .hig-badge pill.
+  // everything else is a quiet tint tag, colored per variant via app-badge-* modifiers.
+  if (variant === 'danger') {
+    return <span className={`hig-badge app-badge ${className}`.trim()}>{children}</span>;
+  }
+  const variantClass = variant !== 'default' ? `app-badge-${variant}` : '';
   return (
-    <span 
-      className={`badge ${className}`} 
-      style={{ ...baseStyle, ...getVariantStyles() }}
-    >
+    <span className={`hig-tag app-badge ${variantClass} ${className}`.replace(/\s+/g, ' ').trim()}>
       {children}
     </span>
   );
 };
+
+export default Badge;

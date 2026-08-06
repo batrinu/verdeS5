@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Flame, Droplets, AlertTriangle, X, Sun, ShieldAlert } from 'lucide-react';
 import type { CareAlertItem, Sector5Neighborhood } from '../../types/tree';
-import './ToastContainer.css';
 
 export type ToastAlert = Omit<Partial<CareAlertItem>, 'neighborhood' | 'alertType'> & {
   id: string;
@@ -38,38 +37,38 @@ const ToastItemComponent: React.FC<{
     switch (toast.alertType) {
       case 'HEATWAVE_DRYNESS':
         return {
-          icon: <Flame className="toast-icon toast-icon-heatwave" size={22} />,
+          icon: <Flame className="app-toast-icon app-toast-icon-heatwave" size={22} />,
           title: toast.title || '🔥 ALERTĂ CANICULĂ & SECETĂ',
-          badgeClass: 'badge-heatwave',
-          themeClass: 'toast-theme-heatwave',
+          badgeClass: 'app-toast-badge-heatwave',
+          themeClass: 'app-toast-heatwave',
         };
       case 'YOUNG_TREE_WATERING':
         return {
-          icon: <Droplets className="toast-icon toast-icon-watering" size={22} />,
+          icon: <Droplets className="app-toast-icon app-toast-icon-watering" size={22} />,
           title: toast.title || '💧 ÎNGRIJIRE ARBORI TINERI',
-          badgeClass: 'badge-watering',
-          themeClass: 'toast-theme-watering',
+          badgeClass: 'app-toast-badge-watering',
+          themeClass: 'app-toast-watering',
         };
       case 'STORM_RISK':
         return {
-          icon: <ShieldAlert className="toast-icon toast-icon-storm" size={22} />,
+          icon: <ShieldAlert className="app-toast-icon app-toast-icon-storm" size={22} />,
           title: toast.title || '🌩️ AVERTIZARE FURTUNĂ',
-          badgeClass: 'badge-storm',
-          themeClass: 'toast-theme-storm',
+          badgeClass: 'app-toast-badge-storm',
+          themeClass: 'app-toast-storm',
         };
       case 'DROUGHT_WARNING':
         return {
-          icon: <Sun className="toast-icon toast-icon-drought" size={22} />,
+          icon: <Sun className="app-toast-icon app-toast-icon-drought" size={22} />,
           title: toast.title || '☀️ AVERTIZARE SECETĂ MUNICIPALĂ',
-          badgeClass: 'badge-drought',
-          themeClass: 'toast-theme-drought',
+          badgeClass: 'app-toast-badge-drought',
+          themeClass: 'app-toast-drought',
         };
       default:
         return {
-          icon: <AlertTriangle className="toast-icon toast-icon-default" size={22} />,
+          icon: <AlertTriangle className="app-toast-icon app-toast-icon-default" size={22} />,
           title: toast.title || '⚠️ ALERTĂ MUNICIPALĂ SECTOR 5',
-          badgeClass: 'badge-default',
-          themeClass: 'toast-theme-default',
+          badgeClass: 'app-toast-badge-default',
+          themeClass: 'app-toast-default',
         };
     }
   };
@@ -78,22 +77,22 @@ const ToastItemComponent: React.FC<{
 
   return (
     <div
-      className={`toast-banner ${config.themeClass}`}
+      className={`hig-material app-toast ${config.themeClass}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       role="alert"
       aria-live="polite"
     >
-      <div className="toast-header">
-        <div className="toast-icon-wrapper">{config.icon}</div>
-        <div className="toast-title-badge-group">
-          <span className="toast-title">{config.title}</span>
-          <span className={`toast-neighborhood-badge ${config.badgeClass}`}>
+      <div className="app-toast-header">
+        <div className="app-toast-icon-wrapper">{config.icon}</div>
+        <div className="app-toast-title-group">
+          <span className="app-toast-title">{config.title}</span>
+          <span className={`app-toast-badge ${config.badgeClass}`}>
             📍 {toast.neighborhood}
           </span>
         </div>
         <button
-          className="toast-close-btn"
+          className="app-toast-close"
           onClick={() => onDismiss(toast.id)}
           aria-label="Închide alerta"
         >
@@ -101,14 +100,14 @@ const ToastItemComponent: React.FC<{
         </button>
       </div>
 
-      <div className="toast-body">
-        <p className="toast-message">{toast.message}</p>
+      <div className="app-toast-body">
+        <p className="app-toast-message">{toast.message}</p>
       </div>
 
       {/* Auto-dismiss animated progress bar */}
-      <div className="toast-progress-bar-container">
+      <div className="app-toast-progress-track">
         <div
-          className={`toast-progress-bar ${isHovered ? 'paused' : ''}`}
+          className={`app-toast-progress-bar ${isHovered ? 'paused' : ''}`}
           style={{ animationDuration: `${duration}ms` }}
         />
       </div>
@@ -120,7 +119,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismis
   if (!toasts || toasts.length === 0) return null;
 
   return (
-    <div className="toast-container-wrapper" aria-label="Notificări în timp real">
+    <div className="app-toast-container" aria-label="Notificări în timp real">
       {toasts.map(toast => (
         <ToastItemComponent key={toast.id} toast={toast} onDismiss={onDismiss} />
       ))}

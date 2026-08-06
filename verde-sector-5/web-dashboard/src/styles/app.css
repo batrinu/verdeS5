@@ -21,6 +21,128 @@
 /* 2. APP COMPONENTS — pieces hig.css cannot cover (map, tree visuals,
    toasts, certificate). Populated by later tasks. */
 
+/* --- StatCard (components/UI/StatCard) --- */
+.app-stat { display: flex; flex-direction: column; gap: var(--hig-space-1); position: relative; }
+.app-stat-icon { position: absolute; top: var(--hig-space-4); right: var(--hig-space-4); color: var(--hig-label-tertiary); }
+.app-stat-value { font-size: var(--hig-text-title1); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--hig-label); }
+.app-stat-label { }
+.app-stat-description { }
+.app-stat-trend { display: inline-flex; align-items: center; gap: 4px; font-size: var(--hig-text-caption); font-weight: 600; margin-top: var(--hig-space-1); }
+.app-stat-trend.positive { color: var(--hig-green); }
+.app-stat-trend.negative { color: var(--hig-red); }
+
+/* --- Badge (components/UI/Badge) — tint tags colored per variant; danger uses .hig-badge as-is --- */
+.app-badge-success { background: color-mix(in srgb, var(--hig-green) 15%, transparent); color: var(--hig-green); }
+.app-badge-warning { background: color-mix(in srgb, var(--hig-orange) 15%, transparent); color: var(--hig-orange); }
+.app-badge-info { background: color-mix(in srgb, var(--hig-blue) 15%, transparent); color: var(--hig-blue); }
+
+/* --- EmptyState (components/UI/EmptyState) — layout wraps hig-empty/-icon/-title --- */
+.app-empty-description { max-width: 400px; }
+.app-empty-action { margin-top: var(--hig-space-2); }
+
+/* --- LoadingSpinner (components/UI/LoadingSpinner) — single ring, fill track + tint arc --- */
+.app-spinner {
+  --app-spinner-size: 28px;
+  display: inline-block;
+  width: var(--app-spinner-size);
+  height: var(--app-spinner-size);
+  border-radius: var(--hig-radius-full);
+  border: 3px solid var(--hig-fill);
+  border-top-color: var(--hig-tint);
+  animation: app-spin 0.8s linear infinite;
+}
+.app-spinner-sm { --app-spinner-size: 20px; border-width: 2px; }
+.app-spinner-lg { --app-spinner-size: 40px; border-width: 4px; }
+@keyframes app-spin { to { transform: rotate(360deg); } }
+.app-spinner-fullpage {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--hig-bg) 80%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+/* Note: prefers-reduced-motion is already handled globally by hig.css's
+   `.hig *` rule (body carries class="hig"), which forces
+   animation-duration/transition-duration to ~0 — covers this spinner and
+   the toast animations below without duplicating the media query here. */
+
+/* --- ToastContainer (components/UI/ToastContainer) — hig-material cards --- */
+.app-toast-container {
+  position: fixed; bottom: var(--hig-space-6); right: var(--hig-space-6); z-index: 9999;
+  display: flex; flex-direction: column; gap: var(--hig-space-3);
+  max-width: 440px; width: calc(100vw - 32px);
+  pointer-events: none;
+}
+.app-toast {
+  pointer-events: auto;
+  position: relative;
+  border-radius: var(--hig-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--hig-shadow-menu);
+  animation: app-toast-in 200ms var(--hig-ease-out) forwards;
+  transition: transform var(--hig-duration-fast) var(--hig-ease-out);
+}
+.app-toast:hover { transform: translateY(-2px); }
+@keyframes app-toast-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.app-toast-heatwave { border: 1px solid color-mix(in srgb, var(--hig-red) 50%, transparent); }
+.app-toast-watering { border: 1px solid color-mix(in srgb, var(--hig-blue) 50%, transparent); }
+.app-toast-storm    { border: 1px solid color-mix(in srgb, var(--hig-purple) 50%, transparent); }
+.app-toast-drought  { border: 1px solid color-mix(in srgb, var(--hig-orange) 50%, transparent); }
+.app-toast-default  { border: 1px solid color-mix(in srgb, var(--hig-green) 50%, transparent); }
+
+.app-toast-header { display: flex; align-items: center; gap: var(--hig-space-2); padding: var(--hig-space-3) var(--hig-space-3) 6px; }
+.app-toast-icon-wrapper {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: var(--hig-radius-md);
+  background: var(--hig-fill-tertiary);
+}
+.app-toast-icon-heatwave { color: var(--hig-red); }
+.app-toast-icon-watering { color: var(--hig-blue); }
+.app-toast-icon-storm    { color: var(--hig-purple); }
+.app-toast-icon-drought  { color: var(--hig-orange); }
+.app-toast-icon-default  { color: var(--hig-green); }
+
+.app-toast-title-group { display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0; }
+.app-toast-title {
+  font-size: var(--hig-text-caption); font-weight: 700; color: var(--hig-label);
+  letter-spacing: 0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.app-toast-badge {
+  display: inline-flex; align-items: center; width: fit-content;
+  font-size: var(--hig-text-caption2); font-weight: 600;
+  padding: 2px var(--hig-space-2); border-radius: var(--hig-radius-full); line-height: 1.2;
+}
+.app-toast-badge-heatwave { background: color-mix(in srgb, var(--hig-red) 20%, transparent); color: var(--hig-red); }
+.app-toast-badge-watering { background: color-mix(in srgb, var(--hig-blue) 20%, transparent); color: var(--hig-blue); }
+.app-toast-badge-storm    { background: color-mix(in srgb, var(--hig-purple) 20%, transparent); color: var(--hig-purple); }
+.app-toast-badge-drought  { background: color-mix(in srgb, var(--hig-orange) 20%, transparent); color: var(--hig-orange); }
+.app-toast-badge-default  { background: color-mix(in srgb, var(--hig-green) 20%, transparent); color: var(--hig-green); }
+
+.app-toast-close {
+  background: transparent; border: none; color: var(--hig-label-secondary);
+  padding: 4px; border-radius: var(--hig-radius-sm); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--hig-duration-fast) var(--hig-ease-out), color var(--hig-duration-fast) var(--hig-ease-out);
+  margin-left: 4px; flex-shrink: 0;
+}
+.app-toast-close:hover { background: var(--hig-fill); color: var(--hig-label); }
+
+.app-toast-body { padding: 4px var(--hig-space-3) var(--hig-space-3); }
+.app-toast-message { font-size: var(--hig-text-caption); line-height: 1.45; color: var(--hig-label-secondary); margin: 0; word-break: break-word; }
+
+.app-toast-progress-track { width: 100%; height: 3px; background: var(--hig-fill-tertiary); overflow: hidden; }
+.app-toast-progress-bar { height: 100%; width: 100%; animation: app-toast-progress linear forwards; }
+.app-toast-progress-bar.paused { animation-play-state: paused; }
+@keyframes app-toast-progress { from { width: 100%; } to { width: 0%; } }
+.app-toast-heatwave .app-toast-progress-bar { background: var(--hig-red); }
+.app-toast-watering .app-toast-progress-bar { background: var(--hig-blue); }
+.app-toast-storm    .app-toast-progress-bar { background: var(--hig-purple); }
+.app-toast-drought  .app-toast-progress-bar { background: var(--hig-orange); }
+.app-toast-default  .app-toast-progress-bar { background: var(--hig-green); }
+
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
