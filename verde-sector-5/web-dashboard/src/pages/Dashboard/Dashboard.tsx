@@ -129,12 +129,7 @@ export const Dashboard: React.FC = () => {
         <div className="dashboard-grid">
           
           {/* Left Column: Interactive Map */}
-          <div
-            className="dashboard-map-column"
-            style={{
-              display: window.innerWidth < 768 && mobileTab !== 'MAP' ? 'none' : 'flex',
-            }}
-          >
+          <div className={`dashboard-map-column ${mobileTab === 'MAP' ? 'mobile-tab-active' : ''}`}>
             <div className="map-column-header">
               <h2 className="map-title">
                 🗺️ Registrul Interactiv al Arborilor
@@ -156,14 +151,9 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {/* Right Column: Dynamic Role Cards */}
-          <div
-            className="dashboard-cards-column"
-            style={{
-              display: window.innerWidth < 768 && mobileTab === 'MAP' ? 'none' : 'flex',
-            }}
-          >
+          <div className={`dashboard-cards-column ${mobileTab !== 'MAP' ? 'mobile-tab-active' : ''}`}>
             {/* Citizen View: District Leaderboard */}
-            {(role === 'CITIZEN' || (window.innerWidth < 768 && mobileTab === 'LEADERBOARD')) && (
+            {(role === 'CITIZEN' || mobileTab === 'LEADERBOARD') && (
               <DistrictLeaderboard
                 stats={stats}
                 selectedNeighborhood={selectedNeighborhood}
@@ -172,7 +162,7 @@ export const Dashboard: React.FC = () => {
             )}
 
             {/* Council Admin View: Analytics & Dispatcher */}
-            {(role === 'COUNCIL_ADMIN' || (window.innerWidth < 768 && mobileTab === 'COUNCIL')) && (
+            {(role === 'COUNCIL_ADMIN' || mobileTab === 'COUNCIL') && (
               <>
                 <CouncilAnalyticsBoard trees={trees} stats={stats} />
                 <CouncilAlertDispatcher alerts={alerts} onCreateAlert={handleCreateAlert} />

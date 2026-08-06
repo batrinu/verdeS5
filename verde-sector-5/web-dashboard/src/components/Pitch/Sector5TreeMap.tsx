@@ -157,7 +157,15 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
       marker.on('click', () => onSelectTree(tree));
     });
 
+    // Schedule invalidateSize to guarantee tiles load on mobile viewports & tabs
+    const resizeTimer = setTimeout(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    }, 150);
+
     return () => {
+      clearTimeout(resizeTimer);
       map.remove();
       mapInstanceRef.current = null;
     };

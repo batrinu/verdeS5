@@ -1,0 +1,32 @@
+- generic [ref=f1e3]:
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - link "Verde în Sectorul 5 - Casă" [ref=f1e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f1e7]: 🌿
+        - generic [ref=f1e8]:
+          - heading "Verde în Sectorul 5" [level=1] [ref=f1e9]
+          - generic [ref=f1e10]: Platformă Comunitară & Registrul Spațiilor Verzi
+      - button "Comută meniul de opțiuni demo" [ref=f1e11] [cursor=pointer]:
+        - generic [ref=f1e13]: Control Demo
+  - generic [ref=f1e14]:
+    - tablist "Navigare Mobil" [ref=f1e15]:
+      - tab "Hartă" [selected] [ref=f1e16] [cursor=pointer]
+      - tab "Clasament" [ref=f1e20] [cursor=pointer]
+      - tab "Consiliu" [ref=f1e28] [cursor=pointer]
+    - generic [ref=f1e33]:
+      - generic [ref=f1e34]:
+        - heading "🗺️ Registrul Interactiv al Arborilor" [level=2] [ref=f1e35]
+        - generic [ref=f1e36]: 0 Arbori Afișați
+      - generic [ref=f1e37]:
+        - generic:
+          - generic:
+            - generic [ref=f1e38]:
+              - button "Zoom in" [ref=f1e39] [cursor=pointer]: +
+              - button "Zoom out" [ref=f1e40] [cursor=pointer]: −
+            - generic [ref=f1e41]:
+              - link "Leaflet" [ref=f1e42] [cursor=pointer]:
+                - /url: https://leafletjs.com
+              - text: "| ©"
+              - link "OpenStreetMap" [ref=f1e47] [cursor=pointer]:
+                - /url: https://www.openstreetmap.org/copyright

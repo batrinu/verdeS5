@@ -1,0 +1,71 @@
+- generic [ref=f1e3]:
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - link "Verde în Sectorul 5 - Casă" [ref=f1e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f1e7]: 🌿
+        - generic [ref=f1e8]:
+          - heading "Verde în Sectorul 5" [level=1] [ref=f1e9]
+          - generic [ref=f1e10]: Platformă Comunitară & Registrul Spațiilor Verzi
+      - button "Comută meniul de opțiuni demo" [ref=f1e11] [cursor=pointer]:
+        - generic [ref=f1e13]: Control Demo
+  - generic [ref=f1e14]:
+    - tablist "Navigare Mobil" [ref=f1e15]:
+      - tab "Hartă" [ref=f1e16] [cursor=pointer]
+      - tab "Clasament" [active] [selected] [ref=f1e20] [cursor=pointer]
+      - tab "Consiliu" [ref=f1e28] [cursor=pointer]
+    - alert [ref=f1e48]:
+      - generic [ref=f1e52]:
+        - strong [ref=f1e53]: "ALERTĂ CANICULĂ SECTOR 5:"
+        - text: "Alerte Caniculă: 15 tei tineri pe Calea Rahovei necesită udare de urgență (15L/copac)."
+      - generic [ref=f1e54]: Acțiune Necesară
+    - generic [ref=f1e116]:
+      - generic [ref=f1e117]:
+        - heading "🏆 Clasament Cartiere Sector 5" [level=3] [ref=f1e118]
+        - generic [ref=f1e119]: Actualizat Live
+      - generic [ref=f1e120]:
+        - generic [ref=f1e121] [cursor=pointer]:
+          - generic [ref=f1e122]:
+            - generic [ref=f1e123]: 🥇
+            - generic [ref=f1e124]:
+              - generic [ref=f1e125]: Cotroceni
+              - generic [ref=f1e126]: 112/145 Arbori Adoptați (77%)
+          - generic [ref=f1e127]:
+            - generic [ref=f1e128]: 17,000 pct
+            - generic [ref=f1e129]: 💧 340 Udări
+        - generic [ref=f1e130] [cursor=pointer]:
+          - generic [ref=f1e131]:
+            - generic [ref=f1e132]: 🥈
+            - generic [ref=f1e133]:
+              - generic [ref=f1e134]: Sebastian
+              - generic [ref=f1e135]: 85/130 Arbori Adoptați (65%)
+          - generic [ref=f1e136]:
+            - generic [ref=f1e137]: 13,000 pct
+            - generic [ref=f1e138]: 💧 260 Udări
+        - generic [ref=f1e139] [cursor=pointer]:
+          - generic [ref=f1e140]:
+            - generic [ref=f1e141]: 🥉
+            - generic [ref=f1e142]:
+              - generic [ref=f1e143]: Rahova
+              - generic [ref=f1e144]: 95/210 Arbori Adoptați (45%)
+          - generic [ref=f1e145]:
+            - generic [ref=f1e146]: 11,000 pct
+            - generic [ref=f1e147]: 💧 220 Udări
+        - generic [ref=f1e148] [cursor=pointer]:
+          - generic [ref=f1e149]:
+            - generic [ref=f1e150]: "#4"
+            - generic [ref=f1e151]:
+              - generic [ref=f1e152]: Ferentari
+              - generic [ref=f1e153]: 78/180 Arbori Adoptați (43%)
+          - generic [ref=f1e154]:
+            - generic [ref=f1e155]: 9,750 pct
+            - generic [ref=f1e156]: 💧 195 Udări
+        - generic [ref=f1e157] [cursor=pointer]:
+          - generic [ref=f1e158]:
+            - generic [ref=f1e159]: "#5"
+            - generic [ref=f1e160]:
+              - generic [ref=f1e161]: Izvor
+              - generic [ref=f1e162]: 62/95 Arbori Adoptați (65%)
+          - generic [ref=f1e163]:
+            - generic [ref=f1e164]: 9,000 pct
+            - generic [ref=f1e165]: 💧 180 Udări
