@@ -84,6 +84,7 @@ let localStats = [...SEED_STATS];
 
 export const TreeService = {
   async getTrees(neighborhood?: string): Promise<TreeItem[]> {
+    let result = localTrees;
     try {
       const url = neighborhood && neighborhood !== 'ALL'
         ? `${API_BASE_URL}/trees?neighborhood=${neighborhood}`
@@ -91,16 +92,18 @@ export const TreeService = {
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
-        if (data.trees && data.trees.length > 0) return data.trees;
+        if (data.trees && data.trees.length >= localTrees.length) {
+          result = data.trees;
+        }
       }
     } catch {
       // Fallback to local memory store during offline/demo mode
     }
 
     if (neighborhood && neighborhood !== 'ALL') {
-      return localTrees.filter(t => t.neighborhood.toLowerCase() === neighborhood.toLowerCase());
+      return result.filter(t => t.neighborhood.toLowerCase() === neighborhood.toLowerCase());
     }
-    return localTrees;
+    return result;
   },
 
   async adoptTree(treeId: string, adopterName: string, nickname: string): Promise<TreeItem> {
