@@ -13,7 +13,7 @@ import { usePresenter } from '../../context/PresenterContext';
 import { Map, Trophy, BarChart3, AlertTriangle } from 'lucide-react';
 import './Dashboard.css';
 
-type MobileTab = 'MAP' | 'LEADERBOARD' | 'COUNCIL';
+type MobileTab = 'MAP' | 'DETAILS';
 
 export const Dashboard: React.FC = () => {
   const { role, selectedNeighborhood, addPoints, incrementWaterings } = usePresenter();
@@ -78,36 +78,35 @@ export const Dashboard: React.FC = () => {
       <PitchHeader />
 
       <div className="dashboard-main-container">
-        {/* Mobile View Switcher Tabs (< 768px) */}
+        {/* Mobile View Switcher Tabs (< 768px only) */}
         <div className="mobile-view-tabs" role="tablist" aria-label="Navigare Mobil">
           <button
             role="tab"
             aria-selected={mobileTab === 'MAP'}
-            className={`mobile-view-tab ${mobileTab === 'MAP' ? 'active' : ''}`}
+            className={`mobile-view-tab ${mobileTab === 'MAP' ? (role === 'COUNCIL_ADMIN' ? 'active council-active' : 'active') : ''}`}
             onClick={() => setMobileTab('MAP')}
           >
             <Map size={15} />
-            <span>Hartă</span>
+            <span>🗺️ Hartă</span>
           </button>
 
           <button
             role="tab"
-            aria-selected={mobileTab === 'LEADERBOARD'}
-            className={`mobile-view-tab ${mobileTab === 'LEADERBOARD' ? 'active' : ''}`}
-            onClick={() => setMobileTab('LEADERBOARD')}
+            aria-selected={mobileTab === 'DETAILS'}
+            className={`mobile-view-tab ${mobileTab === 'DETAILS' ? (role === 'COUNCIL_ADMIN' ? 'active council-active' : 'active') : ''}`}
+            onClick={() => setMobileTab('DETAILS')}
           >
-            <Trophy size={15} />
-            <span>Clasament</span>
-          </button>
-
-          <button
-            role="tab"
-            aria-selected={mobileTab === 'COUNCIL'}
-            className={`mobile-view-tab ${mobileTab === 'COUNCIL' ? 'active' : ''}`}
-            onClick={() => setMobileTab('COUNCIL')}
-          >
-            <BarChart3 size={15} />
-            <span>Consiliu</span>
+            {role === 'CITIZEN' ? (
+              <>
+                <Trophy size={15} />
+                <span>🏆 Clasament</span>
+              </>
+            ) : (
+              <>
+                <BarChart3 size={15} />
+                <span>📊 Raport Consiliu</span>
+              </>
+            )}
           </button>
         </div>
 
@@ -125,11 +124,11 @@ export const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Dashboard Grid Layout */}
+        {/* Dashboard Split-Screen Grid Layout */}
         <div className="dashboard-grid">
           
           {/* Left Column: Interactive Map */}
-          <div className={`dashboard-map-column ${mobileTab === 'MAP' ? 'mobile-tab-active' : ''}`}>
+          <div className={`dashboard-map-column ${mobileTab === 'MAP' ? 'mobile-active' : ''}`}>
             <div className="map-column-header">
               <h2 className="map-title">
                 🗺️ Registrul Interactiv al Arborilor
@@ -150,19 +149,17 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Dynamic Role Cards */}
-          <div className={`dashboard-cards-column ${mobileTab !== 'MAP' ? 'mobile-tab-active' : ''}`}>
-            {/* Citizen View: District Leaderboard */}
-            {(role === 'CITIZEN' || mobileTab === 'LEADERBOARD') && (
+          {/* Right Column: Persona-Specific Cards */}
+          <div className={`dashboard-cards-column ${mobileTab === 'DETAILS' ? 'mobile-active' : ''}`}>
+            {role === 'CITIZEN' ? (
+              /* Citizen Persona: District Leaderboard */
               <DistrictLeaderboard
                 stats={stats}
                 selectedNeighborhood={selectedNeighborhood}
                 onSelectNeighborhood={() => {}}
               />
-            )}
-
-            {/* Council Admin View: Analytics & Dispatcher */}
-            {(role === 'COUNCIL_ADMIN' || mobileTab === 'COUNCIL') && (
+            ) : (
+              /* Council Admin Persona: Executive Analytics & Alert Dispatcher */
               <>
                 <CouncilAnalyticsBoard trees={trees} stats={stats} />
                 <CouncilAlertDispatcher alerts={alerts} onCreateAlert={handleCreateAlert} />
