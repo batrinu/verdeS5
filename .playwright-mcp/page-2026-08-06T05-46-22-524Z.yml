@@ -1,0 +1,60 @@
+- generic [ref=f1e3]:
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - generic [ref=f1e6]: 🌿
+      - generic [ref=f1e7]:
+        - generic [ref=f1e8]: Verde în Sectorul 5
+        - generic [ref=f1e9]: Platformă Comunitară & Registrul Spațiilor Verzi
+    - generic [ref=f1e10]:
+      - generic [ref=f1e11]:
+        - generic [ref=f1e12]: "Cartier:"
+        - combobox [ref=f1e13] [cursor=pointer]:
+          - option "Toate Cartierele (Sector 5)" [selected]
+          - option "Cotroceni"
+          - option "Rahova"
+          - option "Ferentari"
+          - option "Sebastian"
+          - option "Izvor"
+      - generic [ref=f1e14]:
+        - button "👤 Mod Cetățean" [ref=f1e15] [cursor=pointer]
+        - button "🏛️ Mod Consiliu Local" [ref=f1e16] [cursor=pointer]
+    - generic [ref=f1e17]:
+      - generic [ref=f1e18]:
+        - generic [ref=f1e19]: 🏆
+        - generic [ref=f1e20]: 350 EcoPuncte
+      - generic [ref=f1e21]:
+        - generic [ref=f1e22]: 💧
+        - generic [ref=f1e23]: 7 Udări Logate
+  - generic [ref=f1e25]:
+    - generic [ref=f1e26]:
+      - generic [ref=f1e27]:
+        - heading "🗺️ Registrul Interactiv al Arborilor din Sectorul 5" [level=2] [ref=f1e28]
+        - generic [ref=f1e29]: 0 Arbori Afișați
+      - generic [ref=f1e31]:
+        - generic:
+          - generic [ref=f1e32]:
+            - button "Zoom in" [ref=f1e33] [cursor=pointer]: +
+            - button "Zoom out" [ref=f1e34] [cursor=pointer]: −
+          - generic [ref=f1e35]:
+            - link "Leaflet" [ref=f1e36] [cursor=pointer]:
+              - /url: https://leafletjs.com
+            - text: "| ©"
+            - link "OpenStreetMap" [ref=f1e41] [cursor=pointer]:
+              - /url: https://www.openstreetmap.org/copyright
+    - generic [ref=f1e42]:
+      - generic [ref=f1e44]:
+        - heading "🏆 Clasament Cartiere Sector 5" [level=3] [ref=f1e45]
+        - generic [ref=f1e46]: Actualizat Live
+      - generic [ref=f1e47]:
+        - heading "💡 Cum Funcționează Rețeaua Verde?" [level=3] [ref=f1e48]
+        - list [ref=f1e49]:
+          - listitem [ref=f1e50]: Alege un copac din cartierul tău pe hartă.
+          - listitem [ref=f1e51]:
+            - text: Apasă pe
+            - strong [ref=f1e52]: "\"Adoptă\""
+            - text: pentru a-i da un nume și a avea grijă de el.
+          - listitem [ref=f1e53]:
+            - text: Udă copacul în zilele de caniculă și apasă
+            - strong [ref=f1e54]: "\"Udă Copacul\""
+            - text: .
+          - listitem [ref=f1e55]: "Urcă în clasament și adu cartierul tău pe locul #1 în Sectorul 5!"

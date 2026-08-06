@@ -82,12 +82,12 @@ export const Layout: React.FC = () => {
               <Menu size={24} />
             </button>
             <h2 className="page-title">
-              {allNavItems.find(item => item.path === location.pathname)?.label || 'Dashboard'}
+              {allNavItems.find(item => item.path === location.pathname)?.label || 'Tablou de Comandă'}
             </h2>
           </div>
           
           <div className="header-right">
-            <button className="header-icon-btn" aria-label="Notifications">
+            <button className="header-icon-btn" aria-label="Notificări">
               <Bell size={20} />
               <span className="notification-dot"></span>
             </button>

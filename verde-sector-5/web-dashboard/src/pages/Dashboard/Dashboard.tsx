@@ -87,7 +87,7 @@ export const Dashboard: React.FC = () => {
               </div>
             </div>
             <span style={{ fontSize: '11px', backgroundColor: '#e11d48', color: '#ffffff', padding: '4px 10px', borderRadius: '12px', fontWeight: 700 }}>
-              Action Needed
+              Acțiune Necesară
             </span>
           </div>
         )}

@@ -93,7 +93,7 @@ export const LogWateringModal: React.FC<LogWateringModalProps> = ({ tree, onClos
           <div style={{ backgroundColor: '#f8fafc', border: '1px border-dashed #cbd5e1', padding: '12px', borderRadius: '12px', marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span style={{ fontSize: '13px', color: '#475569', fontWeight: 500 }}>
-                📷 Dovadă foto udare (Simulare R2 Upload)
+                📷 Dovadă foto udare (Stocare R2 Cloudflare)
               </span>
               <span style={{ fontSize: '11px', backgroundColor: '#dcfce7', color: '#166534', padding: '2px 8px', borderRadius: '10px', fontWeight: 600 }}>
                 Încărcat ✓

@@ -31,7 +31,7 @@ export const CouncilAlertDispatcher: React.FC<CouncilAlertDispatcherProps> = ({ 
           📢 Dispecerat Alerte Consiliul Local Sector 5
         </h3>
         <span style={{ fontSize: '11px', backgroundColor: '#fef2f2', color: '#b91c1c', padding: '4px 8px', borderRadius: '12px', fontWeight: 700 }}>
-          ADMIN / DISPATCH
+          DISPECERAT MUNICIPAL
         </span>
       </div>
 

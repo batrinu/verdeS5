@@ -1,0 +1,128 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e3]:
+    - banner [ref=f1e4]:
+      - generic [ref=f1e5]:
+        - generic [ref=f1e6]: 🌿
+        - generic [ref=f1e7]:
+          - generic [ref=f1e8]: Verde în Sectorul 5
+          - generic [ref=f1e9]: Platformă Comunitară & Registrul Spațiilor Verzi
+      - generic [ref=f1e10]:
+        - generic [ref=f1e11]:
+          - generic [ref=f1e12]: "Cartier:"
+          - combobox [ref=f1e13] [cursor=pointer]:
+            - option "Toate Cartierele (Sector 5)" [selected]
+            - option "Cotroceni"
+            - option "Rahova"
+            - option "Ferentari"
+            - option "Sebastian"
+            - option "Izvor"
+        - generic [ref=f1e14]:
+          - button "👤 Mod Cetățean" [ref=f1e15] [cursor=pointer]
+          - button "🏛️ Mod Consiliu Local" [active] [ref=f1e16] [cursor=pointer]
+      - generic [ref=f1e17]:
+        - generic [ref=f1e18]:
+          - generic [ref=f1e19]: 🏆
+          - generic [ref=f1e20]: 350 EcoPuncte
+        - generic [ref=f1e21]:
+          - generic [ref=f1e22]: 💧
+          - generic [ref=f1e23]: 7 Udări Logate
+    - generic [ref=f1e25]:
+      - generic [ref=f1e26]:
+        - generic [ref=f1e27]:
+          - heading "🗺️ Registrul Interactiv al Arborilor din Sectorul 5" [level=2] [ref=f1e28]
+          - generic [ref=f1e29]: 8 Arbori Afișați
+        - generic [ref=f1e31]:
+          - generic:
+            - generic:
+              - button "Marker" [ref=f1e126] [cursor=pointer]
+              - button "Marker" [ref=f1e127] [cursor=pointer]
+              - button "Marker" [ref=f1e128] [cursor=pointer]
+              - button "Marker" [ref=f1e129] [cursor=pointer]
+              - button "Marker" [ref=f1e130] [cursor=pointer]
+              - button "Marker" [ref=f1e131] [cursor=pointer]
+              - button "Marker" [ref=f1e132] [cursor=pointer]
+              - button "Marker" [ref=f1e133] [cursor=pointer]
+          - generic:
+            - generic [ref=f1e134]:
+              - button "Zoom in" [ref=f1e135] [cursor=pointer]: +
+              - button "Zoom out" [ref=f1e136] [cursor=pointer]: −
+            - generic [ref=f1e137]:
+              - link "Leaflet" [ref=f1e138] [cursor=pointer]:
+                - /url: https://leafletjs.com
+              - text: "| ©"
+              - link "OpenStreetMap" [ref=f1e143] [cursor=pointer]:
+                - /url: https://www.openstreetmap.org/copyright
+      - generic [ref=f1e42]:
+        - generic [ref=f1e144]:
+          - generic [ref=f1e145]:
+            - generic [ref=f1e146]:
+              - heading "🏛️ Raport Executiv Consiliul Local Sector 5" [level=3] [ref=f1e147]
+              - paragraph [ref=f1e148]: Centralizator privind implicarea comunitară și starea coronamentului verde
+            - button "📥 Exportă Raport CSV Consiliu" [ref=f1e149] [cursor=pointer]
+          - generic [ref=f1e150]:
+            - generic [ref=f1e151]:
+              - generic [ref=f1e152]: Rată Adopție Sector 5
+              - generic [ref=f1e153]: 57%
+              - generic [ref=f1e154]: 432 din 760 arbori
+            - generic [ref=f1e155]:
+              - generic [ref=f1e156]: Udări Înregistrate
+              - generic [ref=f1e157]: "1195"
+              - generic [ref=f1e158]: aprox. 14,340 Litri apă
+            - generic [ref=f1e159]:
+              - generic [ref=f1e160]: Cartier Lider
+              - generic [ref=f1e161]: Cotroceni
+              - generic [ref=f1e162]: 17,000 EcoPuncte
+            - generic [ref=f1e163]:
+              - generic [ref=f1e164]: Economii Bugetar ADP
+              - generic [ref=f1e165]: €14,200
+              - generic [ref=f1e166]: prin voluntariat cetățenesc
+          - application [ref=f1e170]:
+            - generic [ref=f1e219]:
+              - generic [ref=f1e220]:
+                - generic [ref=f1e221]: Cotroceni
+                - generic [ref=f1e223]: Sebastian
+                - generic [ref=f1e225]: Rahova
+                - generic [ref=f1e227]: Ferentari
+                - generic [ref=f1e229]: Izvor
+              - generic [ref=f1e231]:
+                - generic [ref=f1e232]: "0"
+                - generic [ref=f1e234]: "85"
+                - generic [ref=f1e236]: "170"
+                - generic [ref=f1e238]: "255"
+                - generic [ref=f1e240]: "340"
+        - generic [ref=f1e242]:
+          - generic [ref=f1e243]:
+            - heading "📢 Dispecerat Alerte Consiliul Local Sector 5" [level=3] [ref=f1e244]
+            - generic [ref=f1e245]: ADMIN / DISPATCH
+          - generic [ref=f1e246]:
+            - generic [ref=f1e247]:
+              - generic [ref=f1e248]:
+                - generic [ref=f1e249]: Cartier Țintă
+                - combobox [ref=f1e250]:
+                  - option "Cotroceni"
+                  - option "Rahova" [selected]
+                  - option "Ferentari"
+                  - option "Sebastian"
+                  - option "Izvor"
+              - generic [ref=f1e251]:
+                - generic [ref=f1e252]: Tip Alertă
+                - combobox [ref=f1e253]:
+                  - option "🔥 Caniculă / Secetă" [selected]
+                  - option "🌱 Udare Arbori Tineri"
+                  - option "⚠️ Risc Furtună / Risc Cădere"
+            - 'textbox "Mesaj alertă către cetățeni (ex: Solicitare udat 15 tei tineri pe Calea Rahovei)..." [ref=f1e255]'
+            - button "Transmite Alertă Cetățenilor 📢" [ref=f1e256] [cursor=pointer]
+          - generic [ref=f1e257]:
+            - generic [ref=f1e258]: "Alerte Active Transmise (2):"
+            - generic [ref=f1e259]:
+              - generic [ref=f1e260]:
+                - generic [ref=f1e261]:
+                  - generic [ref=f1e262]: 📍 Rahova
+                  - generic [ref=f1e263]: 11:00 AM
+                - generic [ref=f1e264]: "Alerte Caniculă: 15 tei tineri pe Calea Rahovei necesită udare de urgență (15L/copac)."
+              - generic [ref=f1e265]:
+                - generic [ref=f1e266]:
+                  - generic [ref=f1e267]: 📍 Ferentari
+                  - generic [ref=f1e268]: 01:00 PM
+                - generic [ref=f1e269]: Campanie de udat arborii proaspăt plantați pe Strada Vadul Nou.
+  - generic [ref=f1e270]: "0"
