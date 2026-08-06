@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { usePresenter } from '../../context/PresenterContext';
 import { Menu, X, Shield, TreePine } from 'lucide-react';
 import './PitchHeader.css';
@@ -7,6 +7,9 @@ import './PitchHeader.css';
 export const PitchHeader: React.FC = () => {
   const { role, setRole } = usePresenter();
   const [mobileExpanded, setMobileExpanded] = useState(false);
+  // The persona switch only affects the Dashboard; other pages share this
+  // header but have no citizen/council split, so the control hides there.
+  const isDashboard = useLocation().pathname === '/';
 
   // Live-pitch accelerator: press "P" to flip between citizen and council views
   // without reaching for the (deliberately quiet) presenter control.
@@ -65,8 +68,12 @@ export const PitchHeader: React.FC = () => {
             Sponsori
           </Link>
         </nav>
+      </div>
 
-        {/* Quiet presenter-only control (demo view switch; shortcut: P) */}
+      {/* Quiet presenter-only control (demo view switch; shortcut: P).
+          Lives outside the collapsible nav menu and only on the Dashboard —
+          the persona split doesn't exist on the other pages. */}
+      {isDashboard && (
         <div className="presenter-control">
           <span className="presenter-label" title="Comutator de prezentare (tasta P)">Prezentare</span>
           <div className="role-segmented-switcher" role="tablist" aria-label="Comută rolul prezentării">
@@ -91,7 +98,7 @@ export const PitchHeader: React.FC = () => {
           </button>
           </div>
         </div>
-      </div>
+      )}
     </header>
   );
 };

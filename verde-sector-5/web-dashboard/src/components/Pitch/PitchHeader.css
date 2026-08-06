@@ -135,12 +135,14 @@
 }
 
 /* Quiet presenter-only control — deliberately recessive so citizens aren't
-   pulled toward an admin view; it's a demo switch (also toggled with "P"). */
+   pulled toward an admin view; it's a demo switch (also toggled with "P").
+   Sits outside the nav menu as the header grid's right column (Dashboard only). */
 .presenter-control {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
+  justify-self: end;
 }
 
 .presenter-label {
@@ -320,6 +322,18 @@
     justify-content: center;
     width: 100%;
     min-height: 44px; /* HIG/WCAG touch target */
+  }
+
+  /* Standalone presenter row: always visible on the Dashboard without
+     opening the nav menu (it's no longer inside the collapsible panel). */
+  .presenter-control {
+    width: 100%;
+    align-items: stretch;
+    margin-top: 10px;
+  }
+
+  .presenter-label {
+    text-align: center;
   }
 
   .role-segmented-switcher {
