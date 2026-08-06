@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { TreeItem } from '../../types/tree';
@@ -61,126 +60,98 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
   onAdoptClick,
   onWaterClick,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Center of Sector 5, Bucharest
-  const center: [number, number] = [44.4215, 26.0740];
+  const mapContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    return () => {
-      if (containerRef.current) {
-        // Clean up any stray Leaflet DOM state on unmount
-        (containerRef.current as any)._leaflet_id = null;
-      }
-    };
-  }, []);
+    if (!mapContainerRef.current) return;
 
-  const getMarkerIcon = (tree: TreeItem) => {
-    if (tree.isAdopted) return adoptedIcon;
-    if (tree.healthStatus === 'NEEDS_WATER') return needsWaterIcon;
-    if (tree.healthStatus === 'ATTENTION_REQUIRED' || tree.healthStatus === 'CRITICAL') return attentionIcon;
-    return healthyIcon;
-  };
+    // Clean up if container was previously used
+    if ((mapContainerRef.current as any)._leaflet_id) {
+      (mapContainerRef.current as any)._leaflet_id = null;
+    }
+
+    // Initialize Leaflet map instance
+    const map = L.map(mapContainerRef.current).setView([44.4215, 26.0740], 13.5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    const getMarkerIcon = (tree: TreeItem) => {
+      if (tree.isAdopted) return adoptedIcon;
+      if (tree.healthStatus === 'NEEDS_WATER') return needsWaterIcon;
+      if (tree.healthStatus === 'ATTENTION_REQUIRED' || tree.healthStatus === 'CRITICAL') return attentionIcon;
+      return healthyIcon;
+    };
+
+    // Add tree markers
+    trees.forEach((tree) => {
+      const marker = L.marker([tree.latitude, tree.longitude], {
+        icon: getMarkerIcon(tree),
+      }).addTo(map);
+
+      const popupContainer = document.createElement('div');
+      popupContainer.style.minWidth = '220px';
+      popupContainer.style.fontFamily = 'sans-serif';
+
+      popupContainer.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-size: 11px; font-weight: bold; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">
+            ${tree.neighborhood} • ${tree.code}
+          </span>
+          ${tree.isAdopted ? `
+            <span style="background-color: #fef08a; color: #854d0e; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;">
+              🌟 Adoptat
+            </span>
+          ` : `
+            <span style="background-color: #e0f2fe; color: #0369a1; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;">
+              Disponibil
+            </span>
+          `}
+        </div>
+        <h4 style="margin: 0 0 4px 0; font-size: 15px; color: #0f172a;">
+          ${tree.nickname || tree.species}
+        </h4>
+        <p style="margin: 0 0 10px 0; font-size: 12px; color: #64748b;">
+          ${tree.isAdopted ? `Îngrijit de: ${tree.adopterName}` : `Specie: ${tree.species}`}
+        </p>
+        <div style="display: flex; gap: 6px; margin-top: 8px;">
+          ${!tree.isAdopted ? `<button class="btn-adopt-tree" style="flex: 1; background-color: #16a34a; color: #ffffff; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer;">🌱 Adoptă</button>` : ''}
+          <button class="btn-water-tree" style="flex: 1; background-color: #0284c7; color: #ffffff; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer;">💧 Udă Copacul</button>
+        </div>
+      `;
+
+      // Event listener bindings
+      const adoptBtn = popupContainer.querySelector('.btn-adopt-tree');
+      if (adoptBtn) {
+        adoptBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          onAdoptClick(tree);
+        });
+      }
+
+      const waterBtn = popupContainer.querySelector('.btn-water-tree');
+      if (waterBtn) {
+        waterBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          onWaterClick(tree);
+        });
+      }
+
+      marker.bindPopup(popupContainer);
+      marker.on('click', () => onSelectTree(tree));
+    });
+
+    return () => {
+      map.remove();
+    };
+  }, [trees, onSelectTree, onAdoptClick, onWaterClick]);
 
   return (
     <div
-      ref={containerRef}
+      ref={mapContainerRef}
       className="sector5-map-container"
       style={{ height: '100%', width: '100%', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
-    >
-      <MapContainer
-        key="sector5-leaflet-map-instance"
-        center={center}
-        zoom={13.5}
-        style={{ height: '100%', width: '100%' }}
-        scrollWheelZoom={true}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        {trees.map((tree) => (
-          <Marker
-            key={tree.id}
-            position={[tree.latitude, tree.longitude]}
-            icon={getMarkerIcon(tree)}
-            eventHandlers={{
-              click: () => onSelectTree(tree),
-            }}
-          >
-            <Popup>
-              <div style={{ minWidth: '220px', fontFamily: 'sans-serif' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    {tree.neighborhood} • {tree.code}
-                  </span>
-                  {tree.isAdopted ? (
-                    <span style={{ backgroundColor: '#fef08a', color: '#854d0e', fontSize: '10px', padding: '2px 6px', borderRadius: '10px', fontWeight: 600 }}>
-                      🌟 Adoptat
-                    </span>
-                  ) : (
-                    <span style={{ backgroundColor: '#e0f2fe', color: '#0369a1', fontSize: '10px', padding: '2px 6px', borderRadius: '10px', fontWeight: 600 }}>
-                      Disponibil
-                    </span>
-                  )}
-                </div>
-
-                <h4 style={{ margin: '0 0 4px 0', fontSize: '15px', color: '#0f172a' }}>
-                  {tree.nickname || tree.species}
-                </h4>
-                <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: '#64748b' }}>
-                  {tree.isAdopted ? `Îngrijit de: ${tree.adopterName}` : `Specie: ${tree.species}`}
-                </p>
-
-                <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
-                  {!tree.isAdopted && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onAdoptClick(tree);
-                      }}
-                      style={{
-                        flex: 1,
-                        backgroundColor: '#16a34a',
-                        color: '#ffffff',
-                        border: 'none',
-                        padding: '6px 10px',
-                        borderRadius: '8px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      🌱 Adoptă
-                    </button>
-                  )}
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onWaterClick(tree);
-                    }}
-                    style={{
-                      flex: 1,
-                      backgroundColor: '#0284c7',
-                      color: '#ffffff',
-                      border: 'none',
-                      padding: '6px 10px',
-                      borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    💧 Udă Copacul
-                  </button>
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
-    </div>
+    />
   );
 };
