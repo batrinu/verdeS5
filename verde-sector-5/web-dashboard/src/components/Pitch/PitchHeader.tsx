@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePresenter } from '../../context/PresenterContext';
-import { Menu, X, Shield } from 'lucide-react';
+import { Menu, X, Shield, TreePine } from 'lucide-react';
 import './PitchHeader.css';
 
 export const PitchHeader: React.FC = () => {
@@ -13,7 +13,7 @@ export const PitchHeader: React.FC = () => {
       <div className="pitch-header-top">
         <a href="/" className="pitch-brand" aria-label="Verde în Sectorul 5 - Casă">
           <div className="pitch-logo-badge" aria-hidden="true">
-            🌿
+            <TreePine size={22} color="#ffffff" />
           </div>
           <div>
             <h1 className="pitch-title-text" style={{ margin: 0, padding: 0 }}>

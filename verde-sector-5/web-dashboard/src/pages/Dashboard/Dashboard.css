@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #0f172a;
+  background-color: #0B1D1A;
   color: #f8fafc;
   font-family: var(--font-family-main);
 }
@@ -23,11 +23,11 @@
 /* Mobile View Switcher Tabs (< 768px) */
 .mobile-view-tabs {
   display: none;
-  background: rgba(30, 41, 59, 0.8);
+  background: rgba(17, 34, 32, 0.85);
   backdrop-filter: blur(12px);
   padding: 4px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(110, 231, 160, 0.08);
   gap: 4px;
   margin-bottom: 8px;
 }
@@ -50,14 +50,14 @@
 }
 
 .mobile-view-tab.active {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
+  background: linear-gradient(135deg, #34D87A, #1F9D5C);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 12px rgba(52, 216, 122, 0.25);
 }
 
 .mobile-view-tab.active.council-active {
-  background: linear-gradient(135deg, #0284c7, #0369a1);
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+  background: linear-gradient(135deg, #0EA5E9, #0284C7);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
 }
 
 
@@ -110,9 +110,9 @@
 }
 
 .district-select-input {
-  background-color: #1e293b;
+  background-color: #112220;
   color: #f8fafc;
-  border: 1px solid #334155;
+  border: 1px solid rgba(110, 231, 160, 0.12);
   padding: 6px 12px;
   border-radius: 10px;
   font-size: 13px;
@@ -123,12 +123,12 @@
 }
 
 .district-select-input:hover {
-  border-color: #475569;
+  border-color: rgba(110, 231, 160, 0.2);
 }
 
 .district-select-input:focus {
-  border-color: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  border-color: #34D87A;
+  box-shadow: 0 0 0 3px rgba(52, 216, 122, 0.15);
 }
 
 .map-wrapper {
@@ -138,8 +138,8 @@
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(110, 231, 160, 0.06);
 }
 
 /* Right Column: Cards */
