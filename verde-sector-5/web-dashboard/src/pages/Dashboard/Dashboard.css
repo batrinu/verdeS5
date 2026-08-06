@@ -63,6 +63,25 @@
 }
 
 
+/* Dark-skin the Leaflet marker popup so it matches the app instead of a white bubble */
+.leaflet-popup-content-wrapper {
+  background: var(--bg-surface-elevated);
+  color: var(--color-primary-50);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+.leaflet-popup-tip {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+}
+.leaflet-popup-close-button {
+  color: var(--color-text-muted) !important;
+}
+.leaflet-popup-close-button:hover {
+  color: var(--color-primary-50) !important;
+}
+
 /* Offline / local-data notice — honest connection status */
 .offline-banner {
   background: rgba(251, 191, 36, 0.1);
@@ -162,6 +181,45 @@
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(110, 231, 160, 0.06);
+}
+
+/* Loading skeletons — shown during the first data load instead of empty space */
+.skeleton-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeleton-line {
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface-elevated) 25%,
+    var(--bg-surface-hover) 37%,
+    var(--bg-surface-elevated) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeletonShimmer 1.4s ease-in-out infinite;
+}
+.skeleton-row {
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface-elevated) 25%,
+    var(--bg-surface-hover) 37%,
+    var(--bg-surface-elevated) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeletonShimmer 1.4s ease-in-out infinite;
+}
+@keyframes skeletonShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
 }
 
 /* Right Column: Cards */

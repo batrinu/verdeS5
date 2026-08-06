@@ -32,6 +32,8 @@ export const Dashboard: React.FC = () => {
   const isFirstLoadRef = useRef(true);
   // True when the API is unreachable and we're showing local demo data.
   const [isOffline, setIsOffline] = useState(false);
+  // True until the first data load settles — drives the loading skeleton.
+  const [isLoading, setIsLoading] = useState(true);
 
   // Mobile active tab state
   const [mobileTab, setMobileTab] = useState<MobileTab>('MAP');
@@ -85,6 +87,8 @@ export const Dashboard: React.FC = () => {
       setIsOffline(!isApiReachable());
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
+    } finally {
+      setIsLoading(false);
     }
   }, [selectedNeighborhood]);
 
@@ -285,7 +289,17 @@ export const Dashboard: React.FC = () => {
 
           {/* Right Column: Persona-Specific Cards */}
           <div className={`dashboard-cards-column ${mobileTab === 'DETAILS' ? 'mobile-active' : ''}`}>
-            {role === 'CITIZEN' ? (
+            {isLoading && stats.length === 0 ? (
+              /* First-load skeleton so the column isn't blank while data arrives */
+              <div className="skeleton-card" aria-hidden="true">
+                <div className="skeleton-line" style={{ width: '55%' }} />
+                <div className="skeleton-row" />
+                <div className="skeleton-row" />
+                <div className="skeleton-row" />
+                <div className="skeleton-row" />
+                <div className="skeleton-row" />
+              </div>
+            ) : role === 'CITIZEN' ? (
               /* Citizen Persona: District Leaderboard + Active Alerts Feed */
               <>
                 <DistrictLeaderboard

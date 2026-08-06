@@ -99,6 +99,13 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
       return healthyIcon;
     };
 
+    // Escape user-derived values before they go into popup innerHTML (adopter
+    // name / nickname are user input).
+    const esc = (s: unknown) =>
+      String(s ?? '').replace(/[&<>"']/g, (c) => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string
+      ));
+
     // Add tree markers
     trees.forEach((tree) => {
       // Descriptive accessible name so screen readers announce the tree, not "Marker".
@@ -115,29 +122,29 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
       popupContainer.style.fontFamily = 'sans-serif';
 
       popupContainer.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-          <span style="font-size: 11px; font-weight: bold; color: #16a34a; text-transform: uppercase; letter-spacing: 0.5px;">
-            ${tree.neighborhood} • ${tree.code}
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 8px;">
+          <span style="font-size: 11px; font-weight: bold; color: #6EE7A0; text-transform: uppercase; letter-spacing: 0.5px;">
+            ${esc(tree.neighborhood)} • ${esc(tree.code)}
           </span>
           ${tree.isAdopted ? `
-            <span style="background-color: #fef08a; color: #854d0e; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;">
+            <span style="background-color: rgba(251, 191, 36, 0.15); color: #FBBF24; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;">
               🌟 Adoptat
             </span>
           ` : `
-            <span style="background-color: #e0f2fe; color: #0369a1; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;">
+            <span style="background-color: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;">
               Disponibil
             </span>
           `}
         </div>
-        <h4 style="margin: 0 0 4px 0; font-size: 15px; color: #0f172a;">
-          ${tree.nickname || tree.species}
+        <h4 style="margin: 0 0 4px 0; font-size: 15px; color: #f0fdf4;">
+          ${esc(tree.nickname || tree.species)}
         </h4>
-        <p style="margin: 0 0 10px 0; font-size: 12px; color: #64748b;">
-          ${tree.isAdopted ? `Îngrijit de: ${tree.adopterName}` : `Specie: ${tree.species}`}
+        <p style="margin: 0 0 10px 0; font-size: 12px; color: #94A3B8;">
+          ${tree.isAdopted ? `Îngrijit de: ${esc(tree.adopterName)}` : `Specie: ${esc(tree.species)}`}
         </p>
         <div style="display: flex; gap: 6px; margin-top: 8px;">
-          ${!tree.isAdopted ? `<button class="btn-adopt-tree" style="flex: 1; background-color: #16a34a; color: #ffffff; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer;">🌱 Adoptă</button>` : ''}
-          <button class="btn-water-tree" style="flex: 1; background-color: #0284c7; color: #ffffff; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer;">💧 Udă Copacul</button>
+          ${!tree.isAdopted ? `<button class="btn-adopt-tree" style="flex: 1; background-color: #34D87A; color: #0B1D1A; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">🌱 Adoptă</button>` : ''}
+          <button class="btn-water-tree" style="flex: 1; background-color: #0EA5E9; color: #ffffff; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">💧 Udă Copacul</button>
         </div>
       `;
 
