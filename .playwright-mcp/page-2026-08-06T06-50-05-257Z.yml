@@ -1,0 +1,148 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - link "Verde în Sectorul 5 - Casă" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e7]: 🌿
+      - generic [ref=e8]:
+        - heading "Verde în Sectorul 5" [level=1] [ref=e9]
+        - generic [ref=e10]: Platformă Comunitară & Registrul Spațiilor Verzi
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e16]: "Cartier:"
+        - combobox "Selectează cartierul din Sectorul 5" [ref=e17] [cursor=pointer]:
+          - option "Toate Cartierele (Sector 5)" [selected]
+          - option "Cotroceni"
+          - option "Rahova"
+          - option "Ferentari"
+          - option "Sebastian"
+          - option "Izvor"
+      - tablist "Comută rolul prezentării" [ref=e18]:
+        - tab "Mod Cetățean" [selected] [ref=e19] [cursor=pointer]
+        - tab "Mod Consiliu Local" [ref=e23] [cursor=pointer]
+      - generic [ref=e27]:
+        - generic "Puncte ecologice acumulate prin îngrijirea arborilor" [ref=e28]: 400 EcoPuncte
+        - generic "Numărul total de udări înregistrate" [ref=e37]: 8 Udări Logate
+  - generic [ref=e42]:
+    - alert [ref=e65]:
+      - generic [ref=e69]:
+        - strong [ref=e70]: "ALERTĂ CANICULĂ SECTOR 5:"
+        - text: "Alerte Caniculă: 15 tei tineri pe Calea Rahovei necesită udare de urgență (15L/copac)."
+      - generic [ref=e71]: Acțiune Necesară
+    - generic [ref=e43]:
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - heading "🗺️ Registrul Interactiv al Arborilor" [level=2] [ref=e46]
+          - generic [ref=e47]: 50 Arbori Afișați
+        - generic [ref=e49]:
+          - generic:
+            - generic:
+              - button "Marker" [ref=e307] [cursor=pointer]
+              - button "Marker" [ref=e308] [cursor=pointer]
+              - button "Marker" [ref=e309] [cursor=pointer]
+              - button "Marker" [ref=e310] [cursor=pointer]
+              - button "Marker" [ref=e311] [cursor=pointer]
+              - button "Marker" [ref=e312] [cursor=pointer]
+              - button "Marker" [ref=e313] [cursor=pointer]
+              - button "Marker" [ref=e314] [cursor=pointer]
+              - button "Marker" [ref=e315] [cursor=pointer]
+              - button "Marker" [ref=e316] [cursor=pointer]
+              - button "Marker" [ref=e317] [cursor=pointer]
+              - button "Marker" [ref=e318] [cursor=pointer]
+              - button "Marker" [ref=e319] [cursor=pointer]
+              - button "Marker" [ref=e320] [cursor=pointer]
+              - button "Marker" [ref=e321] [cursor=pointer]
+              - button "Marker" [ref=e322] [cursor=pointer]
+              - button "Marker" [ref=e323] [cursor=pointer]
+              - button "Marker" [ref=e324] [cursor=pointer]
+              - button "Marker" [ref=e325] [cursor=pointer]
+              - button "Marker" [ref=e326] [cursor=pointer]
+              - button "Marker" [ref=e327] [cursor=pointer]
+              - button "Marker" [ref=e328] [cursor=pointer]
+              - button "Marker" [ref=e329] [cursor=pointer]
+              - button "Marker" [ref=e330] [cursor=pointer]
+              - button "Marker" [ref=e331] [cursor=pointer]
+              - button "Marker" [ref=e332] [cursor=pointer]
+              - button "Marker" [ref=e333] [cursor=pointer]
+              - button "Marker" [ref=e334] [cursor=pointer]
+              - button "Marker" [ref=e335] [cursor=pointer]
+              - button "Marker" [ref=e336] [cursor=pointer]
+              - button "Marker" [ref=e337] [cursor=pointer]
+              - button "Marker" [ref=e338] [cursor=pointer]
+              - button "Marker" [ref=e339] [cursor=pointer]
+              - button "Marker" [ref=e340] [cursor=pointer]
+              - button "Marker" [ref=e341] [cursor=pointer]
+              - button "Marker" [ref=e342] [cursor=pointer]
+              - button "Marker" [ref=e343] [cursor=pointer]
+              - button "Marker" [ref=e344] [cursor=pointer]
+              - button "Marker" [ref=e345] [cursor=pointer]
+              - button "Marker" [ref=e346] [cursor=pointer]
+              - button "Marker" [ref=e347] [cursor=pointer]
+              - button "Marker" [ref=e348] [cursor=pointer]
+              - button "Marker" [ref=e349] [cursor=pointer]
+              - button "Marker" [ref=e350] [cursor=pointer]
+              - button "Marker" [ref=e351] [cursor=pointer]
+              - button "Marker" [ref=e352] [cursor=pointer]
+              - button "Marker" [ref=e353] [cursor=pointer]
+              - button "Marker" [ref=e354] [cursor=pointer]
+              - button "Marker" [ref=e355] [cursor=pointer]
+              - button "Marker" [ref=e356] [cursor=pointer]
+          - generic:
+            - generic [ref=e357]:
+              - button "Zoom in" [ref=e358] [cursor=pointer]: +
+              - button "Zoom out" [ref=e359] [cursor=pointer]: −
+            - generic [ref=e360]:
+              - link "Leaflet" [ref=e361] [cursor=pointer]:
+                - /url: https://leafletjs.com
+              - text: "| ©"
+              - link "OpenStreetMap" [ref=e366] [cursor=pointer]:
+                - /url: https://www.openstreetmap.org/copyright
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - heading "🏆 Clasament Cartiere Sector 5" [level=3] [ref=e63]
+          - generic [ref=e64]: Actualizat Live
+        - generic [ref=e132]:
+          - generic [ref=e133] [cursor=pointer]:
+            - generic [ref=e134]:
+              - generic [ref=e135]: 🥇
+              - generic [ref=e136]:
+                - generic [ref=e137]: Cotroceni
+                - generic [ref=e138]: 112/145 Arbori Adoptați (77%)
+            - generic [ref=e139]:
+              - generic [ref=e140]: 17,000 pct
+              - generic [ref=e141]: 💧 340 Udări
+          - generic [ref=e142] [cursor=pointer]:
+            - generic [ref=e143]:
+              - generic [ref=e144]: 🥈
+              - generic [ref=e145]:
+                - generic [ref=e146]: Sebastian
+                - generic [ref=e147]: 85/130 Arbori Adoptați (65%)
+            - generic [ref=e148]:
+              - generic [ref=e149]: 13,000 pct
+              - generic [ref=e150]: 💧 260 Udări
+          - generic [ref=e151] [cursor=pointer]:
+            - generic [ref=e152]:
+              - generic [ref=e153]: 🥉
+              - generic [ref=e154]:
+                - generic [ref=e155]: Rahova
+                - generic [ref=e156]: 95/210 Arbori Adoptați (45%)
+            - generic [ref=e157]:
+              - generic [ref=e158]: 11,000 pct
+              - generic [ref=e159]: 💧 220 Udări
+          - generic [ref=e160] [cursor=pointer]:
+            - generic [ref=e161]:
+              - generic [ref=e162]: "#4"
+              - generic [ref=e163]:
+                - generic [ref=e164]: Ferentari
+                - generic [ref=e165]: 78/180 Arbori Adoptați (43%)
+            - generic [ref=e166]:
+              - generic [ref=e167]: 9,750 pct
+              - generic [ref=e168]: 💧 195 Udări
+          - generic [ref=e169] [cursor=pointer]:
+            - generic [ref=e170]:
+              - generic [ref=e171]: "#5"
+              - generic [ref=e172]:
+                - generic [ref=e173]: Izvor
+                - generic [ref=e174]: 62/95 Arbori Adoptați (65%)
+            - generic [ref=e175]:
+              - generic [ref=e176]: 9,000 pct
+              - generic [ref=e177]: 💧 180 Udări

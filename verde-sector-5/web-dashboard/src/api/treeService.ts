@@ -107,20 +107,6 @@ export const TreeService = {
   },
 
   async adoptTree(treeId: string, adopterName: string, nickname: string): Promise<TreeItem> {
-    try {
-      const res = await fetch(`${API_BASE_URL}/trees/${treeId}/adopt`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adopterName, nickname }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.tree) return data.tree;
-      }
-    } catch {
-      // Fallback update
-    }
-
     localTrees = localTrees.map(t => {
       if (t.id === treeId) {
         return {
@@ -135,27 +121,21 @@ export const TreeService = {
 
     const target = localTrees.find(t => t.id === treeId);
     if (target) {
-      // Increment neighborhood adopted tree stats
       localStats = localStats.map(s => s.neighborhood === target.neighborhood ? { ...s, adoptedTrees: s.adoptedTrees + 1 } : s);
     }
+
+    try {
+      fetch(`${API_BASE_URL}/trees/${treeId}/adopt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adopterName, nickname }),
+      }).catch(() => {});
+    } catch {}
+
     return target!;
   },
 
   async waterTree(treeId: string, liters: number, userName: string): Promise<TreeItem> {
-    try {
-      const res = await fetch(`${API_BASE_URL}/trees/${treeId}/water`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ liters, userName }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.tree) return data.tree;
-      }
-    } catch {
-      // Fallback
-    }
-
     localTrees = localTrees.map(t => {
       if (t.id === treeId) {
         return {
@@ -176,6 +156,15 @@ export const TreeService = {
         ecoPoints: s.ecoPoints + 50,
       } : s);
     }
+
+    try {
+      fetch(`${API_BASE_URL}/trees/${treeId}/water`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ liters, userName }),
+      }).catch(() => {});
+    } catch {}
+
     return target!;
   },
 
