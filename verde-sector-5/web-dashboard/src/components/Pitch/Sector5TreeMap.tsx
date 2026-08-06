@@ -47,8 +47,18 @@ const adoptedIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
+const NEIGHBORHOOD_CONFIGS: Record<string, { center: [number, number]; zoom: number }> = {
+  Cotroceni: { center: [44.4332, 26.0725], zoom: 16 },
+  Rahova: { center: [44.4178, 26.0665], zoom: 15.5 },
+  Ferentari: { center: [44.4030, 26.0745], zoom: 15.5 },
+  Sebastian: { center: [44.4265, 26.0825], zoom: 16 },
+  Izvor: { center: [44.4308, 26.0875], zoom: 16 },
+  ALL: { center: [44.4215, 26.0740], zoom: 13.8 },
+};
+
 interface Sector5TreeMapProps {
   trees: TreeItem[];
+  selectedNeighborhood?: string;
   onSelectTree: (tree: TreeItem) => void;
   onAdoptClick: (tree: TreeItem) => void;
   onWaterClick: (tree: TreeItem) => void;
@@ -56,11 +66,13 @@ interface Sector5TreeMapProps {
 
 export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
   trees,
+  selectedNeighborhood = 'ALL',
   onSelectTree,
   onAdoptClick,
   onWaterClick,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -70,8 +82,11 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
       (mapContainerRef.current as any)._leaflet_id = null;
     }
 
+    const targetConfig = NEIGHBORHOOD_CONFIGS[selectedNeighborhood] || NEIGHBORHOOD_CONFIGS.ALL;
+
     // Initialize Leaflet map instance
-    const map = L.map(mapContainerRef.current).setView([44.4215, 26.0740], 13.5);
+    const map = L.map(mapContainerRef.current).setView(targetConfig.center, targetConfig.zoom);
+    mapInstanceRef.current = map;
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -144,8 +159,9 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
 
     return () => {
       map.remove();
+      mapInstanceRef.current = null;
     };
-  }, [trees, onSelectTree, onAdoptClick, onWaterClick]);
+  }, [trees, selectedNeighborhood, onSelectTree, onAdoptClick, onWaterClick]);
 
   return (
     <div

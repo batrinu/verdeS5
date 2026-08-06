@@ -109,6 +109,7 @@ export const Dashboard: React.FC = () => {
             <div style={{ flex: 1, minHeight: '580px' }}>
               <Sector5TreeMap
                 trees={trees}
+                selectedNeighborhood={selectedNeighborhood}
                 onSelectTree={() => {}}
                 onAdoptClick={setAdoptTreeModalTarget}
                 onWaterClick={setWaterTreeModalTarget}
