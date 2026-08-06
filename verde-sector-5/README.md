@@ -14,6 +14,10 @@ Backend API built with **Cloudflare Workers**, **Hono**, and **D1 Database** (SQ
 - ✅ **Geospatial Queries** - Location-based filtering using lat/lon bounding boxes
 - ✅ **Audit Logging** - Complete audit trail for admin actions
 - ✅ **Analytics Dashboard** - Real-time metrics and CSV export
+- ✅ **Care Incentives** - Verde Points ledger, guardian levels, rewards catalog with voucher redemption
+- ✅ **Living Tree Profiles** - Computed water status, CO₂/shade impact estimates, "voice of the tree" messages
+- ✅ **Community Layer** - Neighborhood/user leaderboards and seasonal watering challenges
+- ✅ **Corporate Sponsors** - Bronze/Silver/Gold tiers, sponsored groves, ESG dashboard with CSRD-ready CSV export
 
 ## 📁 Project Structure
 
@@ -143,7 +147,11 @@ npx wrangler deploy --env staging
 | DELETE | `/api/v1/trees/:id` | Delete tree | Admin |
 | POST | `/api/v1/trees/:id/adopt` | Adopt tree | Citizen |
 | DELETE | `/api/v1/trees/:id/adopt` | Release tree | Adopter/Admin |
+| POST | `/api/v1/trees/:id/water` | Log watering (photo proof, earns points when authenticated) | All |
+| GET | `/api/v1/trees/:id/messages` | "Voice of the tree" message feed | All |
 | GET | `/api/v1/trees/nearby` | Trees near location | All |
+
+Tree list/detail responses include computed `waterStatus` and `impact` (CO₂/shade estimates).
 
 ### Green Spaces
 
@@ -183,6 +191,24 @@ npx wrangler deploy --env staging
 | GET | `/api/v1/analytics/export/reports` | Export CSV | Admin |
 | GET | `/api/v1/analytics/activity` | Activity log | Admin |
 
+### Rewards & Community
+
+| Method | Endpoint | Description | Roles |
+|--------|----------|-------------|-------|
+| GET | `/api/v1/rewards` | Rewards catalog (active items) | All |
+| POST | `/api/v1/rewards/:id/redeem` | Redeem reward → voucher code (atomic) | Citizen+ |
+| GET | `/api/v1/leaderboard` | `?scope=neighborhoods\|users`, challenge-windowed | All |
+| GET | `/api/v1/challenges/current` | Active challenge + progress by neighborhood | All |
+| GET | `/api/v1/users/me/impact` | My points, guardian level, trees' impact | Owner |
+
+### Sponsors
+
+| Method | Endpoint | Description | Roles |
+|--------|----------|-------------|-------|
+| GET | `/api/v1/sponsors` | Tier-sorted sponsor list | All |
+| GET | `/api/v1/sponsors/:slug` | Sponsor + groves + campaigns | All |
+| GET | `/api/v1/sponsors/:slug/dashboard` | ESG aggregates; `?format=csv` for export | All (demo) |
+
 ### Users
 
 | Method | Endpoint | Description | Roles |
@@ -209,11 +235,18 @@ Tokens expire after 7 days. Use the refresh token endpoint to get a new access t
 
 The application uses SQLite via Cloudflare D1. Key entities:
 
-- **User** - Citizens, field workers, administrators
+- **User** - Citizens, field workers, administrators (cached `pointsBalance` / `careScore`)
 - **Report** - Citizen-submitted tree issues
-- **Tree** - Individual trees in the registry
+- **Tree** - Individual trees in the registry (optional grove membership)
+- **WateringLog** - Care actions with photo proof
+- **TreeMessage** - Template-generated "voice of the tree" messages
+- **PointsEvent** - Verde Points ledger (source of truth for balance and care score)
+- **Reward / Redemption** - Merchant rewards catalog and issued vouchers
+- **Sponsor / Grove** - Corporate sponsors (Bronze/Silver/Gold) and their tree groves
+- **Challenge** - Seasonal watering challenges
 - **GreenSpace** - Parks, gardens, green strips
-- **PlantingCampaign** - Tree planting initiatives
+- **PlantingCampaign** - Tree planting initiatives (optional sponsor)
+- **CareAlert / NeighborhoodStats** - Alerts and per-neighborhood aggregates
 - **Notification** - Push notifications
 - **AuditLog** - Admin action tracking
 

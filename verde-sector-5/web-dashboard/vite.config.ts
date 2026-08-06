@@ -12,7 +12,7 @@ export default defineConfig({
       manifest: {
         name: 'Verde în Sectorul 5',
         short_name: 'Verde S5',
-        description: 'Platformă de management al copacilor și raportare cetățenească pentru Sectorul 5, București',
+        description: 'Platformă comunitară pentru arborii din Sectorul 5: adopție, îngrijire cu dovadă foto, EcoPuncte și recompense, gardieni și sponsori',
         theme_color: '#0a0f0d',
         background_color: '#0a0f0d',
         display: 'standalone',

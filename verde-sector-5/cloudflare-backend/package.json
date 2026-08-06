@@ -1,7 +1,7 @@
 {
   "name": "verde-sector-5-cloudflare-backend",
-  "version": "1.0.0",
-  "description": "Cloudflare Workers backend for Verde în Sectorul 5 - Tree management platform",
+  "version": "1.1.0",
+  "description": "Cloudflare Workers backend for Verde în Sectorul 5 - tree care, incentives (points/rewards/guardians) and sponsor ESG platform",
   "main": "src/index.ts",
   "scripts": {
     "dev": "wrangler dev",

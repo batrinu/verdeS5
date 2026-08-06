@@ -1,7 +1,8 @@
 {
   "name": "web-dashboard",
+  "description": "Verde în Sectorul 5 — local-first PWA: tree adoption & care, EcoPuncte rewards, guardians, community challenges and sponsor pages",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
