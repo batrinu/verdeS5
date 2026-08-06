@@ -67,7 +67,7 @@ UPDATE users SET pointsBalance = 2350, careScore = 2350 WHERE id = 'usr_citizen_
 -- (tr_1 = LIME/Tei, tr_4 = CHESTNUT/Castan, tr_2 = OAK/Stejar).
 INSERT INTO tree_messages (id, treeId, text, createdAt) VALUES
   ('tm-1', 'tr_1', 'Mulțumesc pentru apă! Pe căldura asta, orice strop contează. — Teiul de pe Splai', datetime('now', '-2 days')),
-  ('tm-2', 'tr_4', 'Uf, chiar aveam nevoie! Cei 15 litri m-au salvat de arșiță. — Castanul Sebastian', datetime('now', '-1 days')),
+  ('tm-2', 'tr_4', 'Uf, chiar aveam nevoie! Cei 15 litri m-au salvat de arșiță. — Castanul Izvor', datetime('now', '-1 days')),
   ('tm-3', 'tr_2', 'Începeam să mă usuc — mulțumesc pentru cei 10 litri! — Stejarul Parlamentului', datetime('now', '-6 hours'));
 
 -- Gold tier (spec §4.1): anchor sponsor underwrites a campaign. Resolved via
