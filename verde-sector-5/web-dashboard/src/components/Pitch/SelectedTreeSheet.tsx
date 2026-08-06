@@ -1,6 +1,7 @@
 import React from 'react';
 import type { TreeItem } from '../../types/tree';
 import { X, Sprout, Droplets, MapPin, ShieldCheck } from 'lucide-react';
+import { TreeCareDetails } from './TreeCareDetails';
 import './SelectedTreeSheet.css';
 
 interface SelectedTreeSheetProps {
@@ -80,6 +81,8 @@ export const SelectedTreeSheet: React.FC<SelectedTreeSheetProps> = ({
               </div>
             )}
           </div>
+
+          <TreeCareDetails tree={tree} />
 
           {/* Action Buttons */}
           <div className="sheet-actions">
