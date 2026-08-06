@@ -24,6 +24,7 @@
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
+.app-sidebar-logo { font-size: var(--hig-text-title3); font-weight: 700; padding: var(--hig-space-3) var(--hig-space-3) var(--hig-space-4); }
 .app-content { flex: 1; min-width: 0; padding: var(--hig-space-6); max-width: 1200px; }
 .app-tabbar {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
