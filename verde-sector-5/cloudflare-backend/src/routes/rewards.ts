@@ -61,19 +61,21 @@ rewards.post('/:id/redeem', jwtMiddleware, async (c) => {
     // Balance and stock are already decremented at this point. Any failure
     // below must be compensated with a best-effort refund so the ledger
     // (points_events) never silently diverges from users.pointsBalance.
+    // Tracked outside the try so the catch can also delete it on failure.
+    let createdRedemption: { id: string; code: string; createdAt: Date } | null = null;
     try {
-      let redemption = null;
       let lastError: unknown;
-      for (let attempt = 0; attempt < 3 && !redemption; attempt++) {
+      for (let attempt = 0; attempt < 3 && !createdRedemption; attempt++) {
         try {
-          redemption = await prisma.redemption.create({
+          createdRedemption = await prisma.redemption.create({
             data: { userId: user.id, rewardId: reward.id, code: generateVoucherCode() },
           });
         } catch (createError) {
           lastError = createError; // likely a voucher-code unique collision; retry with a fresh code
         }
       }
-      if (!redemption) throw lastError ?? new Error('Failed to create redemption');
+      if (!createdRedemption) throw lastError ?? new Error('Failed to create redemption');
+      const redemption = createdRedemption;
 
       await prisma.pointsEvent.create({
         data: {
@@ -98,7 +100,13 @@ rewards.post('/:id/redeem', jwtMiddleware, async (c) => {
       }, 201);
     } catch (postDecrementError) {
       console.error('Redeem post-decrement error:', postDecrementError);
-      // Best-effort compensating refund — don't let a refund failure mask the original error.
+      // Best-effort compensation — don't let any compensating write's failure
+      // mask the original error. If the redemption row was committed (e.g.
+      // pointsEvent.create then threw), delete it too: otherwise it's an
+      // un-ledgered, un-paid-for voucher left in place after the refund.
+      if (createdRedemption) {
+        await prisma.redemption.delete({ where: { id: createdRedemption.id } }).catch(() => {});
+      }
       await prisma.user
         .update({ where: { id: user.id }, data: { pointsBalance: { increment: reward.costPoints } } })
         .catch(() => {});
