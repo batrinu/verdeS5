@@ -99,6 +99,41 @@
   box-shadow: 0 0 0 3px rgba(52, 216, 122, 0.15);
 }
 
+/* Desktop controls panel: primary nav + presenter switch side by side.
+   Mobile layout (stacked, full-width) is defined in the breakpoint below. */
+.pitch-controls-panel {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Primary site navigation */
+.pitch-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pitch-nav-link {
+  padding: 8px 14px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-family: var(--font-family-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.pitch-nav-link:hover,
+.pitch-nav-link:focus-visible {
+  background-color: rgba(110, 231, 160, 0.1);
+  color: #6EE7A0;
+}
+
 /* Quiet presenter-only control — deliberately recessive so citizens aren't
    pulled toward an admin view; it's a demo switch (also toggled with "P"). */
 .presenter-control {
@@ -272,6 +307,19 @@
 
   .district-select-input {
     flex: 1;
+  }
+
+  .pitch-nav {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 2px;
+  }
+
+  .pitch-nav-link {
+    justify-content: center;
+    width: 100%;
+    min-height: 44px; /* HIG/WCAG touch target */
   }
 
   .role-segmented-switcher {

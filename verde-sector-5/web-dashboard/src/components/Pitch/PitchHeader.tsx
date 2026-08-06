@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { usePresenter } from '../../context/PresenterContext';
 import { Menu, X, Shield, TreePine } from 'lucide-react';
 import './PitchHeader.css';
@@ -53,6 +54,18 @@ export const PitchHeader: React.FC = () => {
 
       {/* Desktop Controls & Mobile Collapsible Panel */}
       <div className={`pitch-controls-panel ${mobileExpanded ? 'mobile-open' : ''}`}>
+        <nav className="pitch-nav" aria-label="Navigare principală">
+          <Link to="/rewards" className="pitch-nav-link" onClick={() => setMobileExpanded(false)}>
+            Recompense
+          </Link>
+          <Link to="/community" className="pitch-nav-link" onClick={() => setMobileExpanded(false)}>
+            Comunitate
+          </Link>
+          <Link to="/sponsors" className="pitch-nav-link" onClick={() => setMobileExpanded(false)}>
+            Sponsori
+          </Link>
+        </nav>
+
         {/* Quiet presenter-only control (demo view switch; shortcut: P) */}
         <div className="presenter-control">
           <span className="presenter-label" title="Comutator de prezentare (tasta P)">Prezentare</span>

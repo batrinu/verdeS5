@@ -33,10 +33,26 @@ export const PresenterProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
   const incrementWaterings = () => setUserWaterings(prev => prev + 1);
 
+  // Atomic check-and-decrement: two rapid/synchronous calls (e.g. a double
+  // click before React re-renders) must not both read the same stale
+  // `userPoints` and both pass their balance check, which could drive the
+  // balance negative. The check happens *inside* the functional updater, so
+  // it always sees the latest queued value rather than the closed-over
+  // `userPoints` from render time. Callers should still disable/close the
+  // triggering UI immediately (defense in depth — see Rewards.tsx) since the
+  // `ok` return value here is only reliable once React has processed the
+  // update, not synchronously for callers that fire multiple updates in the
+  // same tick without reading each other's result.
   const spendPoints = (amount: number): boolean => {
-    if (userPoints < amount) return false;
-    setUserPoints(prev => prev - amount);
-    return true;
+    let ok = false;
+    setUserPoints(prev => {
+      if (prev >= amount) {
+        ok = true;
+        return prev - amount;
+      }
+      return prev;
+    });
+    return ok;
   };
 
   return (

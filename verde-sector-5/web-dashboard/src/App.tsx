@@ -10,6 +10,7 @@ const MapPage = lazy(() => import('./pages/Map/Map'));
 const ReportsPage = lazy(() => import('./pages/Reports/Reports'));
 const CampaignsPage = lazy(() => import('./pages/Campaigns/Campaigns'));
 const TreesPage = lazy(() => import('./pages/Trees/Trees'));
+const RewardsPage = lazy(() => import('./pages/Rewards/Rewards'));
 const LoginPage = lazy(() => import('./pages/Login/Login'));
 const RegisterPage = lazy(() => import('./pages/Register/Register'));
 
@@ -28,6 +29,7 @@ export const App: React.FC = () => {
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/campaigns" element={<CampaignsPage />} />
               <Route path="/trees" element={<TreesPage />} />
+              <Route path="/rewards" element={<RewardsPage />} />
 
               {/* Public Auth Routes */}
               <Route path="/login" element={<LoginPage />} />
