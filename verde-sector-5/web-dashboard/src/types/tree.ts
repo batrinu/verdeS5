@@ -15,6 +15,10 @@ export interface TreeItem {
   adopterName?: string | null;
   lastWateredAt?: string | null;
   wateringsCount?: number;
+  lastWateredBy?: string | null;
+  lastWateredLiters?: number | null;
+  lastWateredPhotoProof?: string | null;
+  lastWateredPhotoVerified?: boolean;
   notes?: string | null;
 }
 
