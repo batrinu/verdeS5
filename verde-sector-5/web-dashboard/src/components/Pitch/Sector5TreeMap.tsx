@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import './Sector5TreeMap.css';
 import type { TreeItem } from '../../types/tree';
+import { computeWaterStatus, waterStatusColor, waterStatusLabel, type WaterStatus } from '../../utils/treeCare';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -10,42 +12,49 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-// Custom pin icons
-const healthyIcon = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+// Marker fill color now comes from water status (Task 14's computeWaterStatus),
+// not health status — an SVG divIcon lets us paint the exact legend hex values,
+// which the fixed CDN pin-color presets used previously could not do. Shape and
+// size (25x41 teardrop pin, same anchors) are kept identical to the old L.Icon
+// markers. Adoption is preserved as its own affordance (gold ring + star badge)
+// rather than overriding the color, so an adopted tree that's thirsty still reads
+// as thirsty.
+const treeIconCache = new Map<string, L.DivIcon>();
 
-const needsWaterIcon = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+const buildTreeIcon = (status: WaterStatus, isAdopted: boolean): L.DivIcon => {
+  const cacheKey = `${status}-${isAdopted}`;
+  const cached = treeIconCache.get(cacheKey);
+  if (cached) return cached;
 
-const attentionIcon = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+  const fill = waterStatusColor(status);
+  const strokeColor = isAdopted ? '#FBBF24' : 'rgba(0, 0, 0, 0.35)';
+  const strokeWidth = isAdopted ? 2.5 : 1;
+  const centerMark = isAdopted
+    ? '<circle cx="12.5" cy="12.5" r="4.5" fill="#0B1D1A" /><text x="12.5" y="15.5" text-anchor="middle" font-size="7" fill="#FBBF24">★</text>'
+    : '<circle cx="12.5" cy="12.5" r="4.5" fill="rgba(0, 0, 0, 0.3)" />';
 
-const adoptedIcon = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+  const html = `
+    <svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg" focusable="false">
+      <path
+        d="M12.5 0C5.596 0 0 5.596 0 12.5c0 9.375 12.5 28.5 12.5 28.5S25 21.875 25 12.5C25 5.596 19.404 0 12.5 0z"
+        fill="${fill}"
+        stroke="${strokeColor}"
+        stroke-width="${strokeWidth}"
+      />
+      ${centerMark}
+    </svg>
+  `;
+
+  const icon = L.divIcon({
+    className: 'tree-marker-icon',
+    html,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+  treeIconCache.set(cacheKey, icon);
+  return icon;
+};
 
 const NEIGHBORHOOD_CONFIGS: Record<string, { center: [number, number]; zoom: number }> = {
   Cotroceni: { center: [44.4332, 26.0725], zoom: 16 },
@@ -92,13 +101,6 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
 
-    const getMarkerIcon = (tree: TreeItem) => {
-      if (tree.isAdopted) return adoptedIcon;
-      if (tree.healthStatus === 'NEEDS_WATER') return needsWaterIcon;
-      if (tree.healthStatus === 'ATTENTION_REQUIRED' || tree.healthStatus === 'CRITICAL') return attentionIcon;
-      return healthyIcon;
-    };
-
     // Escape user-derived values before they go into popup innerHTML (adopter
     // name / nickname are user input).
     const esc = (s: unknown) =>
@@ -108,10 +110,12 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
 
     // Add tree markers
     trees.forEach((tree) => {
+      const status = computeWaterStatus(tree);
       // Descriptive accessible name so screen readers announce the tree, not "Marker".
-      const label = `${tree.nickname || tree.species} — ${tree.neighborhood}, ${tree.isAdopted ? 'adoptat' : 'disponibil pentru adopție'} (${tree.code})`;
+      // Water status is appended so the label carries the same info the marker color does.
+      const label = `${tree.nickname || tree.species} — ${tree.neighborhood}, ${tree.isAdopted ? 'adoptat' : 'disponibil pentru adopție'} (${tree.code}) — ${waterStatusLabel(status)}`;
       const marker = L.marker([tree.latitude, tree.longitude], {
-        icon: getMarkerIcon(tree),
+        icon: buildTreeIcon(status, tree.isAdopted),
         alt: label,
         title: label,
         keyboard: true,
@@ -184,10 +188,24 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
   }, [trees, selectedNeighborhood, onSelectTree, onAdoptClick, onWaterClick]);
 
   return (
-    <div
-      ref={mapContainerRef}
-      className="sector5-map-container"
-      style={{ height: '100%', width: '100%', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
-    />
+    // Leaflet mounts directly into the ref'd div's DOM, outside React's own
+    // tracking of its children — the legend must be a *sibling* in an outer
+    // wrapper, not a JSX child of that div, or React and Leaflet fight over
+    // the same node's children on re-render/unmount.
+    <div className="sector5-map-outer">
+      <div
+        ref={mapContainerRef}
+        className="sector5-map-container"
+        style={{ height: '100%', width: '100%', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
+      />
+      <div className="map-water-legend" role="note" aria-label="Legendă stare hidratare">
+        {(['ok', 'thirsty', 'urgent', 'unknown'] as const).map((s) => (
+          <span key={s} className="legend-item">
+            <span className="legend-dot" style={{ background: waterStatusColor(s) }} aria-hidden="true" />
+            {waterStatusLabel(s)}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 };
