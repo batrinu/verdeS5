@@ -108,37 +108,37 @@ const Rewards: React.FC = () => {
     if (redeemingRef.current) return;
     redeemingRef.current = true;
 
-    setConfirmTarget(null);
-    setError(null);
+    try {
+      setConfirmTarget(null);
+      setError(null);
 
-    if (userPoints < reward.costPoints) {
-      setError('Nu ai destule EcoPuncte pentru această recompensă.');
+      if (userPoints < reward.costPoints) {
+        setError('Nu ai destule EcoPuncte pentru această recompensă.');
+        return;
+      }
+
+      const result = redeemReward(reward.id, userPoints);
+      if (!result.ok) {
+        setError(result.error === 'out_of_stock'
+          ? 'Stoc epuizat — încearcă altă recompensă.'
+          : 'Nu s-a putut emite voucherul. Încearcă din nou.');
+        return;
+      }
+
+      const spent = spendPoints(reward.costPoints);
+      if (!spent) {
+        // Extremely unlikely given the guards above, but stay honest rather
+        // than silently issuing a voucher the balance can't cover.
+        setError('Soldul de EcoPuncte s-a schimbat între timp. Încearcă din nou.');
+        return;
+      }
+
+      setRewards(getRewards());
+      setRedemptions(getRedemptions());
+      setIssued(result.redemption);
+    } finally {
       redeemingRef.current = false;
-      return;
     }
-
-    const result = redeemReward(reward.id, userPoints);
-    if (!result.ok) {
-      setError(result.error === 'out_of_stock'
-        ? 'Stoc epuizat — încearcă altă recompensă.'
-        : 'Nu s-a putut emite voucherul. Încearcă din nou.');
-      redeemingRef.current = false;
-      return;
-    }
-
-    const spent = spendPoints(reward.costPoints);
-    if (!spent) {
-      // Extremely unlikely given the guards above, but stay honest rather
-      // than silently issuing a voucher the balance can't cover.
-      setError('Soldul de EcoPuncte s-a schimbat între timp. Încearcă din nou.');
-      redeemingRef.current = false;
-      return;
-    }
-
-    setRewards(getRewards());
-    setRedemptions(getRedemptions());
-    setIssued(result.redemption);
-    redeemingRef.current = false;
   };
 
   return (
