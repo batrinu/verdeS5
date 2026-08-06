@@ -163,9 +163,6 @@ export const Dashboard: React.FC = () => {
           {/* Left Column: Interactive Map */}
           <div className={`dashboard-map-column ${mobileTab === 'MAP' ? 'mobile-active' : ''}`}>
             <div className="map-column-header">
-              <h2 className="map-title">
-                🗺️ Registrul Interactiv al Arborilor
-              </h2>
               <div className="district-selector-group">
                 <MapPin size={16} color="#94a3b8" />
                 <label htmlFor="district-select" className="district-label">
