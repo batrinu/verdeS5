@@ -55,8 +55,8 @@ export const TreeService = {
   async getTrees(neighborhood?: string): Promise<TreeItem[]> {
     try {
       const url = neighborhood && neighborhood !== 'ALL'
-        ? `${API_BASE_URL}/api/v1/trees?neighborhood=${neighborhood}`
-        : `${API_BASE_URL}/api/v1/trees`;
+        ? `${API_BASE_URL}/trees?neighborhood=${neighborhood}`
+        : `${API_BASE_URL}/trees`;
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
@@ -74,7 +74,7 @@ export const TreeService = {
 
   async adoptTree(treeId: string, adopterName: string, nickname: string): Promise<TreeItem> {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/trees/${treeId}/adopt`, {
+      const res = await fetch(`${API_BASE_URL}/trees/${treeId}/adopt`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ adopterName, nickname }),
@@ -109,7 +109,7 @@ export const TreeService = {
 
   async waterTree(treeId: string, liters: number, userName: string): Promise<TreeItem> {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/trees/${treeId}/water`, {
+      const res = await fetch(`${API_BASE_URL}/trees/${treeId}/water`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ liters, userName }),
@@ -147,7 +147,7 @@ export const TreeService = {
 
   async getAlerts(): Promise<CareAlertItem[]> {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/alerts`);
+      const res = await fetch(`${API_BASE_URL}/alerts`);
       if (res.ok) {
         const data = await res.json();
         if (data.alerts) return data.alerts;
@@ -167,7 +167,7 @@ export const TreeService = {
     };
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/alerts`, {
+      const res = await fetch(`${API_BASE_URL}/alerts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newAlert),
@@ -184,7 +184,7 @@ export const TreeService = {
 
   async getDistrictStats(): Promise<DistrictStat[]> {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/neighborhoods/stats`);
+      const res = await fetch(`${API_BASE_URL}/neighborhoods/stats`);
       if (res.ok) {
         const data = await res.json();
         if (data.stats && data.stats.length > 0) return data.stats;

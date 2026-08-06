@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -61,8 +61,19 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
   onAdoptClick,
   onWaterClick,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // Center of Sector 5, Bucharest
   const center: [number, number] = [44.4215, 26.0740];
+
+  useEffect(() => {
+    return () => {
+      if (containerRef.current) {
+        // Clean up any stray Leaflet DOM state on unmount
+        (containerRef.current as any)._leaflet_id = null;
+      }
+    };
+  }, []);
 
   const getMarkerIcon = (tree: TreeItem) => {
     if (tree.isAdopted) return adoptedIcon;
@@ -72,8 +83,18 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
   };
 
   return (
-    <div className="sector5-map-container" style={{ height: '100%', width: '100%', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}>
-      <MapContainer center={center} zoom={13.5} style={{ height: '100%', width: '100%' }} scrollWheelZoom={true}>
+    <div
+      ref={containerRef}
+      className="sector5-map-container"
+      style={{ height: '100%', width: '100%', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
+    >
+      <MapContainer
+        key="sector5-leaflet-map-instance"
+        center={center}
+        zoom={13.5}
+        style={{ height: '100%', width: '100%' }}
+        scrollWheelZoom={true}
+      >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

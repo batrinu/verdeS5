@@ -15,15 +15,28 @@ INSERT OR REPLACE INTO green_spaces (id, name, type, location, area, description
 ('gs_hum', 'Parcul Humulești', 'PARK', '[[44.4050, 26.0780], [44.4070, 26.0780], [44.4070, 26.0800], [44.4050, 26.0800]]', 8500.0, 'Zona verde urbană în cartierul Rahova/Ferentari.', 'Strada Humulești, Sector 5', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z');
 
 -- Trees
-INSERT OR REPLACE INTO trees (id, species, speciesOther, latitude, longitude, plantingDate, height, trunkDiameter, healthStatus, greenSpaceId, notes, photos, createdAt, updatedAt) VALUES
-('tr_1', 'LIME', NULL, 44.4268, 26.0814, '2022-04-10T00:00:00.000Z', 8.5, 25.0, 'EXCELLENT', 'gs_seb', 'Tei argintiu îngrijit periodic.', '[]', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
-('tr_2', 'OAK', NULL, 44.4272, 26.0818, '2020-11-15T00:00:00.000Z', 12.0, 40.0, 'GOOD', 'gs_seb', 'Stejar roșu matur.', '[]', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
-('tr_3', 'MAPLE', NULL, 44.4275, 26.0820, '2023-03-20T00:00:00.000Z', 6.0, 18.0, 'FAIR', 'gs_seb', 'Arțar american, necesită toaletare.', '[]', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
-('tr_4', 'CHESTNUT', NULL, 44.4330, 26.0905, '2018-05-01T00:00:00.000Z', 14.0, 55.0, 'GOOD', 'gs_izv', 'Castan ornamental de talie mare.', '[]', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
-('tr_5', 'BIRCH', NULL, 44.4335, 26.0915, '2024-03-25T00:00:00.000Z', 4.5, 12.0, 'EXCELLENT', 'gs_izv', 'Mesteacăn tânăr plantat recent.', '[]', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
-('tr_6', 'ASH', NULL, 44.4295, 26.0725, '2021-09-12T00:00:00.000Z', 9.0, 30.0, 'GOOD', 'gs_rom', 'Frasin pe aleea principală.', '[]', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
-('tr_7', 'WILLOW', NULL, 44.4060, 26.0785, '2019-04-18T00:00:00.000Z', 11.0, 45.0, 'POOR', 'gs_hum', 'Salcie plângătoare, uscături la bază.', '[]', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
-('tr_8', 'PINE', NULL, 44.4250, 26.0790, '2023-11-05T00:00:00.000Z', 5.0, 15.0, 'EXCELLENT', NULL, 'Pin negru aliniament stradal Rahova.', '[]', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z');
+INSERT OR REPLACE INTO trees (id, species, speciesOther, latitude, longitude, plantingDate, height, trunkDiameter, healthStatus, greenSpaceId, notes, photos, neighborhood, nickname, lastWateredAt, createdAt, updatedAt) VALUES
+('tr_1', 'LIME', NULL, 44.4268, 26.0814, '2022-04-10T00:00:00.000Z', 8.5, 25.0, 'EXCELLENT', 'gs_seb', 'Tei argintiu îngrijit periodic.', '[]', 'SEBASTIAN', 'Teiul Sebastian', '2026-08-05T12:00:00.000Z', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
+('tr_2', 'OAK', NULL, 44.4272, 26.0818, '2020-11-15T00:00:00.000Z', 12.0, 40.0, 'GOOD', 'gs_seb', 'Stejar roșu matur.', '[]', 'SEBASTIAN', 'Stejarul din Parc', '2026-08-04T10:00:00.000Z', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
+('tr_3', 'MAPLE', NULL, 44.4275, 26.0820, '2023-03-20T00:00:00.000Z', 6.0, 18.0, 'FAIR', 'gs_seb', 'Arțar american, necesită toaletare.', '[]', 'SEBASTIAN', NULL, NULL, '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
+('tr_4', 'CHESTNUT', NULL, 44.4330, 26.0905, '2018-05-01T00:00:00.000Z', 14.0, 55.0, 'GOOD', 'gs_izv', 'Castan ornamental de talie mare.', '[]', 'IZVOR', 'Castanul Izvor', '2026-08-05T08:00:00.000Z', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
+('tr_5', 'BIRCH', NULL, 44.4335, 26.0915, '2024-03-25T00:00:00.000Z', 4.5, 12.0, 'EXCELLENT', 'gs_izv', 'Mesteacăn tânăr plantat recent.', '[]', 'IZVOR', NULL, NULL, '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
+('tr_6', 'ASH', NULL, 44.4295, 26.0725, '2021-09-12T00:00:00.000Z', 9.0, 30.0, 'GOOD', 'gs_rom', 'Frasin pe aleea principală.', '[]', 'COTROCENI', 'Frasinul Romniceanu', '2026-08-03T15:00:00.000Z', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
+('tr_7', 'WILLOW', NULL, 44.4060, 26.0785, '2019-04-18T00:00:00.000Z', 11.0, 45.0, 'POOR', 'gs_hum', 'Salcie plângătoare, uscături la bază.', '[]', 'FERENTARI', NULL, NULL, '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z'),
+('tr_8', 'PINE', NULL, 44.4250, 26.0790, '2023-11-05T00:00:00.000Z', 5.0, 15.0, 'EXCELLENT', NULL, 'Pin negru aliniament stradal Rahova.', '[]', 'RAHOVA', 'Pinul Rahova', '2026-08-05T09:00:00.000Z', '2026-08-05T00:00:00.000Z', '2026-08-05T00:00:00.000Z');
+
+-- Care Alerts
+INSERT OR REPLACE INTO care_alerts (id, neighborhood, alertType, message, status, createdAt) VALUES
+('alert_1', 'Rahova', 'HEATWAVE_DRYNESS', 'Alerte Caniculă: 15 tei tineri pe Calea Rahovei necesită udare de urgență (15L/copac).', 'ACTIVE', '2026-08-05T08:00:00.000Z'),
+('alert_2', 'Ferentari', 'YOUNG_TREE_WATERING', 'Campanie de udat arborii proaspăt plantați pe Strada Vadul Nou.', 'ACTIVE', '2026-08-04T10:00:00.000Z');
+
+-- Neighborhood Stats
+INSERT OR REPLACE INTO neighborhood_stats (id, neighborhood, totalTrees, adoptedTrees, wateringsCount, ecoPoints, updatedAt) VALUES
+('stat_1', 'Cotroceni', 145, 112, 340, 17000, '2026-08-05T00:00:00.000Z'),
+('stat_2', 'Sebastian', 130, 85, 260, 13000, '2026-08-05T00:00:00.000Z'),
+('stat_3', 'Rahova', 210, 95, 220, 11000, '2026-08-05T00:00:00.000Z'),
+('stat_4', 'Ferentari', 180, 78, 195, 9750, '2026-08-05T00:00:00.000Z'),
+('stat_5', 'Izvor', 95, 62, 180, 9000, '2026-08-05T00:00:00.000Z');
 
 -- Reports
 INSERT OR REPLACE INTO reports (id, userId, issueType, description, latitude, longitude, address, photos, status, priority, trackingNumber, updatedAt, submittedAt) VALUES
