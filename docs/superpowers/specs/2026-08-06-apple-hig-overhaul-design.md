@@ -27,8 +27,9 @@ functionality, `useModalA11y`, the vitest logic suite.
   2. App-specific components hig.css cannot cover: tree map, tree/guardian visuals,
      toast animation, adoption certificate, chart bits.
   3. Shell scaffolding: layout grid for sidebar + content, bottom tab bar placement.
-- Deleted: old `src/index.css` token system (file may remain as a 2-line import shim
-  or be removed entirely), `src/App.css`, and all 23 per-page/per-component CSS files.
+- Deleted: `src/index.css` (old token system), `src/App.css`, and all 23
+  per-page/per-component CSS files. `main.tsx` imports `styles/hig.css` then
+  `styles/app.css` directly.
 - `index.html`: remove the Google Fonts `<link>`/preconnects for Bricolage Grotesque
   and Inter. Font stack becomes the HIG system stack (`-apple-system,
   BlinkMacSystemFont, "Segoe UI", Roboto, …`). This removes the app's only external
