@@ -3,6 +3,9 @@ import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { jwtMiddleware, roleMiddleware } from './auth';
 import { AppEnv } from '../types/hono';
+import { computeWaterStatus } from '../lib/waterStatus';
+import { computeImpact } from '../lib/impact';
+import { guardianLevelFor, nextLevelProgress } from '../lib/guardianLevel';
 
 const users = new Hono<AppEnv>();
 
@@ -69,6 +72,46 @@ users.patch('/me', jwtMiddleware, async (c) => {
   } catch (error) {
     console.error('Update profile error:', error);
     return c.json({ error: 'Failed to update profile' }, 500);
+  }
+});
+
+// My guardian card (spec §6)
+users.get('/me/impact', jwtMiddleware, async (c) => {
+  const prisma = c.get('prisma');
+  const user = c.get('user');
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      include: { adoptedTrees: true },
+    });
+    if (!dbUser) return c.json({ error: 'User not found' }, 404);
+
+    const trees = dbUser.adoptedTrees.map((t: any) => ({
+      id: t.id,
+      nickname: t.nickname,
+      waterStatus: computeWaterStatus({ species: t.species, plantingDate: t.plantingDate, lastWateredAt: t.lastWateredAt }),
+      impact: computeImpact({ species: t.species, trunkDiameter: t.trunkDiameter, plantingDate: t.plantingDate }),
+    }));
+    const totals = trees.reduce(
+      (acc: any, t: any) => ({
+        co2KgPerYear: Math.round((acc.co2KgPerYear + t.impact.co2KgPerYear) * 10) / 10,
+        shadeM2: Math.round((acc.shadeM2 + t.impact.shadeM2) * 10) / 10,
+      }),
+      { co2KgPerYear: 0, shadeM2: 0 }
+    );
+    const { next, progress } = nextLevelProgress(dbUser.careScore);
+    return c.json({
+      pointsBalance: dbUser.pointsBalance,
+      careScore: dbUser.careScore,
+      level: guardianLevelFor(dbUser.careScore),
+      next,
+      progress,
+      trees,
+      totals,
+    });
+  } catch (error) {
+    console.error('Me impact error:', error);
+    return c.json({ error: 'Failed to build impact summary' }, 500);
   }
 });
 

@@ -8,8 +8,26 @@ import { optionalJwtMiddleware } from './auth';
 import { awardPoints, POINTS } from '../lib/points';
 import { composeTreeMessage } from '../lib/treeMessages';
 import { computeWaterStatus } from '../lib/waterStatus';
+import { computeImpact } from '../lib/impact';
 
 const trees = new Hono<AppEnv>();
+
+// Spec §6: computed on read, never stored.
+function enrichTree<T extends { species: string; plantingDate?: Date | null; lastWateredAt?: Date | null; trunkDiameter?: number | null }>(tree: T) {
+  return {
+    ...tree,
+    waterStatus: computeWaterStatus({
+      species: tree.species,
+      plantingDate: tree.plantingDate,
+      lastWateredAt: tree.lastWateredAt,
+    }),
+    impact: computeImpact({
+      species: tree.species,
+      trunkDiameter: tree.trunkDiameter,
+      plantingDate: tree.plantingDate,
+    }),
+  };
+}
 
 // Validation schemas
 const createTreeSchema = z.object({
@@ -80,7 +98,7 @@ trees.get('/', async (c) => {
     const total = await prisma.tree.count({ where });
 
     return c.json({
-      trees,
+      trees: trees.map(enrichTree),
       pagination: {
         page,
         limit,
@@ -91,6 +109,24 @@ trees.get('/', async (c) => {
   } catch (error: any) {
     console.error('Get trees error:', error);
     return c.json({ error: error?.message || String(error) }, 500);
+  }
+});
+
+// Voice-of-the-tree feed (spec §3.2)
+trees.get('/:id/messages', async (c) => {
+  const prisma = c.get('prisma');
+  const id = c.req.param('id');
+  try {
+    const messages = await prisma.treeMessage.findMany({
+      where: { treeId: id },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      select: { id: true, text: true, createdAt: true },
+    });
+    return c.json({ messages });
+  } catch (error) {
+    console.error('Get tree messages error:', error);
+    return c.json({ error: 'Failed to fetch tree messages' }, 500);
   }
 });
 
@@ -116,7 +152,7 @@ trees.get('/:id', async (c) => {
       return c.json({ error: 'Tree not found' }, 404);
     }
 
-    return c.json({ tree });
+    return c.json({ tree: enrichTree(tree) });
   } catch (error) {
     console.error('Get tree error:', error);
     return c.json({ error: 'Failed to fetch tree' }, 500);
