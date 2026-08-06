@@ -134,7 +134,7 @@ export const Dashboard: React.FC = () => {
             onClick={() => setMobileTab('MAP')}
           >
             <Map size={15} />
-            <span>🗺️ Hartă</span>
+            <span>Hartă</span>
           </button>
 
           <button
@@ -146,12 +146,12 @@ export const Dashboard: React.FC = () => {
             {role === 'CITIZEN' ? (
               <>
                 <Trophy size={15} />
-                <span>🏆 Clasament</span>
+                <span>Clasament</span>
               </>
             ) : (
               <>
                 <BarChart3 size={15} />
-                <span>📊 Raport Consiliu</span>
+                <span>Raport Consiliu</span>
               </>
             )}
           </button>
