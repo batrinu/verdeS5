@@ -36,12 +36,18 @@ export async function adoptTreeApi(treeId: string, adopterName: string, nickname
   return null;
 }
 
-export async function waterTreeApi(treeId: string, liters: number, userName: string): Promise<TreeItem | null> {
+export async function waterTreeApi(
+  treeId: string,
+  liters: number,
+  userName: string,
+  photoProofUrl?: string,
+  isPhotoVerified?: boolean
+): Promise<TreeItem | null> {
   try {
     const res = await fetch(`${API_BASE_URL}/trees/${encodeURIComponent(treeId)}/water`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ liters, userName }),
+      body: JSON.stringify({ liters, userName, photoProofUrl, isPhotoVerified }),
     });
     if (res.ok) {
       const data = await res.json();

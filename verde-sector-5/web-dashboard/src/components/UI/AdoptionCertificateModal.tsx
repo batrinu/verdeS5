@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Download, X, Award } from 'lucide-react';
 import type { TreeItem } from '../../types/tree';
 import './AdoptionCertificateModal.css';
@@ -31,7 +31,7 @@ export const AdoptionCertificateModal: React.FC<AdoptionCertificateModalProps> =
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Consolidate data from either customCertData or tree props
-  const certData: AdoptionCertificateData = customCertData || {
+  const certData: AdoptionCertificateData = useMemo(() => customCertData || {
     adopterName: adopterName || tree?.adopterName || 'Cetățean Sector 5',
     treeCode: tree?.code || 'S5-COT-001',
     treeSpecies: tree?.species || 'Tei (Linden)',
@@ -43,7 +43,7 @@ export const AdoptionCertificateModal: React.FC<AdoptionCertificateModalProps> =
       year: 'numeric',
     }),
     ecoPoints: 100,
-  };
+  }, [customCertData, adopterName, nickname, tree?.adopterName, tree?.code, tree?.species, tree?.nickname, tree?.neighborhood]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

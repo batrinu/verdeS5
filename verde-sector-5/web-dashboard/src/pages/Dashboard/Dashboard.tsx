@@ -83,11 +83,19 @@ export const Dashboard: React.FC = () => {
     loadData();
   };
 
-  const handleWaterConfirm = async (treeId: string, liters: number, userName: string) => {
-    await TreeService.waterTree(treeId, liters, userName);
+  const handleWaterConfirm = async (
+    treeId: string,
+    liters: number,
+    userName: string,
+    photoProofUrl?: string,
+    isPhotoVerified?: boolean
+  ) => {
+    await TreeService.waterTree(treeId, liters, userName, photoProofUrl, isPhotoVerified);
     setWaterTreeModalTarget(null);
     setSelectedTree(null);
-    addPoints(50);
+    const basePoints = liters * 5;
+    const bonusPoints = isPhotoVerified ? 50 : 0;
+    addPoints(basePoints + bonusPoints);
     incrementWaterings();
     loadData();
   };

@@ -47,10 +47,16 @@ export const TreeService = {
     return updatedTree;
   },
 
-  async waterTree(treeId: string, liters: number, userName: string): Promise<TreeItem> {
-    const updatedTree = waterTreeInStorage(treeId, liters, userName);
+  async waterTree(
+    treeId: string,
+    liters: number,
+    userName: string,
+    photoProofUrl?: string,
+    isPhotoVerified?: boolean
+  ): Promise<TreeItem> {
+    const updatedTree = waterTreeInStorage(treeId, liters, userName, photoProofUrl, isPhotoVerified);
     // Fire and forget background API sync
-    waterTreeApi(treeId, liters, userName).catch(() => {});
+    waterTreeApi(treeId, liters, userName, photoProofUrl, isPhotoVerified).catch(() => {});
     return updatedTree;
   },
 

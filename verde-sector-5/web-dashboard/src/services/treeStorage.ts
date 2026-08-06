@@ -127,9 +127,19 @@ export function adoptTreeInStorage(treeId: string, adopterName: string, nickname
   return targetTree || currentTrees.find(t => t.id === treeId) || currentTrees[0];
 }
 
-export function waterTreeInStorage(treeId: string, _liters: number, _userName: string): TreeItem {
+export function waterTreeInStorage(
+  treeId: string,
+  liters: number = 10,
+  userName: string = 'Cetățean',
+  photoProofUrl?: string,
+  isPhotoVerified?: boolean
+): TreeItem {
   const currentTrees = getStoredTrees();
   const currentStats = getStoredStats();
+
+  const basePoints = liters * 5;
+  const photoBonus = isPhotoVerified ? 50 : 0;
+  const totalEarnedPoints = basePoints + photoBonus;
 
   const updatedTrees = currentTrees.map(t => {
     if (t.id === treeId) {
@@ -138,6 +148,10 @@ export function waterTreeInStorage(treeId: string, _liters: number, _userName: s
         healthStatus: 'EXCELLENT' as const,
         lastWateredAt: new Date().toISOString(),
         wateringsCount: (t.wateringsCount || 0) + 1,
+        lastWateredBy: userName,
+        lastWateredLiters: liters,
+        lastWateredPhotoProof: photoProofUrl || null,
+        lastWateredPhotoVerified: isPhotoVerified || false,
       };
     }
     return t;
@@ -150,7 +164,7 @@ export function waterTreeInStorage(treeId: string, _liters: number, _userName: s
         ? {
             ...s,
             wateringsCount: s.wateringsCount + 1,
-            ecoPoints: s.ecoPoints + 50,
+            ecoPoints: s.ecoPoints + totalEarnedPoints,
           }
         : s
     );
