@@ -8,6 +8,7 @@ interface SelectedTreeSheetProps {
   onClose: () => void;
   onAdoptClick: (tree: TreeItem) => void;
   onWaterClick: (tree: TreeItem) => void;
+  onCertClick?: (tree: TreeItem) => void;
 }
 
 export const SelectedTreeSheet: React.FC<SelectedTreeSheetProps> = ({
@@ -15,6 +16,7 @@ export const SelectedTreeSheet: React.FC<SelectedTreeSheetProps> = ({
   onClose,
   onAdoptClick,
   onWaterClick,
+  onCertClick,
 }) => {
   if (!tree) return null;
 
@@ -93,9 +95,36 @@ export const SelectedTreeSheet: React.FC<SelectedTreeSheetProps> = ({
                 <span>Adoptă Copacul (+100 EcoPuncte)</span>
               </button>
             ) : (
-              <div className="adopted-status-banner">
-                <ShieldCheck size={18} color="#22c55e" />
-                <span>Copac Adoptat & Îngrijit Comunitar</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+                <div className="adopted-status-banner">
+                  <ShieldCheck size={18} color="#22c55e" />
+                  <span>Copac Adoptat & Îngrijit Comunitar</span>
+                </div>
+                {onCertClick && (
+                  <button
+                    onClick={() => {
+                      onClose();
+                      onCertClick(tree);
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      borderRadius: '12px',
+                      backgroundColor: '#059669',
+                      color: '#ffffff',
+                      border: 'none',
+                      fontWeight: 700,
+                      fontSize: '13px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    📜 Afișează & Descarcă Certificat Adopție
+                  </button>
+                )}
               </div>
             )}
 

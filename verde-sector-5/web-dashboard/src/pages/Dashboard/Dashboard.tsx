@@ -4,6 +4,7 @@ import type { TreeItem, CareAlertItem, DistrictStat, Sector5Neighborhood } from 
 import { Sector5TreeMap } from '../../components/Pitch/Sector5TreeMap';
 import { AdoptTreeModal } from '../../components/Pitch/AdoptTreeModal';
 import { LogWateringModal } from '../../components/Pitch/LogWateringModal';
+import { AdoptionCertificateModal } from '../../components/UI/AdoptionCertificateModal';
 import { DistrictLeaderboard } from '../../components/Pitch/DistrictLeaderboard';
 import { CouncilAlertDispatcher } from '../../components/Pitch/CouncilAlertDispatcher';
 import { CouncilAnalyticsBoard } from '../../components/Pitch/CouncilAnalyticsBoard';
@@ -31,6 +32,7 @@ export const Dashboard: React.FC = () => {
   // Active Modals state
   const [adoptTreeModalTarget, setAdoptTreeModalTarget] = useState<TreeItem | null>(null);
   const [waterTreeModalTarget, setWaterTreeModalTarget] = useState<TreeItem | null>(null);
+  const [adoptionCertModalTarget, setAdoptionCertModalTarget] = useState<TreeItem | null>(null);
 
   const loadData = async () => {
     try {
@@ -53,9 +55,31 @@ export const Dashboard: React.FC = () => {
 
   const handleAdoptConfirm = async (treeId: string, adopterName: string, nickname: string) => {
     await TreeService.adoptTree(treeId, adopterName, nickname);
+    
+    // Find tree or create updated record to show in certificate
+    const target = trees.find(t => t.id === treeId) || adoptTreeModalTarget;
+    const updatedTree: TreeItem = target ? {
+      ...target,
+      isAdopted: true,
+      adopterName,
+      nickname,
+    } : {
+      id: treeId,
+      code: 'S5-COT-001',
+      species: 'Tei',
+      latitude: 44.4332,
+      longitude: 26.0725,
+      neighborhood: 'Cotroceni',
+      healthStatus: 'EXCELLENT',
+      isAdopted: true,
+      adopterName,
+      nickname,
+    };
+
     setAdoptTreeModalTarget(null);
     setSelectedTree(null);
     addPoints(100);
+    setAdoptionCertModalTarget(updatedTree);
     loadData();
   };
 
@@ -175,6 +199,7 @@ export const Dashboard: React.FC = () => {
         onClose={() => setSelectedTree(null)}
         onAdoptClick={(tree) => setAdoptTreeModalTarget(tree)}
         onWaterClick={(tree) => setWaterTreeModalTarget(tree)}
+        onCertClick={(tree) => setAdoptionCertModalTarget(tree)}
       />
 
       {/* Adoption Modal */}
@@ -192,6 +217,14 @@ export const Dashboard: React.FC = () => {
           tree={waterTreeModalTarget}
           onClose={() => setWaterTreeModalTarget(null)}
           onConfirm={handleWaterConfirm}
+        />
+      )}
+
+      {/* Adoption Certificate Digital Modal */}
+      {adoptionCertModalTarget && (
+        <AdoptionCertificateModal
+          tree={adoptionCertModalTarget}
+          onClose={() => setAdoptionCertModalTarget(null)}
         />
       )}
     </div>

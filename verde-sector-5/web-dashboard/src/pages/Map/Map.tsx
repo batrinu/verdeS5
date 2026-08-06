@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { AdoptionCertificateModal } from '../../components/UI/AdoptionCertificateModal';
+import type { TreeItem } from '../../types/tree';
 import './Map.css';
 
 // Fix for default leaflet icons in react
@@ -22,6 +24,15 @@ const treeIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+const adoptedTreeIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 const reportIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
@@ -33,17 +44,53 @@ const reportIcon = new L.Icon({
 
 const Map: React.FC = () => {
   const center: [number, number] = [44.4168, 26.0764]; // Sector 5, Bucharest
-  const [trees, setTrees] = useState<any[]>([]);
+  const [trees, setTrees] = useState<TreeItem[]>([]);
   const [reports, setReports] = useState<any[]>([]);
   const [filterSpecies, setFilterSpecies] = useState('toate');
   const [filterHealth, setFilterHealth] = useState('toate');
+  const [certModalTree, setCertModalTree] = useState<TreeItem | null>(null);
 
   useEffect(() => {
-    // Mock fetch for markers
+    // Mock fetch for markers with adoption details
     setTrees([
-      { id: 1, lat: 44.4170, lng: 26.0750, species: 'Platan', health: 'Sănătos' },
-      { id: 2, lat: 44.4150, lng: 26.0780, species: 'Tei', health: 'Necesită toaletare' },
-      { id: 3, lat: 44.4180, lng: 26.0740, species: 'Castan', health: 'Sănătos' },
+      {
+        id: '1',
+        code: 'S5-COT-001',
+        latitude: 44.4170,
+        longitude: 26.0750,
+        species: 'Platan',
+        nickname: 'Platanul Marelui Parc',
+        neighborhood: 'Cotroceni',
+        healthStatus: 'EXCELLENT',
+        isAdopted: true,
+        adopterName: 'Elena Popa',
+        wateringsCount: 14,
+      },
+      {
+        id: '2',
+        code: 'S5-RAH-014',
+        latitude: 44.4150,
+        longitude: 26.0780,
+        species: 'Tei',
+        nickname: 'Teiul Parcului Sebastian',
+        neighborhood: 'Rahova',
+        healthStatus: 'NEEDS_WATER',
+        isAdopted: false,
+        wateringsCount: 3,
+      },
+      {
+        id: '3',
+        code: 'S5-FER-008',
+        latitude: 44.4180,
+        longitude: 26.0740,
+        species: 'Castan',
+        nickname: 'Castanul Ferentari',
+        neighborhood: 'Ferentari',
+        healthStatus: 'GOOD',
+        isAdopted: true,
+        adopterName: 'Andrei Ionescu',
+        wateringsCount: 9,
+      },
     ]);
     
     setReports([
@@ -52,9 +99,20 @@ const Map: React.FC = () => {
     ]);
   }, []);
 
+  const handleAdoptTree = (treeToAdopt: TreeItem) => {
+    const updatedTree: TreeItem = {
+      ...treeToAdopt,
+      isAdopted: true,
+      adopterName: treeToAdopt.adopterName || 'Cetățean Sector 5',
+    };
+
+    setTrees(prev => prev.map(t => (t.id === treeToAdopt.id ? updatedTree : t)));
+    setCertModalTree(updatedTree);
+  };
+
   const filteredTrees = trees.filter(tree => {
     if (filterSpecies !== 'toate' && tree.species.toLowerCase() !== filterSpecies) return false;
-    if (filterHealth !== 'toate' && tree.health.toLowerCase() !== filterHealth) return false;
+    if (filterHealth !== 'toate' && tree.healthStatus.toLowerCase() !== filterHealth) return false;
     return true;
   });
 
@@ -77,9 +135,9 @@ const Map: React.FC = () => {
           <label>Stare Sănătate</label>
           <select value={filterHealth} onChange={e => setFilterHealth(e.target.value)}>
             <option value="toate">Toate</option>
-            <option value="sănătos">Sănătos</option>
-            <option value="necesită toaletare">Necesită toaletare</option>
-            <option value="uscat">Uscat</option>
+            <option value="excellent">Excelentă</option>
+            <option value="good">Bună</option>
+            <option value="needs_water">Necesită apă</option>
           </select>
         </div>
 
@@ -87,7 +145,11 @@ const Map: React.FC = () => {
           <h4>Legendă</h4>
           <div className="legend-item">
             <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" alt="Copac" />
-            <span>Copac</span>
+            <span>Copac Disponibil</span>
+          </div>
+          <div className="legend-item">
+            <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" alt="Copac Adoptat" />
+            <span>Copac Adoptat (Certificat)</span>
           </div>
           <div className="legend-item">
             <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png" alt="Raport" />
@@ -104,11 +166,59 @@ const Map: React.FC = () => {
           />
           
           {filteredTrees.map(tree => (
-            <Marker key={`tree-${tree.id}`} position={[tree.lat, tree.lng]} icon={treeIcon}>
+            <Marker key={`tree-${tree.id}`} position={[tree.latitude, tree.longitude]} icon={tree.isAdopted ? adoptedTreeIcon : treeIcon}>
               <Popup>
-                <div className="custom-popup">
-                  <strong>Copac: {tree.species}</strong><br/>
-                  Stare: {tree.health}
+                <div className="custom-popup" style={{ minWidth: '200px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#16a34a', textTransform: 'uppercase' }}>
+                    {tree.neighborhood} • {tree.code}
+                  </div>
+                  <strong style={{ fontSize: '15px', display: 'block', margin: '4px 0 2px 0' }}>
+                    {tree.nickname || tree.species}
+                  </strong>
+                  <div style={{ fontSize: '12px', color: '#475569', marginBottom: '8px' }}>
+                    Specie: {tree.species} | Stare: {tree.healthStatus}
+                  </div>
+
+                  {tree.isAdopted ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <span style={{ fontSize: '11px', color: '#854d0e', backgroundColor: '#fef08a', padding: '3px 8px', borderRadius: '12px', textAlign: 'center', fontWeight: 600 }}>
+                        🌟 Adoptat de {tree.adopterName}
+                      </span>
+                      <button
+                        onClick={() => setCertModalTree(tree)}
+                        style={{
+                          backgroundColor: '#059669',
+                          color: '#ffffff',
+                          border: 'none',
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          marginTop: '4px',
+                        }}
+                      >
+                        📜 Certificat Adopție
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleAdoptTree(tree)}
+                      style={{
+                        width: '100%',
+                        backgroundColor: '#16a34a',
+                        color: '#ffffff',
+                        border: 'none',
+                        padding: '6px 12px',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      🌱 Adoptă & Generație Certificat
+                    </button>
+                  )}
                 </div>
               </Popup>
             </Marker>
@@ -126,8 +236,16 @@ const Map: React.FC = () => {
           ))}
         </MapContainer>
       </div>
+
+      {certModalTree && (
+        <AdoptionCertificateModal
+          tree={certModalTree}
+          onClose={() => setCertModalTree(null)}
+        />
+      )}
     </div>
   );
 };
 
 export default Map;
+
