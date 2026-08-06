@@ -45,13 +45,8 @@ export const PitchHeader: React.FC = () => {
         </button>
       </div>
 
-      {/* Desktop & Mobile Responsive Controls */}
-      <div
-        className="pitch-controls"
-        style={{
-          display: mobileExpanded || window.innerWidth > 900 ? 'flex' : 'none',
-        }}
-      >
+      {/* Desktop Controls & Mobile Collapsible Panel */}
+      <div className={`pitch-controls-panel ${mobileExpanded ? 'mobile-open' : ''}`}>
         {/* District Selector */}
         <div className="district-selector-group">
           <MapPin size={16} color="#94a3b8" />
@@ -96,24 +91,19 @@ export const PitchHeader: React.FC = () => {
             <span>Mod Consiliu Local</span>
           </button>
         </div>
-      </div>
 
-      {/* Live Eco Ticker */}
-      <div
-        className="pitch-ticker-group"
-        style={{
-          display: mobileExpanded || window.innerWidth > 900 ? 'flex' : 'none',
-        }}
-      >
-        <div className="ticker-badge ticker-eco" title="Puncte ecologice acumulate prin îngrijirea arborilor">
-          <span className="pulse-dot" aria-hidden="true" />
-          <Trophy size={15} color="#4ade80" />
-          <span>{userPoints} EcoPuncte</span>
-        </div>
+        {/* Live Eco Ticker */}
+        <div className="pitch-ticker-group">
+          <div className="ticker-badge ticker-eco" title="Puncte ecologice acumulate prin îngrijirea arborilor">
+            <span className="pulse-dot" aria-hidden="true" />
+            <Trophy size={15} color="#4ade80" />
+            <span>{userPoints} EcoPuncte</span>
+          </div>
 
-        <div className="ticker-badge ticker-water" title="Numărul total de udări înregistrate">
-          <Droplets size={15} color="#38bdf8" />
-          <span>{userWaterings} Udări Logate</span>
+          <div className="ticker-badge ticker-water" title="Numărul total de udări înregistrate">
+            <Droplets size={15} color="#38bdf8" />
+            <span>{userWaterings} Udări Logate</span>
+          </div>
         </div>
       </div>
     </header>
