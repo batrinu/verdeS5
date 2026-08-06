@@ -166,9 +166,6 @@ export const Dashboard: React.FC = () => {
               <h2 className="map-title">
                 🗺️ Registrul Interactiv al Arborilor
               </h2>
-              <span className="map-tree-counter">
-                {trees.length} Arbori Afișați
-              </span>
             </div>
 
             <div className="map-wrapper">
