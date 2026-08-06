@@ -40,8 +40,7 @@ export const PitchHeader: React.FC = () => {
           aria-expanded={mobileExpanded}
           aria-label="Comută meniul de opțiuni demo"
         >
-          {mobileExpanded ? <X size={18} /> : <Menu size={18} />}
-          <span>Control Demo</span>
+          {mobileExpanded ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
