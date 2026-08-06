@@ -148,6 +148,9 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  /* Drop the cards so their top edge lines up with the MAP, not the selector
+     row above it. Offset = .map-column-header height (32px) + its 12px margin. */
+  margin-top: 44px;
 }
 
 /* Responsive Styles for Mobile (< 768px) */
@@ -191,6 +194,7 @@
   .dashboard-cards-column {
     display: none;
     width: 100%;
+    margin-top: 0; /* side-by-side offset doesn't apply to stacked mobile tabs */
   }
 
   .dashboard-cards-column.mobile-active {

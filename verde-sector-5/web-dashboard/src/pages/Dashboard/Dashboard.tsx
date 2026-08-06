@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { TreeService } from '../../api/treeService';
 import type { TreeItem, CareAlertItem, DistrictStat, Sector5Neighborhood } from '../../types/tree';
 import { Sector5TreeMap } from '../../components/Pitch/Sector5TreeMap';
@@ -7,6 +7,7 @@ import { LogWateringModal } from '../../components/Pitch/LogWateringModal';
 import { AdoptionCertificateModal } from '../../components/UI/AdoptionCertificateModal';
 import { ToastContainer, type ToastAlert } from '../../components/UI/ToastContainer';
 import { DistrictLeaderboard } from '../../components/Pitch/DistrictLeaderboard';
+import { CitizenAlertsFeed } from '../../components/Pitch/CitizenAlertsFeed';
 import { CouncilAlertDispatcher } from '../../components/Pitch/CouncilAlertDispatcher';
 import { CouncilAnalyticsBoard } from '../../components/Pitch/CouncilAnalyticsBoard';
 import { PitchHeader } from '../../components/Pitch/PitchHeader';
@@ -24,6 +25,11 @@ export const Dashboard: React.FC = () => {
   const [alerts, setAlerts] = useState<CareAlertItem[]>([]);
   const [stats, setStats] = useState<DistrictStat[]>([]);
   const [toastAlerts, setToastAlerts] = useState<ToastAlert[]>([]);
+
+  // Track which alert IDs we've already seen so toasts only fire for alerts that
+  // newly arrive — the persistent "Alerte Active" feed covers everything else.
+  const seenAlertIdsRef = useRef<Set<string>>(new Set());
+  const isFirstLoadRef = useRef(true);
 
   // Mobile active tab state
   const [mobileTab, setMobileTab] = useState<MobileTab>('MAP');
@@ -50,14 +56,25 @@ export const Dashboard: React.FC = () => {
       const matchingAlerts = fetchedAlerts.filter(
         a => selectedNeighborhood === 'ALL' || a.neighborhood.toLowerCase() === selectedNeighborhood.toLowerCase()
       );
-      if (matchingAlerts.length > 0) {
-        setToastAlerts(matchingAlerts.map(a => ({
-          id: `toast-dash-${a.id}-${Date.now()}`,
-          neighborhood: a.neighborhood,
-          alertType: a.alertType,
-          message: a.message,
-          autoDismissMs: 5000,
-        })));
+
+      if (isFirstLoadRef.current) {
+        // First load: the persistent alerts feed already lists these, so seed the
+        // "seen" set silently instead of firing a redundant burst of toasts.
+        fetchedAlerts.forEach(a => seenAlertIdsRef.current.add(a.id));
+        isFirstLoadRef.current = false;
+      } else {
+        // Toast only alerts that have newly arrived since the last refresh.
+        const newAlerts = matchingAlerts.filter(a => !seenAlertIdsRef.current.has(a.id));
+        fetchedAlerts.forEach(a => seenAlertIdsRef.current.add(a.id));
+        if (newAlerts.length > 0) {
+          setToastAlerts(newAlerts.map(a => ({
+            id: `toast-dash-${a.id}-${Date.now()}`,
+            neighborhood: a.neighborhood,
+            alertType: a.alertType,
+            message: a.message,
+            autoDismissMs: 5000,
+          })));
+        }
       }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
@@ -199,12 +216,15 @@ export const Dashboard: React.FC = () => {
           {/* Right Column: Persona-Specific Cards */}
           <div className={`dashboard-cards-column ${mobileTab === 'DETAILS' ? 'mobile-active' : ''}`}>
             {role === 'CITIZEN' ? (
-              /* Citizen Persona: District Leaderboard */
-              <DistrictLeaderboard
-                stats={stats}
-                selectedNeighborhood={selectedNeighborhood}
-                onSelectNeighborhood={() => {}}
-              />
+              /* Citizen Persona: District Leaderboard + Active Alerts Feed */
+              <>
+                <DistrictLeaderboard
+                  stats={stats}
+                  selectedNeighborhood={selectedNeighborhood}
+                  onSelectNeighborhood={() => {}}
+                />
+                <CitizenAlertsFeed alerts={alerts} />
+              </>
             ) : (
               /* Council Admin Persona: Executive Analytics & Alert Dispatcher */
               <>
