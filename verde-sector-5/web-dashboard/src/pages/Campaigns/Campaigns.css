@@ -1,84 +1,102 @@
-.campaigns-container {
+.campaigns-root {
+  min-height: 100vh;
+  background: var(--bg-main);
+  color: var(--color-text-primary);
+}
+
+.campaigns-main {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  color: #f8fafc;
 }
 
 .campaigns-header {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
 .campaigns-header h1 {
-  color: #4ade80;
   margin: 0 0 0.5rem 0;
-  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-family-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary-400);
 }
 
 .campaigns-header p {
-  color: #94a3b8;
-  font-size: 1.125rem;
   margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
 }
 
 .campaigns-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
 .campaign-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
 }
 
 .campaign-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
-  border-color: rgba(74, 222, 128, 0.3);
+  border-color: rgba(110, 231, 160, 0.25);
 }
 
-.campaign-image {
-  height: 200px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
+/* Tonal iconography band replacing the old stock-photo header — Forest
+   Night ramp only, no imagery (anti-reference: ESG greenwash). */
+.campaign-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  color: var(--color-primary-400);
+  background: linear-gradient(135deg, var(--bg-surface-elevated), var(--bg-surface-active));
 }
 
-.campaign-image .status-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  backdrop-filter: blur(4px);
+.campaign-band.status-finalizata {
+  color: var(--color-text-muted);
 }
 
-.status-activă {
-  background: rgba(34, 197, 94, 0.9);
-  color: white;
+.campaign-band.status-in-curand {
+  color: var(--color-info);
 }
 
-.status-finalizată {
-  background: rgba(148, 163, 184, 0.9);
-  color: white;
+.status-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--border-radius-full);
+  font-family: var(--font-family-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 
-.status-în-curând {
-  background: rgba(59, 130, 246, 0.9);
-  color: white;
+.status-badge.status-activa {
+  background: rgba(52, 216, 122, 0.15);
+  color: var(--color-primary-400);
+}
+
+.status-badge.status-finalizata {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--color-text-muted);
+}
+
+.status-badge.status-in-curand {
+  background: rgba(14, 165, 233, 0.15);
+  color: var(--color-info);
 }
 
 .campaign-content {
-  padding: 1.5rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -86,48 +104,58 @@
 
 .campaign-title {
   margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
-  color: #f8fafc;
+  font-family: var(--font-family-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
 }
 
 .campaign-date {
-  color: #94a3b8;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.85rem;
 }
 
 .campaign-description {
-  color: #cbd5e1;
-  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
   line-height: 1.5;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1.25rem 0;
   flex: 1;
 }
 
 .campaign-progress {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .progress-stats {
   display: flex;
   justify-content: space-between;
-  font-size: 0.875rem;
-  color: #e2e8f0;
-  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-text-primary);
+  margin-bottom: 0.4rem;
 }
 
+/* Progress track pattern copied from GuardianCard.css: 8px track, scaleX
+   fill (compositor-only, no layout thrash). Width transitions are skipped
+   under prefers-reduced-motion via the global guard in src/index.css. */
 .progress-bar-bg {
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
+  border-radius: var(--border-radius-full);
+  background-color: var(--bg-surface-elevated);
   overflow: hidden;
 }
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #22c55e, #4ade80);
-  border-radius: 999px;
-  transition: width 1s ease-out;
+  width: 100%;
+  border-radius: var(--border-radius-full);
+  background: linear-gradient(90deg, var(--color-primary-600), var(--color-primary-400));
+  transform-origin: left center;
+  transition: transform var(--transition-normal);
 }
 
 .campaign-actions {
@@ -136,27 +164,39 @@
 
 .btn-join {
   width: 100%;
+  min-height: 44px;
   padding: 0.75rem;
-  background: #22c55e;
-  color: white;
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: var(--border-radius-md);
+  font-family: var(--font-family-heading);
+  font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color var(--transition-fast);
 }
 
 .btn-join:hover {
-  background: #16a34a;
+  background: var(--color-primary-400);
 }
 
-.btn-completed {
-  width: 100%;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: not-allowed;
+.btn-join:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .campaigns-main {
+    padding: 1.25rem 1rem;
+  }
+
+  .campaigns-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .campaigns-grid {
+    grid-template-columns: 1fr;
+  }
 }
