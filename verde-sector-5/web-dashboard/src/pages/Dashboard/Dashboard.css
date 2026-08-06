@@ -38,7 +38,8 @@
   border-radius: 8px;
   border: none;
   background: transparent;
-  color: #94a3b8;
+  color: #94A3B8;
+  font-family: var(--font-family-heading);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;

@@ -42,6 +42,7 @@
 }
 
 .pitch-title-text {
+  font-family: var(--font-family-heading);
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.4px;
@@ -52,8 +53,9 @@
 
 .pitch-subtitle-text {
   font-size: 11px;
-  color: #94a3b8;
+  color: #94A3B8;
   margin-top: -2px;
+  letter-spacing: 0.02em;
 }
 
 /* Center Controls */
@@ -76,9 +78,9 @@
 }
 
 .district-select-input {
-  background-color: #1e293b;
+  background-color: #112220;
   color: #f8fafc;
-  border: 1px solid #334155;
+  border: 1px solid rgba(110, 231, 160, 0.12);
   padding: 8px 14px;
   border-radius: 10px;
   font-size: 13px;
@@ -89,12 +91,12 @@
 }
 
 .district-select-input:hover {
-  border-color: #475569;
+  border-color: rgba(110, 231, 160, 0.2);
 }
 
 .district-select-input:focus {
-  border-color: #22c55e;
-  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  border-color: #34D87A;
+  box-shadow: 0 0 0 3px rgba(52, 216, 122, 0.15);
 }
 
 /* Segmented Role Switcher */
@@ -113,6 +115,7 @@
   border: none;
   background-color: transparent;
   color: #94a3b8;
+  font-family: var(--font-family-heading);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
