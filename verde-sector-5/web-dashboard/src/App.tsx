@@ -12,6 +12,9 @@ const CampaignsPage = lazy(() => import('./pages/Campaigns/Campaigns'));
 const TreesPage = lazy(() => import('./pages/Trees/Trees'));
 const RewardsPage = lazy(() => import('./pages/Rewards/Rewards'));
 const CommunityPage = lazy(() => import('./pages/Community/Community'));
+const SponsorsPage = lazy(() => import('./pages/Sponsors/Sponsors'));
+const SponsorGrovePage = lazy(() => import('./pages/Sponsors/SponsorGrove'));
+const SponsorDashboardPage = lazy(() => import('./pages/Sponsors/SponsorDashboard'));
 const LoginPage = lazy(() => import('./pages/Login/Login'));
 const RegisterPage = lazy(() => import('./pages/Register/Register'));
 
@@ -32,6 +35,9 @@ export const App: React.FC = () => {
               <Route path="/trees" element={<TreesPage />} />
               <Route path="/rewards" element={<RewardsPage />} />
               <Route path="/community" element={<CommunityPage />} />
+              <Route path="/sponsors" element={<SponsorsPage />} />
+              <Route path="/sponsors/:slug" element={<SponsorGrovePage />} />
+              <Route path="/sponsor-dashboard" element={<SponsorDashboardPage />} />
 
               {/* Public Auth Routes */}
               <Route path="/login" element={<LoginPage />} />
