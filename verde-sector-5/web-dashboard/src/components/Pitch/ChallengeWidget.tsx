@@ -46,7 +46,7 @@ export const ChallengeWidget: React.FC<{ detailed?: boolean }> = ({ detailed = f
         <strong>{SEED_CHALLENGE.name}</strong>
       </header>
       <div className="challenge-progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-        <div className="challenge-progress-fill" style={{ width: `${pct}%` }} />
+        <div className="challenge-progress-fill" style={{ transform: `scaleX(${pct / 100})` }} />
       </div>
       <p className="challenge-numbers">{total} / {goal} udări în Sectorul 5</p>
       {detailed && (

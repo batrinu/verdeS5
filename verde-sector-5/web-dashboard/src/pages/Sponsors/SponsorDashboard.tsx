@@ -150,11 +150,11 @@ const SponsorDashboard: React.FC = () => {
               <table className="esg-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Nume</th>
-                    <th>Specie</th>
-                    <th>Status</th>
-                    <th>Udări</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nume</th>
+                    <th scope="col">Specie</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Udări</th>
                   </tr>
                 </thead>
                 <tbody>

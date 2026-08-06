@@ -38,7 +38,7 @@ export const GuardianCard: React.FC = () => {
         aria-valuemax={100}
         aria-label={nextTitle ? `Progres spre ${nextTitle}` : 'Nivel maxim atins'}
       >
-        <div className="guardian-progress-fill" style={{ width: `${Math.round(progress * 100)}%` }} />
+        <div className="guardian-progress-fill" style={{ transform: `scaleX(${Math.min(1, Math.max(0, progress))})` }} />
       </div>
       <p className="guardian-next">
         {nextTitle ? `${lifetimePoints} puncte — încă ${remaining} până la ${nextTitle}` : 'Nivel maxim — mulțumim!'}

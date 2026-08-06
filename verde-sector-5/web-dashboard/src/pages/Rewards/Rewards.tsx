@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { PitchHeader } from '../../components/Pitch/PitchHeader';
 import { usePresenter } from '../../context/PresenterContext';
 import { getRewards, getRedemptions, redeemReward } from '../../services/gamificationStorage';
@@ -70,7 +70,8 @@ const VoucherIssuedModal: React.FC<VoucherIssuedModalProps> = ({ redemption, onC
         aria-label="Voucher emis"
         tabIndex={-1}
       >
-        <h3>🎉 Voucher emis!</h3>
+        {/* Calm celebration (DESIGN.md): the glow on the code is the reward — no emoji. */}
+        <h3 className="voucher-issued-title">Voucher emis!</h3>
         <p>{redemption.rewardTitle}</p>
         <code className="voucher-code voucher-code-big">{redemption.code}</code>
         <p className="voucher-note">Arată codul la partener. Valabil 30 de zile (demo).</p>
@@ -103,6 +104,17 @@ const Rewards: React.FC = () => {
   const redeemingRef = useRef(false);
 
   const sponsorName = (id?: string | null) => SEED_SPONSORS.find(s => s.id === id)?.name;
+
+  // Affordable-first at the decision moment: what the citizen can claim right
+  // now leads (cheapest first), unaffordable/out-of-stock items follow.
+  const sortedRewards = useMemo(() => {
+    const claimable = (r: RewardItem) => r.stock > 0 && userPoints >= r.costPoints;
+    return [...rewards].sort((a, b) => {
+      const ca = claimable(a) ? 0 : 1;
+      const cb = claimable(b) ? 0 : 1;
+      return ca !== cb ? ca - cb : a.costPoints - b.costPoints;
+    });
+  }, [rewards, userPoints]);
 
   const handleRedeem = (reward: RewardItem) => {
     if (redeemingRef.current) return;
@@ -154,7 +166,7 @@ const Rewards: React.FC = () => {
         {error && <p className="rewards-error" role="alert">{error}</p>}
 
         <div className="rewards-grid">
-          {rewards.map(r => (
+          {sortedRewards.map(r => (
             <article key={r.id} className="reward-card">
               <h3>{r.title}</h3>
               <p className="reward-desc">{r.description}</p>
