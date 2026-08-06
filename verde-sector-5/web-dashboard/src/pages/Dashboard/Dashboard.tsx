@@ -8,14 +8,25 @@ import { DistrictLeaderboard } from '../../components/Pitch/DistrictLeaderboard'
 import { CouncilAlertDispatcher } from '../../components/Pitch/CouncilAlertDispatcher';
 import { CouncilAnalyticsBoard } from '../../components/Pitch/CouncilAnalyticsBoard';
 import { PitchHeader } from '../../components/Pitch/PitchHeader';
+import { SelectedTreeSheet } from '../../components/Pitch/SelectedTreeSheet';
 import { usePresenter } from '../../context/PresenterContext';
+import { Map, Trophy, BarChart3, AlertTriangle } from 'lucide-react';
+import './Dashboard.css';
+
+type MobileTab = 'MAP' | 'LEADERBOARD' | 'COUNCIL';
 
 export const Dashboard: React.FC = () => {
-  const { role, selectedNeighborhood, setSelectedNeighborhood, addPoints, incrementWaterings } = usePresenter();
+  const { role, selectedNeighborhood, addPoints, incrementWaterings } = usePresenter();
 
   const [trees, setTrees] = useState<TreeItem[]>([]);
   const [alerts, setAlerts] = useState<CareAlertItem[]>([]);
   const [stats, setStats] = useState<DistrictStat[]>([]);
+
+  // Mobile active tab state
+  const [mobileTab, setMobileTab] = useState<MobileTab>('MAP');
+
+  // Selected Tree Bottom Sheet Target
+  const [selectedTree, setSelectedTree] = useState<TreeItem | null>(null);
 
   // Active Modals state
   const [adoptTreeModalTarget, setAdoptTreeModalTarget] = useState<TreeItem | null>(null);
@@ -43,6 +54,7 @@ export const Dashboard: React.FC = () => {
   const handleAdoptConfirm = async (treeId: string, adopterName: string, nickname: string) => {
     await TreeService.adoptTree(treeId, adopterName, nickname);
     setAdoptTreeModalTarget(null);
+    setSelectedTree(null);
     addPoints(100);
     loadData();
   };
@@ -50,6 +62,7 @@ export const Dashboard: React.FC = () => {
   const handleWaterConfirm = async (treeId: string, liters: number, userName: string) => {
     await TreeService.waterTree(treeId, liters, userName);
     setWaterTreeModalTarget(null);
+    setSelectedTree(null);
     addPoints(50);
     incrementWaterings();
     loadData();
@@ -61,117 +74,139 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div className="dashboard-root">
       <PitchHeader />
 
-      {/* Main Container */}
-      <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        
-        {/* Banner Alert for Citizens */}
+      <div className="dashboard-main-container">
+        {/* Mobile View Switcher Tabs (< 768px) */}
+        <div className="mobile-view-tabs" role="tablist" aria-label="Navigare Mobil">
+          <button
+            role="tab"
+            aria-selected={mobileTab === 'MAP'}
+            className={`mobile-view-tab ${mobileTab === 'MAP' ? 'active' : ''}`}
+            onClick={() => setMobileTab('MAP')}
+          >
+            <Map size={15} />
+            <span>Hartă</span>
+          </button>
+
+          <button
+            role="tab"
+            aria-selected={mobileTab === 'LEADERBOARD'}
+            className={`mobile-view-tab ${mobileTab === 'LEADERBOARD' ? 'active' : ''}`}
+            onClick={() => setMobileTab('LEADERBOARD')}
+          >
+            <Trophy size={15} />
+            <span>Clasament</span>
+          </button>
+
+          <button
+            role="tab"
+            aria-selected={mobileTab === 'COUNCIL'}
+            className={`mobile-view-tab ${mobileTab === 'COUNCIL' ? 'active' : ''}`}
+            onClick={() => setMobileTab('COUNCIL')}
+          >
+            <BarChart3 size={15} />
+            <span>Consiliu</span>
+          </button>
+        </div>
+
+        {/* Caniculă Alert Banner for Citizens */}
         {role === 'CITIZEN' && alerts.length > 0 && (
-          <div style={{
-            backgroundColor: '#fff1f2',
-            border: '1px solid #fecdd3',
-            borderRadius: '12px',
-            padding: '12px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            boxShadow: '0 2px 8px rgba(225, 29, 72, 0.08)',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '20px' }}>🚨</span>
+          <div className="dashboard-alert-banner" role="alert">
+            <div className="dashboard-alert-content">
+              <AlertTriangle size={20} color="#f43f5e" />
               <div>
-                <strong style={{ fontSize: '13px', color: '#be123c' }}>ALERTĂ CANICULĂ SECTOR 5:</strong>
-                <span style={{ fontSize: '13px', color: '#9f1239', marginLeft: '6px' }}>{alerts[0].message}</span>
+                <strong style={{ fontSize: '13px', color: '#fda4af' }}>ALERTĂ CANICULĂ SECTOR 5:</strong>
+                <span style={{ fontSize: '13px', color: '#fecdd3', marginLeft: '6px' }}>{alerts[0].message}</span>
               </div>
             </div>
-            <span style={{ fontSize: '11px', backgroundColor: '#e11d48', color: '#ffffff', padding: '4px 10px', borderRadius: '12px', fontWeight: 700 }}>
-              Acțiune Necesară
-            </span>
+            <span className="alert-badge-red">Acțiune Necesară</span>
           </div>
         )}
 
         {/* Dashboard Grid Layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px', flex: 1, minHeight: '650px' }}>
+        <div className="dashboard-grid">
           
           {/* Left Column: Interactive Map */}
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#0f172a' }}>
-                🗺️ Registrul Interactiv al Arborilor din Sectorul 5
+          <div
+            className="dashboard-map-column"
+            style={{
+              display: window.innerWidth < 768 && mobileTab !== 'MAP' ? 'none' : 'flex',
+            }}
+          >
+            <div className="map-column-header">
+              <h2 className="map-title">
+                🗺️ Registrul Interactiv al Arborilor
               </h2>
-              <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 600 }}>
+              <span className="map-tree-counter">
                 {trees.length} Arbori Afișați
               </span>
             </div>
 
-            <div style={{ flex: 1, minHeight: '580px' }}>
+            <div className="map-wrapper">
               <Sector5TreeMap
                 trees={trees}
                 selectedNeighborhood={selectedNeighborhood}
-                onSelectTree={() => {}}
-                onAdoptClick={setAdoptTreeModalTarget}
-                onWaterClick={setWaterTreeModalTarget}
+                onSelectTree={(tree) => setSelectedTree(tree)}
+                onAdoptClick={(tree) => setAdoptTreeModalTarget(tree)}
+                onWaterClick={(tree) => setWaterTreeModalTarget(tree)}
               />
             </div>
           </div>
 
-          {/* Right Column: Dynamic Role Views */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            
-            {role === 'CITIZEN' ? (
-              <>
-                <DistrictLeaderboard
-                  stats={stats}
-                  selectedNeighborhood={selectedNeighborhood}
-                  onSelectNeighborhood={setSelectedNeighborhood}
-                />
+          {/* Right Column: Dynamic Role Cards */}
+          <div
+            className="dashboard-cards-column"
+            style={{
+              display: window.innerWidth < 768 && mobileTab === 'MAP' ? 'none' : 'flex',
+            }}
+          >
+            {/* Citizen View: District Leaderboard */}
+            {(role === 'CITIZEN' || (window.innerWidth < 768 && mobileTab === 'LEADERBOARD')) && (
+              <DistrictLeaderboard
+                stats={stats}
+                selectedNeighborhood={selectedNeighborhood}
+                onSelectNeighborhood={() => {}}
+              />
+            )}
 
-                {/* Citizen Quick Action Guide */}
-                <div style={{
-                  backgroundColor: '#ffffff',
-                  borderRadius: '16px',
-                  padding: '20px',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
-                  border: '1px solid #f1f5f9',
-                }}>
-                  <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
-                    💡 Cum Funcționează Rețeaua Verde?
-                  </h3>
-                  <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '13px', color: '#475569', lineHeight: 1.6 }}>
-                    <li>Alege un copac din cartierul tău pe hartă.</li>
-                    <li>Apasă pe <strong>"Adoptă"</strong> pentru a-i da un nume și a avea grijă de el.</li>
-                    <li>Udă copacul în zilele de caniculă și apasă <strong>"Udă Copacul"</strong>.</li>
-                    <li>Urcă în clasament și adu cartierul tău pe locul #1 în Sectorul 5!</li>
-                  </ol>
-                </div>
-              </>
-            ) : (
+            {/* Council Admin View: Analytics & Dispatcher */}
+            {(role === 'COUNCIL_ADMIN' || (window.innerWidth < 768 && mobileTab === 'COUNCIL')) && (
               <>
-                <CouncilAnalyticsBoard stats={stats} trees={trees} />
+                <CouncilAnalyticsBoard trees={trees} stats={stats} />
                 <CouncilAlertDispatcher alerts={alerts} onCreateAlert={handleCreateAlert} />
               </>
             )}
-
           </div>
-
         </div>
-
       </div>
 
-      {/* Modals */}
-      <AdoptTreeModal
-        tree={adoptTreeModalTarget}
-        onClose={() => setAdoptTreeModalTarget(null)}
-        onConfirm={handleAdoptConfirm}
+      {/* Selected Tree Mobile Bottom Sheet */}
+      <SelectedTreeSheet
+        tree={selectedTree}
+        onClose={() => setSelectedTree(null)}
+        onAdoptClick={(tree) => setAdoptTreeModalTarget(tree)}
+        onWaterClick={(tree) => setWaterTreeModalTarget(tree)}
       />
 
-      <LogWateringModal
-        tree={waterTreeModalTarget}
-        onClose={() => setWaterTreeModalTarget(null)}
-        onConfirm={handleWaterConfirm}
-      />
+      {/* Adoption Modal */}
+      {adoptTreeModalTarget && (
+        <AdoptTreeModal
+          tree={adoptTreeModalTarget}
+          onClose={() => setAdoptTreeModalTarget(null)}
+          onConfirm={handleAdoptConfirm}
+        />
+      )}
+
+      {/* Water Tree Modal */}
+      {waterTreeModalTarget && (
+        <LogWateringModal
+          tree={waterTreeModalTarget}
+          onClose={() => setWaterTreeModalTarget(null)}
+          onConfirm={handleWaterConfirm}
+        />
+      )}
     </div>
   );
 };

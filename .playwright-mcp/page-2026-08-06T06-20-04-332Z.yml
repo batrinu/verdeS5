@@ -1,0 +1,57 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - link "Verde în Sectorul 5 - Casă" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e7]: 🌿
+      - generic [ref=e8]:
+        - heading "Verde în Sectorul 5" [level=1] [ref=e9]
+        - generic [ref=e10]: Platformă Comunitară & Registrul Spațiilor Verzi
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e16]: "Cartier:"
+        - combobox "Selectează cartierul din Sectorul 5" [ref=e17] [cursor=pointer]:
+          - option "Toate Cartierele (Sector 5)" [selected]
+          - option "Cotroceni"
+          - option "Rahova"
+          - option "Ferentari"
+          - option "Sebastian"
+          - option "Izvor"
+      - tablist "Comută rolul prezentării" [ref=e18]:
+        - tab "Mod Cetățean" [selected] [ref=e19] [cursor=pointer]
+        - tab "Mod Consiliu Local" [ref=e23] [cursor=pointer]
+    - generic [ref=e27]:
+      - generic "Puncte ecologice acumulate prin îngrijirea arborilor" [ref=e28]: 350 EcoPuncte
+      - generic "Numărul total de udări înregistrate" [ref=e37]: 7 Udări Logate
+  - generic [ref=e43]:
+    - generic [ref=e44]:
+      - generic [ref=e45]:
+        - heading "🗺️ Registrul Interactiv al Arborilor din Sectorul 5" [level=2] [ref=e46]
+        - generic [ref=e47]: 0 Arbori Afișați
+      - generic [ref=e49]:
+        - generic:
+          - generic [ref=e50]:
+            - button "Zoom in" [ref=e51] [cursor=pointer]: +
+            - button "Zoom out" [ref=e52] [cursor=pointer]: −
+          - generic [ref=e53]:
+            - link "Leaflet" [ref=e54] [cursor=pointer]:
+              - /url: https://leafletjs.com
+            - text: "| ©"
+            - link "OpenStreetMap" [ref=e59] [cursor=pointer]:
+              - /url: https://www.openstreetmap.org/copyright
+    - generic [ref=e60]:
+      - generic [ref=e62]:
+        - heading "🏆 Clasament Cartiere Sector 5" [level=3] [ref=e63]
+        - generic [ref=e64]: Actualizat Live
+      - generic [ref=e65]:
+        - heading "💡 Cum Funcționează Rețeaua Verde?" [level=3] [ref=e66]
+        - list [ref=e67]:
+          - listitem [ref=e68]: Alege un copac din cartierul tău pe hartă.
+          - listitem [ref=e69]:
+            - text: Apasă pe
+            - strong [ref=e70]: "\"Adoptă\""
+            - text: pentru a-i da un nume și a avea grijă de el.
+          - listitem [ref=e71]:
+            - text: Udă copacul în zilele de caniculă și apasă
+            - strong [ref=e72]: "\"Udă Copacul\""
+            - text: .
+          - listitem [ref=e73]: "Urcă în clasament și adu cartierul tău pe locul #1 în Sectorul 5!"
