@@ -12,7 +12,7 @@ import { CouncilAnalyticsBoard } from '../../components/Pitch/CouncilAnalyticsBo
 import { PitchHeader } from '../../components/Pitch/PitchHeader';
 import { SelectedTreeSheet } from '../../components/Pitch/SelectedTreeSheet';
 import { usePresenter } from '../../context/PresenterContext';
-import { Map, Trophy, BarChart3, AlertTriangle } from 'lucide-react';
+import { Map, Trophy, BarChart3 } from 'lucide-react';
 import './Dashboard.css';
 
 type MobileTab = 'MAP' | 'DETAILS';
@@ -70,7 +70,7 @@ export const Dashboard: React.FC = () => {
 
   const handleAdoptConfirm = async (treeId: string, adopterName: string, nickname: string) => {
     await TreeService.adoptTree(treeId, adopterName, nickname);
-    
+
     // Find tree or create updated record to show in certificate
     const target = trees.find(t => t.id === treeId) || adoptTreeModalTarget;
     const updatedTree: TreeItem = target ? {
@@ -157,23 +157,9 @@ export const Dashboard: React.FC = () => {
           </button>
         </div>
 
-        {/* Caniculă Alert Banner for Citizens */}
-        {role === 'CITIZEN' && alerts.length > 0 && (
-          <div className="dashboard-alert-banner" role="alert">
-            <div className="dashboard-alert-content">
-              <AlertTriangle size={20} color="#f43f5e" />
-              <div>
-                <strong style={{ fontSize: '13px', color: '#fda4af' }}>ALERTĂ CANICULĂ SECTOR 5:</strong>
-                <span style={{ fontSize: '13px', color: '#fecdd3', marginLeft: '6px' }}>{alerts[0].message}</span>
-              </div>
-            </div>
-            <span className="alert-badge-red">Acțiune Necesară</span>
-          </div>
-        )}
-
         {/* Dashboard Split-Screen Grid Layout */}
         <div className="dashboard-grid">
-          
+
           {/* Left Column: Interactive Map */}
           <div className={`dashboard-map-column ${mobileTab === 'MAP' ? 'mobile-active' : ''}`}>
             <div className="map-column-header">
