@@ -19,10 +19,20 @@ export const ChallengeWidget: React.FC<{ detailed?: boolean }> = ({ detailed = f
   useEffect(() => {
     fetchChallengeApi().then(data => {
       if (data?.progress) {
-        setTotal(data.progress.total);
-        if (data.progress.byNeighborhood.length > 0) setByNeighborhood(data.progress.byNeighborhood);
+        // Demo floor: the live backend is near-empty today, so never let a real
+        // count *regress* the pitch below the seed demo's progress/board.
+        setTotal(prev => Math.max(prev, data.progress.total));
+        if (data.progress.byNeighborhood.length >= byNeighborhood.length) {
+          setByNeighborhood(data.progress.byNeighborhood.map(h => ({
+            ...h,
+            neighborhood: h.neighborhood === h.neighborhood.toUpperCase()
+              ? h.neighborhood.charAt(0) + h.neighborhood.slice(1).toLowerCase()
+              : h.neighborhood,
+          })));
+        }
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const goal = SEED_CHALLENGE.goal;
