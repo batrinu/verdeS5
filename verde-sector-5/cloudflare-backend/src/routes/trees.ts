@@ -253,13 +253,18 @@ trees.post('/:id/water', async (c) => {
 
   try {
     const body = await c.req.json().catch(() => ({}));
-    const liters = body.liters || 10;
-    const userName = body.userName || 'Cetățean Anonim';
-    const photoVerified = Boolean(body.isPhotoVerified);
+    // Bound/validate untrusted input — this is a public, unauthenticated endpoint.
+    const liters = Math.min(Math.max(Math.round(Number(body.liters)) || 10, 1), 100);
+    const userName = String(body.userName || 'Cetățean Anonim').slice(0, 80);
+    // Accept only a reasonably sized image data-URL blob; drop anything else so a
+    // client can't bloat D1 or persist arbitrary payloads. (~1 MB base64 ≈ 750 KB image.)
+    const rawPhoto = typeof body.photoProofUrl === 'string' ? body.photoProofUrl : '';
+    const photoOk = /^data:image\/(png|jpe?g|webp);base64,/.test(rawPhoto) && rawPhoto.length <= 1_000_000;
     // Blob mode: persist the compressed data URL inline (see lib/photoStore).
-    const photoProof = body.photoProofUrl
-      ? await storePhoto(String(body.photoProofUrl), c.env)
-      : null;
+    const photoProof = photoOk ? await storePhoto(rawPhoto, c.env) : null;
+    // The photo "verification" is a client-side demo signal; only grant the bonus
+    // when an actual valid image blob is stored, so it can't be farmed flag-only.
+    const photoVerified = Boolean(body.isPhotoVerified) && photoOk;
     const earnedPoints = liters * 5 + (photoVerified ? 50 : 0);
 
     let tree = await prisma.tree.findUnique({ where: { id } });
