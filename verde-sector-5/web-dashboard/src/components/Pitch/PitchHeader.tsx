@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { usePresenter } from '../../context/PresenterContext';
 import { Menu, X, Shield, TreePine } from 'lucide-react';
@@ -62,8 +63,11 @@ export const PitchHeader: React.FC = () => {
 
       {/* Presenter-only demo control (accepted live-mode variant „Pastilă demo
           plutitoare"): floating glass pill, bottom-right, out of the product
-          chrome entirely. Dashboard-only; „P" flips the persona too. */}
-      {isDashboard && (
+          chrome entirely. Rendered through a portal to <body> — the header's
+          backdrop-filter would otherwise become the containing block for
+          position: fixed and pin the pill to the header instead of the
+          viewport. Dashboard-only; „P" flips the persona too. */}
+      {isDashboard && createPortal(
         <div className="demo-float" role="group" aria-label="Comutator de prezentare (doar demo)">
           <span className="demo-float-tag">Demo</span>
           <div className="role-segmented-switcher" role="tablist" aria-label="Comută rolul prezentării" title="Comutator de prezentare (tasta P)">
@@ -76,7 +80,8 @@ export const PitchHeader: React.FC = () => {
               <span>Consiliu</span>
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   );
