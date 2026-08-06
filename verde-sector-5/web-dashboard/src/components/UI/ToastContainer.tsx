@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Flame, Droplets, AlertTriangle, X, Sun, ShieldAlert } from 'lucide-react';
 import type { CareAlertItem, Sector5Neighborhood } from '../../types/tree';
 
@@ -22,16 +22,25 @@ const ToastItemComponent: React.FC<{
 }> = ({ toast, onDismiss }) => {
   const duration = toast.autoDismissMs ?? 5000;
   const [isHovered, setIsHovered] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  // Plays the 200ms slide+fade exit (app-toast-out, ease-in) before actually
+  // removing the toast — covers both auto-dismiss and the manual close button.
+  const EXIT_ANIMATION_MS = 200;
+  const dismiss = useCallback(() => {
+    setIsLeaving(true);
+    setTimeout(() => onDismiss(toast.id), EXIT_ANIMATION_MS);
+  }, [toast.id, onDismiss]);
 
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || isLeaving) return;
 
     const timer = setTimeout(() => {
-      onDismiss(toast.id);
+      dismiss();
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [toast.id, duration, isHovered, onDismiss]);
+  }, [duration, isHovered, isLeaving, dismiss]);
 
   const getAlertConfig = () => {
     switch (toast.alertType) {
@@ -77,7 +86,7 @@ const ToastItemComponent: React.FC<{
 
   return (
     <div
-      className={`hig-material app-toast ${config.themeClass}`}
+      className={`hig-material app-toast ${config.themeClass} ${isLeaving ? 'app-toast-leaving' : ''}`.trim()}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       role="alert"
@@ -93,7 +102,7 @@ const ToastItemComponent: React.FC<{
         </div>
         <button
           className="app-toast-close"
-          onClick={() => onDismiss(toast.id)}
+          onClick={() => dismiss()}
           aria-label="Închide alerta"
         >
           <X size={16} />
