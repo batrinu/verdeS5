@@ -707,7 +707,12 @@ a.hig-button { color: var(--hig-tint-contrast); }
    plain h1 title plus the presenter demo pill. Navigation now lives only in
    the HIG shell (Layout.tsx); this header carries no brand link or nav. --- */
 .app-pitch-header {
-  padding: var(--hig-space-1) var(--hig-space-4);
+  /* Horizontal padding removed: .app-content already applies --app-inset to
+     the whole content box, so any horizontal padding here doubled it and
+     pushed the h1 (300px) out of alignment with the page's own h2/cards
+     (284px) — same "one shared left edge" defect class as the mobile inset
+     fix. Vertical padding stays local (sticky bar's own breathing room). */
+  padding: var(--hig-space-1) 0;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
