@@ -1116,13 +1116,16 @@
 }
 
 /* --- TreeCareDetails (components/Pitch/TreeCareDetails) — the "living
-   profile" strip embedded on Trees/Map/SponsorGrove. Water-status badge
-   reuses the SAME ok/thirsty/urgent/unknown semantic vocabulary as the map
-   pins (app-map-pin) instead of the old inline waterStatusColor() hex:
-   urgent reuses hig.css's own solid .hig-badge (Badge.tsx's "danger = solid,
-   else = tint" split), the other three use tint modifiers below. --- */
+   profile" strip embedded on Trees/Map/SponsorGrove. Water status and the
+   last-watered row are label/value shaped, so they're a hig-list of
+   hig-list-item rows (hig-spacer/hig-value) per the ruling — impact chips
+   and the tree-voice quote aren't label/value pairs, so they stay plain
+   badge/blockquote markup outside the list. Water-status badge reuses the
+   SAME ok/thirsty/urgent/unknown semantic vocabulary as the map pins
+   (app-map-pin) instead of the old inline waterStatusColor() hex: urgent
+   reuses hig.css's own solid .hig-badge (Badge.tsx's "danger = solid, else
+   = tint" split), the other three use tint modifiers below. --- */
 .app-tree-care { display: flex; flex-direction: column; gap: var(--hig-space-2); margin-bottom: var(--hig-space-4); }
-.app-care-row { display: flex; align-items: center; gap: var(--hig-space-2); flex-wrap: wrap; }
 .app-badge-neutral { background: var(--hig-fill-tertiary); color: var(--hig-label-secondary); }
 .app-impact-row { display: flex; align-items: center; gap: var(--hig-space-2); flex-wrap: wrap; }
 .app-impact-chip {
@@ -1142,7 +1145,6 @@
   border-left: 2px solid var(--hig-tint);
   font-style: italic;
 }
-.app-last-care { display: flex; align-items: center; gap: var(--hig-space-2); flex-wrap: wrap; }
 .app-last-care-label { font-weight: 600; color: var(--hig-label); }
 .app-last-care-photo { width: 44px; height: 44px; border-radius: var(--hig-radius-sm); object-fit: cover; flex-shrink: 0; }
 

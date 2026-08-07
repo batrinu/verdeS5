@@ -32,12 +32,30 @@ export const TreeCareDetails: React.FC<{ tree: TreeItem }> = ({ tree }) => {
 
   return (
     <div className="app-tree-care">
-      <div className="app-care-row">
-        <span className={WATER_STATUS_BADGE_CLASS[status]}>
-          <Droplets size={13} aria-hidden="true" /> {waterStatusLabel(status)}
-        </span>
-        {tree.isAdopted && tree.adopterName && (
-          <span className="hig-footnote hig-secondary">Gardian: {tree.adopterName}</span>
+      <div className="hig-list">
+        <div className="hig-list-item">
+          <span className={WATER_STATUS_BADGE_CLASS[status]}>
+            <Droplets size={13} aria-hidden="true" /> {waterStatusLabel(status)}
+          </span>
+          <span className="hig-spacer" />
+          {tree.isAdopted && tree.adopterName && (
+            <span className="hig-value hig-footnote hig-secondary">Gardian: {tree.adopterName}</span>
+          )}
+        </div>
+
+        {tree.lastWateredAt && (
+          <div className="hig-list-item" aria-label="Ultima îngrijire">
+            <span className="app-last-care-label">Ultima îngrijire:</span>
+            <span className="hig-spacer" />
+            <span className="hig-value hig-footnote hig-secondary">
+              {new Date(tree.lastWateredAt).toLocaleDateString('ro-RO')}
+              {tree.lastWateredBy ? ` — ${tree.lastWateredBy}` : ''}
+              {tree.lastWateredLiters ? `, ${tree.lastWateredLiters}L` : ''}
+            </span>
+            {tree.lastWateredPhotoProof && (
+              <img className="app-last-care-photo" src={tree.lastWateredPhotoProof} alt="Dovadă foto a udării" />
+            )}
+          </div>
         )}
       </div>
 
@@ -52,20 +70,6 @@ export const TreeCareDetails: React.FC<{ tree: TreeItem }> = ({ tree }) => {
           <MessageCircle size={13} aria-hidden="true" />
           <span>{message}</span>
         </blockquote>
-      )}
-
-      {tree.lastWateredAt && (
-        <div className="app-last-care hig-footnote hig-secondary" aria-label="Ultima îngrijire">
-          <span className="app-last-care-label">Ultima îngrijire:</span>
-          <span>
-            {new Date(tree.lastWateredAt).toLocaleDateString('ro-RO')}
-            {tree.lastWateredBy ? ` — ${tree.lastWateredBy}` : ''}
-            {tree.lastWateredLiters ? `, ${tree.lastWateredLiters}L` : ''}
-          </span>
-          {tree.lastWateredPhotoProof && (
-            <img className="app-last-care-photo" src={tree.lastWateredPhotoProof} alt="Dovadă foto a udării" />
-          )}
-        </div>
       )}
     </div>
   );
