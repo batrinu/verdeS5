@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PitchHeader } from '../../components/Pitch/PitchHeader';
+import { Badge } from '../../components/UI/Badge';
 import { Sprout, TreePine, Leaf, Calendar } from 'lucide-react';
-import './Campaigns.css';
 
 interface Campaign {
   id: number;
@@ -53,6 +53,15 @@ const STATUS_ICONS: Record<Campaign['status'], React.ReactNode> = {
   'În curând': <Leaf size={22} aria-hidden="true" />,
 };
 
+// Badge component variants (app-badge-success/-info tint green/blue; the
+// default variant reads as a quiet neutral tag) — mirrors the old
+// status-activa/-finalizata/-in-curand palette without hand-rolled CSS.
+const STATUS_BADGE_VARIANT: Record<Campaign['status'], 'success' | 'default' | 'info'> = {
+  'Activă': 'success',
+  'Finalizată': 'default',
+  'În curând': 'info',
+};
+
 // Campaigns page (demo data — see comment above): read-only overview of
 // citywide planting/watering events. Participation itself happens on the
 // live map (Dashboard), so „Participă" routes there rather than hosting a
@@ -66,56 +75,54 @@ const Campaigns: React.FC = () => {
   }, []);
 
   return (
-    <div className="campaigns-root">
+    <>
       <PitchHeader />
-      <main className="campaigns-main">
-        <header className="campaigns-header">
-          <h1><TreePine size={20} aria-hidden="true" /> Campanii de Împădurire</h1>
-          <p>Implică-te activ în creșterea suprafeței verzi a Sectorului 5</p>
+      <div className="app-campaigns-page">
+        <header className="app-campaigns-header">
+          <h2><TreePine size={20} aria-hidden="true" /> Campanii de Împădurire</h2>
+          <p className="hig-secondary">Implică-te activ în creșterea suprafeței verzi a Sectorului 5</p>
         </header>
 
-        <div className="campaigns-grid">
+        <div className="app-campaigns-grid">
           {campaigns.map(campaign => {
-            const progressPercent = Math.min(100, Math.round((campaign.planted / campaign.target) * 100));
-            const statusClass = campaign.status === 'Activă' ? 'status-activa' : campaign.status === 'Finalizată' ? 'status-finalizata' : 'status-in-curand';
+            const progressFraction = Math.min(1, campaign.planted / campaign.target);
 
             return (
-              <div key={campaign.id} className="campaign-card">
-                <div className={`campaign-band ${statusClass}`}>
-                  {STATUS_ICONS[campaign.status]}
-                  <span className={`status-badge ${statusClass}`}>{campaign.status}</span>
+              <div key={campaign.id} className="hig-card app-campaign-card">
+                <div className="app-campaign-card-header">
+                  <span className="app-campaign-icon" aria-hidden="true">{STATUS_ICONS[campaign.status]}</span>
+                  <Badge variant={STATUS_BADGE_VARIANT[campaign.status]}>{campaign.status}</Badge>
                 </div>
-                <div className="campaign-content">
-                  <h3 className="campaign-title">{campaign.title}</h3>
-                  <div className="campaign-date"><Calendar size={13} aria-hidden="true" /> {campaign.dateRange}</div>
-                  <p className="campaign-description">{campaign.description}</p>
 
-                  <div className="campaign-progress">
-                    <div className="progress-stats">
-                      <span>{campaign.planted} plantați</span>
-                      <span>Țintă: {campaign.target}</span>
-                    </div>
-                    <div className="progress-bar-bg">
-                      <div className="progress-bar-fill" style={{ transform: `scaleX(${progressPercent / 100})` }} />
-                    </div>
+                <h3 className="hig-headline app-campaign-title">{campaign.title}</h3>
+                <p className="hig-footnote hig-secondary app-campaign-meta">
+                  <Calendar size={13} aria-hidden="true" /> {campaign.dateRange}
+                </p>
+                <p className="app-campaign-description">{campaign.description}</p>
+
+                <div className="app-campaign-progress">
+                  <div className="app-campaign-progress-stats hig-footnote hig-secondary">
+                    <span>{campaign.planted} plantați</span>
+                    <span>Țintă: {campaign.target}</span>
                   </div>
-
-                  <div className="campaign-actions">
-                    <button
-                      className="btn-join"
-                      onClick={() => navigate('/')}
-                      title="Participarea se face din harta live a Dashboard-ului"
-                    >
-                      Participă
-                    </button>
+                  <div className="hig-progress" style={{ '--hig-progress': progressFraction } as React.CSSProperties}>
+                    <div />
                   </div>
                 </div>
+
+                <button
+                  className="hig-button tinted app-campaign-join"
+                  onClick={() => navigate('/')}
+                  title="Participarea se face din harta live a Dashboard-ului"
+                >
+                  Participă
+                </button>
               </div>
             );
           })}
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 
