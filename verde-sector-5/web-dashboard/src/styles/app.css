@@ -512,17 +512,22 @@
   font-weight: 700;
 }
 
-/* --- Leaflet map popup (used by Sector5TreeMap, rendered on Dashboard) —
-   dark-skin the default white Leaflet popup chrome so it matches the app
+/* --- Leaflet map popup (used by Sector5TreeMap AND the standalone Map page)
+   — dark-skin the default white Leaflet popup chrome so it matches the app
    instead of clashing with the theme. Selectors are Leaflet's own, not
-   renameable. --- */
+   renameable. !important throughout: leaflet/dist/leaflet.css is imported
+   inside the lazy-loaded page/component chunk, so its own same-specificity
+   .leaflet-popup-content-wrapper rule can land AFTER this one in the
+   cascade depending on route load order — without !important the popup
+   silently reverts to Leaflet's white background (found while verifying
+   this task in dark mode: text was unreadable, light-on-white). --- */
 .leaflet-popup-content-wrapper {
-  background: var(--hig-bg-secondary);
-  color: var(--hig-label);
-  border-radius: var(--hig-radius-lg);
-  box-shadow: var(--hig-shadow-menu);
+  background: var(--hig-bg-secondary) !important;
+  color: var(--hig-label) !important;
+  border-radius: var(--hig-radius-lg) !important;
+  box-shadow: var(--hig-shadow-menu) !important;
 }
-.leaflet-popup-tip { background: var(--hig-bg-secondary); }
+.leaflet-popup-tip { background: var(--hig-bg-secondary) !important; }
 .leaflet-popup-close-button { color: var(--hig-label-secondary) !important; }
 .leaflet-popup-close-button:hover { color: var(--hig-label) !important; }
 
@@ -795,6 +800,108 @@ button.hig-list-item.app-list-item-selected { background: color-mix(in srgb, var
 .app-tree-adoption-line { font-style: italic; }
 .app-tree-waterings-line { margin-left: auto; font-weight: 600; }
 .app-trees-empty-title { font-size: var(--hig-text-body); font-weight: 400; }
+
+/* --- Sector5TreeMap (components/Pitch/Sector5TreeMap, embedded on Dashboard
+   inside .app-map-wrapper) — this is a real Leaflet + OpenStreetMap-tile map,
+   not a custom-drawn schematic (no land/road/label SVG to theme); the parts
+   that needed to become theme-aware were the divIcon marker SVG and the
+   popup content it injects via innerHTML. Water status drives both the
+   marker fill and the legend dot through the SAME class modifiers below, so
+   they can never drift apart between light/dark. --- */
+.app-sector5-map { position: relative; height: 100%; width: 100%; }
+.app-sector5-map-canvas {
+  height: 100%;
+  width: 100%;
+  border-radius: var(--hig-radius-xl);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+.app-sector5-map-legend {
+  position: absolute;
+  left: var(--hig-space-2);
+  bottom: var(--hig-space-2);
+  z-index: 1000;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hig-space-1) var(--hig-space-3);
+  max-width: calc(100% - 16px);
+  padding: 6px var(--hig-space-3);
+  background: var(--hig-material);
+  border: 1px solid var(--hig-material-border);
+  border-radius: var(--hig-radius-md);
+  font-size: var(--hig-text-caption2);
+  line-height: 1.4;
+  color: var(--hig-label-secondary);
+}
+.app-sector5-map-legend-item { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.app-sector5-map-legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.app-sector5-map-legend-dot.ok { background: var(--hig-green); }
+.app-sector5-map-legend-dot.thirsty { background: var(--hig-orange); }
+.app-sector5-map-legend-dot.urgent { background: var(--hig-red); }
+.app-sector5-map-legend-dot.unknown { background: var(--hig-gray); }
+@media (max-width: 480px) {
+  .app-sector5-map-legend { flex-direction: column; align-items: flex-start; gap: 4px; }
+}
+
+/* Tree marker pin — the divIcon SVG built in buildTreeIcon(). Status picks
+   the fill, adoption picks the stroke + badge; both axes are independent
+   modifier classes on the same <path> so any status/adoption combination
+   composes correctly. Leaflet's default .leaflet-div-icon paints a white
+   box + border behind custom HTML — disabled since our SVG supplies its
+   own pin shape. */
+.leaflet-div-icon.tree-marker-icon { background: transparent; border: none; }
+.app-map-svg { filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.45)); }
+.app-map-pin { fill: var(--hig-green); stroke: var(--hig-separator); stroke-width: 1; }
+.app-map-pin.ok { fill: var(--hig-green); }
+.app-map-pin.thirsty { fill: var(--hig-orange); }
+.app-map-pin.urgent { fill: var(--hig-red); }
+.app-map-pin.unknown { fill: var(--hig-gray); }
+.app-map-pin.adopted { stroke: var(--hig-yellow); stroke-width: 2.5; }
+.app-map-pin-badge { fill: var(--hig-fill); }
+.app-map-pin-badge.adopted { fill: var(--hig-bg-secondary); }
+.app-map-pin-star { fill: var(--hig-yellow); }
+
+/* Popup content — Sector5TreeMap builds it via innerHTML; the standalone
+   Map page's react-leaflet <Popup> reuses the same classes so both embeds
+   of the map look identical. Adopted = gold (matches the watering-points
+   hint elsewhere), available = neutral fill (matches Trees registry's
+   muted "Neadoptat" treatment) rather than inventing a second accent. */
+.app-map-popup { min-width: 220px; font-family: inherit; }
+.app-map-popup-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: var(--hig-space-2); }
+.app-map-popup-eyebrow { display: block; font-size: var(--hig-text-caption2); font-weight: 700; color: var(--hig-tint); text-transform: uppercase; letter-spacing: 0.5px; }
+.app-map-popup-badge { display: inline-block; font-size: var(--hig-text-caption2); padding: 2px var(--hig-space-2); border-radius: var(--hig-radius-full); font-weight: 600; white-space: nowrap; }
+.app-map-popup-badge.adopted { background: color-mix(in srgb, var(--hig-yellow) 18%, transparent); color: var(--hig-yellow); }
+.app-map-popup-badge.available { background: var(--hig-fill-secondary); color: var(--hig-label-secondary); }
+.app-map-popup-title { display: block; margin: 4px 0 2px; font-size: var(--hig-text-subheadline); color: var(--hig-label); }
+.app-map-popup-meta { margin: 0 0 var(--hig-space-2); font-size: var(--hig-text-caption); color: var(--hig-label-secondary); }
+.app-map-popup-actions { display: flex; gap: 6px; margin-top: var(--hig-space-2); }
+.app-map-popup-adopted-group { display: flex; flex-direction: column; gap: 6px; }
+.app-map-popup-btn { flex: 1; border: none; padding: 6px var(--hig-space-3); border-radius: var(--hig-radius-md); font-size: var(--hig-text-caption2); font-weight: 700; cursor: pointer; }
+.app-map-popup-btn.adopt { background: var(--hig-tint); color: var(--hig-tint-contrast); }
+.app-map-popup-btn.water { background: color-mix(in srgb, var(--hig-blue) 20%, transparent); color: var(--hig-blue); }
+.app-map-popup-btn.full { width: 100%; margin-top: var(--hig-space-1); }
+
+/* --- Map page (pages/Map) — full-height two-column layout: filter sidebar +
+   Leaflet canvas, the only routed page that needs to fill the viewport
+   below the shell's own padding instead of scrolling like a document.
+   Filters reuse hig-form-row/hig-field (mapping table) rather than a
+   bespoke filter-group. --- */
+.app-map-page { display: flex; flex-direction: column; gap: var(--hig-space-5); height: 100%; }
+.app-map-page-header h2 { display: flex; align-items: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-1); }
+.app-map-page-header p { margin: 0; }
+.app-map-page-body { display: flex; gap: var(--hig-space-5); flex: 1; min-height: 560px; }
+.app-map-sidebar { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; gap: var(--hig-space-4); overflow-y: auto; }
+.app-map-page-legend { margin-top: auto; padding-top: var(--hig-space-5); border-top: 1px solid var(--hig-separator); display: flex; flex-direction: column; gap: var(--hig-space-2); }
+.app-map-page-legend-item { display: flex; align-items: center; gap: var(--hig-space-2); font-size: var(--hig-text-footnote); color: var(--hig-label-secondary); }
+.app-map-page-legend-item img { height: 24px; }
+.app-map-content { flex: 1; position: relative; border-radius: var(--hig-radius-xl); overflow: hidden; min-height: 400px; }
+.app-map-leaflet { width: 100%; height: 100%; }
+@media (max-width: 768px) {
+  .app-map-page-body { flex-direction: column; }
+  .app-map-sidebar { width: 100%; max-height: 40vh; }
+  .app-map-content { min-height: 60vh; }
+}
 
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }

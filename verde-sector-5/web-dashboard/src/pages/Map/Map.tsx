@@ -4,9 +4,10 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { AdoptionCertificateModal } from '../../components/UI/AdoptionCertificateModal';
 import { ToastContainer, type ToastAlert } from '../../components/UI/ToastContainer';
+import { PitchHeader } from '../../components/Pitch/PitchHeader';
 import { TreeService } from '../../api/treeService';
 import type { TreeItem, CareAlertItem } from '../../types/tree';
-import './Map.css';
+import { Map as MapIcon } from 'lucide-react';
 
 // Fix for default leaflet icons in react
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -181,139 +182,129 @@ const Map: React.FC = () => {
   });
 
   return (
-    <div className="map-page-container">
-      <div className="map-sidebar">
-        <h3>Filtre Hartă</h3>
-        
-        <div className="filter-group">
-          <label>Cartier Sector 5</label>
-          <select value={filterNeighborhood} onChange={e => handleNeighborhoodChange(e.target.value)}>
-            <option value="toate">Toate cartierele</option>
-            <option value="Cotroceni">Cotroceni</option>
-            <option value="Rahova">Rahova</option>
-            <option value="Ferentari">Ferentari</option>
-            <option value="Sebastian">Sebastian</option>
-            <option value="Izvor">Izvor</option>
-          </select>
-        </div>
+    <>
+      <PitchHeader />
+      <div className="app-map-page">
+        <header className="app-map-page-header">
+          <h2><MapIcon size={20} aria-hidden="true" /> Hartă Interactivă</h2>
+          <p className="hig-secondary">Explorează copacii și sesizările din Sectorul 5</p>
+        </header>
 
-        <div className="filter-group">
-          <label>Specie</label>
-          <select value={filterSpecies} onChange={e => setFilterSpecies(e.target.value)}>
-            <option value="toate">Toate speciile</option>
-            <option value="platan">Platan</option>
-            <option value="tei">Tei</option>
-            <option value="castan">Castan</option>
-            <option value="stejar">Stejar</option>
-            <option value="arțar">Arțar</option>
-          </select>
-        </div>
+        <div className="app-map-page-body">
+          <aside className="app-map-sidebar">
+            <div className="hig-section-header">Filtre Hartă</div>
 
-        <div className="filter-group">
-          <label>Stare Sănătate</label>
-          <select value={filterHealth} onChange={e => setFilterHealth(e.target.value)}>
-            <option value="toate">Toate stările</option>
-            <option value="excellent">Excelentă</option>
-            <option value="good">Bună</option>
-            <option value="needs_water">Necesită apă</option>
-            <option value="attention_required">Atenție sporită</option>
-          </select>
-        </div>
+            <div className="hig-form-row">
+              <label>Cartier Sector 5</label>
+              <select className="hig-field" value={filterNeighborhood} onChange={e => handleNeighborhoodChange(e.target.value)}>
+                <option value="toate">Toate cartierele</option>
+                <option value="Cotroceni">Cotroceni</option>
+                <option value="Rahova">Rahova</option>
+                <option value="Ferentari">Ferentari</option>
+                <option value="Sebastian">Sebastian</option>
+                <option value="Izvor">Izvor</option>
+              </select>
+            </div>
 
-        <div className="map-legend">
-          <h4>Legendă</h4>
-          <div className="legend-item">
-            <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" alt="Copac" />
-            <span>Copac Disponibil</span>
-          </div>
-          <div className="legend-item">
-            <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" alt="Copac Adoptat" />
-            <span>Copac Adoptat (Certificat)</span>
-          </div>
-          <div className="legend-item">
-            <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png" alt="Raport" />
-            <span>Problemă Semnalată</span>
-          </div>
-        </div>
-      </div>
+            <div className="hig-form-row">
+              <label>Specie</label>
+              <select className="hig-field" value={filterSpecies} onChange={e => setFilterSpecies(e.target.value)}>
+                <option value="toate">Toate speciile</option>
+                <option value="platan">Platan</option>
+                <option value="tei">Tei</option>
+                <option value="castan">Castan</option>
+                <option value="stejar">Stejar</option>
+                <option value="arțar">Arțar</option>
+              </select>
+            </div>
 
-      <div className="map-wrapper">
-        <MapContainer center={center} zoom={14} className="leaflet-map" scrollWheelZoom={true}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          
-          {filteredTrees.map(tree => (
-            <Marker key={`tree-${tree.id}`} position={[tree.latitude, tree.longitude]} icon={tree.isAdopted ? adoptedTreeIcon : treeIcon}>
-              <Popup>
-                <div className="custom-popup" style={{ minWidth: '200px' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#16a34a', textTransform: 'uppercase' }}>
-                    {tree.neighborhood} • {tree.code}
-                  </div>
-                  <strong style={{ fontSize: '15px', display: 'block', margin: '4px 0 2px 0' }}>
-                    {tree.nickname || tree.species}
-                  </strong>
-                  <div style={{ fontSize: '12px', color: '#475569', marginBottom: '8px' }}>
-                    Specie: {tree.species} | Stare: {tree.healthStatus}
-                  </div>
+            <div className="hig-form-row">
+              <label>Stare Sănătate</label>
+              <select className="hig-field" value={filterHealth} onChange={e => setFilterHealth(e.target.value)}>
+                <option value="toate">Toate stările</option>
+                <option value="excellent">Excelentă</option>
+                <option value="good">Bună</option>
+                <option value="needs_water">Necesită apă</option>
+                <option value="attention_required">Atenție sporită</option>
+              </select>
+            </div>
 
-                  {tree.isAdopted ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <span style={{ fontSize: '11px', color: '#854d0e', backgroundColor: '#fef08a', padding: '3px 8px', borderRadius: '12px', textAlign: 'center', fontWeight: 600 }}>
-                        🌟 Adoptat de {tree.adopterName}
-                      </span>
-                      <button
-                        onClick={() => setCertModalTree(tree)}
-                        style={{
-                          backgroundColor: '#059669',
-                          color: '#ffffff',
-                          border: 'none',
-                          padding: '6px 12px',
-                          borderRadius: '8px',
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          marginTop: '4px',
-                        }}
-                      >
-                        📜 Certificat Adopție
-                      </button>
+            <div className="app-map-page-legend">
+              <div className="hig-section-header">Legendă</div>
+              <div className="app-map-page-legend-item">
+                <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" alt="Copac" />
+                <span>Copac Disponibil</span>
+              </div>
+              <div className="app-map-page-legend-item">
+                <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png" alt="Copac Adoptat" />
+                <span>Copac Adoptat (Certificat)</span>
+              </div>
+              <div className="app-map-page-legend-item">
+                <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png" alt="Raport" />
+                <span>Problemă Semnalată</span>
+              </div>
+            </div>
+          </aside>
+
+          <div className="app-map-content">
+            <MapContainer center={center} zoom={14} className="app-map-leaflet" scrollWheelZoom={true}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+
+              {filteredTrees.map(tree => (
+                <Marker key={`tree-${tree.id}`} position={[tree.latitude, tree.longitude]} icon={tree.isAdopted ? adoptedTreeIcon : treeIcon}>
+                  <Popup>
+                    <div className="app-map-popup">
+                      <div className="app-map-popup-eyebrow">
+                        {tree.neighborhood} • {tree.code}
+                      </div>
+                      <strong className="app-map-popup-title">
+                        {tree.nickname || tree.species}
+                      </strong>
+                      <div className="app-map-popup-meta">
+                        Specie: {tree.species} | Stare: {tree.healthStatus}
+                      </div>
+
+                      {tree.isAdopted ? (
+                        <div className="app-map-popup-adopted-group">
+                          <span className="app-map-popup-badge adopted">
+                            🌟 Adoptat de {tree.adopterName}
+                          </span>
+                          <button
+                            onClick={() => setCertModalTree(tree)}
+                            className="app-map-popup-btn adopt full"
+                          >
+                            📜 Certificat Adopție
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleAdoptTree(tree)}
+                          className="app-map-popup-btn adopt full"
+                        >
+                          🌱 Adoptă & Generație Certificat
+                        </button>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      onClick={() => handleAdoptTree(tree)}
-                      style={{
-                        width: '100%',
-                        backgroundColor: '#16a34a',
-                        color: '#ffffff',
-                        border: 'none',
-                        padding: '6px 12px',
-                        borderRadius: '8px',
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      🌱 Adoptă & Generație Certificat
-                    </button>
-                  )}
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+                  </Popup>
+                </Marker>
+              ))}
 
-          {reports.map(report => (
-            <Marker key={`report-${report.id}`} position={[report.lat, report.lng]} icon={reportIcon}>
-              <Popup>
-                <div className="custom-popup">
-                  <strong>Raport: {report.title}</strong><br/>
-                  Status: {report.status}
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
+              {reports.map(report => (
+                <Marker key={`report-${report.id}`} position={[report.lat, report.lng]} icon={reportIcon}>
+                  <Popup>
+                    <div className="app-map-popup">
+                      <strong>Raport: {report.title}</strong><br/>
+                      Status: {report.status}
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </div>
+        </div>
       </div>
 
       {certModalTree && (
@@ -325,7 +316,7 @@ const Map: React.FC = () => {
 
       {/* Real-time Municipal Heatwave & Care Toast Notification Banner Engine */}
       <ToastContainer toasts={toastAlerts} onDismiss={handleDismissToast} />
-    </div>
+    </>
   );
 };
 

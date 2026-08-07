@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import './Sector5TreeMap.css';
 import type { TreeItem } from '../../types/tree';
-import { computeWaterStatus, waterStatusColor, waterStatusLabel, type WaterStatus } from '../../utils/treeCare';
+import { computeWaterStatus, waterStatusLabel, type WaterStatus } from '../../utils/treeCare';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -26,20 +25,20 @@ const buildTreeIcon = (status: WaterStatus, isAdopted: boolean): L.DivIcon => {
   const cached = treeIconCache.get(cacheKey);
   if (cached) return cached;
 
-  const fill = waterStatusColor(status);
-  const strokeColor = isAdopted ? '#FBBF24' : 'rgba(0, 0, 0, 0.35)';
-  const strokeWidth = isAdopted ? 2.5 : 1;
+  // Fill/stroke are CSS-variable-driven classes (app.css section 2), not
+  // inline hex — status picks the fill (.app-map-pin.<status>), adoption
+  // picks the stroke (.app-map-pin.adopted), so the pin stays theme-aware
+  // in both light and dark instead of baking in a fixed color.
+  const pinClass = `app-map-pin ${status}${isAdopted ? ' adopted' : ''}`;
   const centerMark = isAdopted
-    ? '<circle cx="12.5" cy="12.5" r="4.5" fill="#0B1D1A" /><text x="12.5" y="15.5" text-anchor="middle" font-size="7" fill="#FBBF24">★</text>'
-    : '<circle cx="12.5" cy="12.5" r="4.5" fill="rgba(0, 0, 0, 0.3)" />';
+    ? '<circle cx="12.5" cy="12.5" r="4.5" class="app-map-pin-badge adopted" /><text x="12.5" y="15.5" text-anchor="middle" font-size="7" class="app-map-pin-star">★</text>'
+    : '<circle cx="12.5" cy="12.5" r="4.5" class="app-map-pin-badge" />';
 
   const html = `
-    <svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg" focusable="false">
+    <svg class="app-map-svg" width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg" focusable="false">
       <path
+        class="${pinClass}"
         d="M12.5 0C5.596 0 0 5.596 0 12.5c0 9.375 12.5 28.5 12.5 28.5S25 21.875 25 12.5C25 5.596 19.404 0 12.5 0z"
-        fill="${fill}"
-        stroke="${strokeColor}"
-        stroke-width="${strokeWidth}"
       />
       ${centerMark}
     </svg>
@@ -121,34 +120,36 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
         keyboard: true,
       }).addTo(map);
 
+      // Styling lives in app.css (.app-map-popup-*) — CSS-variable-driven
+      // classes instead of inline hex, so the popup follows the active
+      // theme like every other surface.
       const popupContainer = document.createElement('div');
-      popupContainer.style.minWidth = '220px';
-      popupContainer.style.fontFamily = 'sans-serif';
+      popupContainer.className = 'app-map-popup';
 
       popupContainer.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 8px;">
-          <span style="font-size: 11px; font-weight: bold; color: #6EE7A0; text-transform: uppercase; letter-spacing: 0.5px;">
+        <div class="app-map-popup-head">
+          <span class="app-map-popup-eyebrow">
             ${esc(tree.neighborhood)} • ${esc(tree.code)}
           </span>
           ${tree.isAdopted ? `
-            <span style="background-color: rgba(251, 191, 36, 0.15); color: #FBBF24; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;">
+            <span class="app-map-popup-badge adopted">
               🌟 Adoptat
             </span>
           ` : `
-            <span style="background-color: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600;">
+            <span class="app-map-popup-badge available">
               Disponibil
             </span>
           `}
         </div>
-        <h4 style="margin: 0 0 4px 0; font-size: 15px; color: #f0fdf4;">
+        <h4 class="app-map-popup-title">
           ${esc(tree.nickname || tree.species)}
         </h4>
-        <p style="margin: 0 0 10px 0; font-size: 12px; color: #94A3B8;">
+        <p class="app-map-popup-meta">
           ${tree.isAdopted ? `Îngrijit de: ${esc(tree.adopterName)}` : `Specie: ${esc(tree.species)}`}
         </p>
-        <div style="display: flex; gap: 6px; margin-top: 8px;">
-          ${!tree.isAdopted ? `<button class="btn-adopt-tree" style="flex: 1; background-color: #34D87A; color: #0B1D1A; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">🌱 Adoptă</button>` : ''}
-          <button class="btn-water-tree" style="flex: 1; background-color: #0EA5E9; color: #ffffff; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">💧 Udă Copacul</button>
+        <div class="app-map-popup-actions">
+          ${!tree.isAdopted ? `<button class="btn-adopt-tree app-map-popup-btn adopt">🌱 Adoptă</button>` : ''}
+          <button class="btn-water-tree app-map-popup-btn water">💧 Udă Copacul</button>
         </div>
       `;
 
@@ -192,16 +193,12 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
     // tracking of its children — the legend must be a *sibling* in an outer
     // wrapper, not a JSX child of that div, or React and Leaflet fight over
     // the same node's children on re-render/unmount.
-    <div className="sector5-map-outer">
-      <div
-        ref={mapContainerRef}
-        className="sector5-map-container"
-        style={{ height: '100%', width: '100%', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
-      />
-      <div className="map-water-legend" role="note" aria-label="Legendă stare hidratare">
+    <div className="app-sector5-map">
+      <div ref={mapContainerRef} className="app-sector5-map-canvas" />
+      <div className="app-sector5-map-legend" role="note" aria-label="Legendă stare hidratare">
         {(['ok', 'thirsty', 'urgent', 'unknown'] as const).map((s) => (
-          <span key={s} className="legend-item">
-            <span className="legend-dot" style={{ background: waterStatusColor(s) }} aria-hidden="true" />
+          <span key={s} className="app-sector5-map-legend-item">
+            <span className={`app-sector5-map-legend-dot ${s}`} aria-hidden="true" />
             {waterStatusLabel(s)}
           </span>
         ))}
