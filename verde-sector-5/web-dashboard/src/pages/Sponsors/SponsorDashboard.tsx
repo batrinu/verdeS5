@@ -6,7 +6,7 @@ import { computeWaterStatus, waterStatusLabel, computeImpact } from '../../utils
 import { TIER_LABELS } from './Sponsors';
 import type { TreeItem } from '../../types/tree';
 import { BarChart3, Download } from 'lucide-react';
-import './Sponsors.css';
+import { StatCard } from '../../components/UI/StatCard';
 
 // Pure + unit-testable (see src/__tests__/groveStats.test.ts): given a
 // grove's trees, aggregates the ESG-facing survival/health/watering/impact
@@ -93,17 +93,17 @@ const SponsorDashboard: React.FC = () => {
   };
 
   return (
-    <div className="sponsors-root">
+    <>
       <PitchHeader />
-      <main className="sponsors-main">
-        <header className="sponsors-header">
-          <h1><BarChart3 size={20} aria-hidden="true" /> Dashboard ESG (demo)</h1>
-          <p className="sponsors-pitch-line">Nu vindem certificate de plantare — vindem dovada supraviețuirii.</p>
+      <div className="app-sponsors-page">
+        <header className="app-sponsors-header">
+          <h2><BarChart3 size={20} aria-hidden="true" /> Dashboard ESG (demo)</h2>
+          <p className="hig-footnote hig-secondary app-esg-pitch-line">Nu vindem certificate de plantare — vindem dovada supraviețuirii.</p>
         </header>
 
-        <div className="esg-controls">
+        <div className="hig-form-row app-esg-controls">
           <label htmlFor="sponsor-select">Alege sponsorul (demo — fără autentificare)</label>
-          <select id="sponsor-select" value={selectedSlug} onChange={e => setSelectedSlug(e.target.value)}>
+          <select id="sponsor-select" className="hig-field" value={selectedSlug} onChange={e => setSelectedSlug(e.target.value)}>
             {eligibleSponsors.map(s => (
               <option key={s.id} value={s.slug}>{withDemoTag(s.name)}</option>
             ))}
@@ -111,43 +111,28 @@ const SponsorDashboard: React.FC = () => {
         </div>
 
         {!selectedSponsor || !grove ? (
-          <p className="sponsors-empty">Niciun sponsor demonstrativ disponibil pentru dashboard-ul ESG.</p>
+          <p className="hig-footnote hig-secondary app-sponsors-empty">Niciun sponsor demonstrativ disponibil pentru dashboard-ul ESG.</p>
         ) : (
           <>
-            <section className="esg-summary">
-              <h2>{selectedSponsor.name} · {grove.name}</h2>
-              <span className={`sponsor-tier tier-${selectedSponsor.tier.toLowerCase()}`}>{TIER_LABELS[selectedSponsor.tier]}</span>
+            <section className="app-esg-summary">
+              <h3 className="hig-headline">{selectedSponsor.name} · {grove.name}</h3>
+              <span className="hig-tag app-sponsor-tier">{TIER_LABELS[selectedSponsor.tier]}</span>
             </section>
 
-            <div className="esg-tiles">
-              <div className="esg-tile">
-                <span className="esg-tile-value">{stats.survivalRate}%</span>
-                <span className="esg-tile-label">Rată de supraviețuire</span>
-              </div>
-              <div className="esg-tile">
-                <span className="esg-tile-value">{stats.healthyRate}%</span>
-                <span className="esg-tile-label">Copaci sănătoși</span>
-              </div>
-              <div className="esg-tile">
-                <span className="esg-tile-value">{stats.wateringsCount}</span>
-                <span className="esg-tile-label">Udări dovedite cu foto</span>
-              </div>
-              <div className="esg-tile">
-                <span className="esg-tile-value">{stats.co2KgPerYear} kg</span>
-                <span className="esg-tile-label">CO₂ estimat/an</span>
-              </div>
-              <div className="esg-tile">
-                <span className="esg-tile-value">{stats.shadeM2} m²</span>
-                <span className="esg-tile-label">Umbră estimată</span>
-              </div>
+            <div className="app-kpi-grid">
+              <StatCard title="Rată de supraviețuire" value={`${stats.survivalRate}%`} />
+              <StatCard title="Copaci sănătoși" value={`${stats.healthyRate}%`} />
+              <StatCard title="Udări dovedite cu foto" value={stats.wateringsCount} />
+              <StatCard title="CO₂ estimat/an" value={`${stats.co2KgPerYear} kg`} />
+              <StatCard title="Umbră estimată" value={`${stats.shadeM2} m²`} />
             </div>
 
-            <button className="esg-csv-btn" onClick={downloadCsv} disabled={trees.length === 0}>
+            <button className="hig-button app-esg-csv-btn" onClick={downloadCsv} disabled={trees.length === 0}>
               <Download size={15} aria-hidden="true" /> Export CSV — dovezi pentru raportare (CSRD)
             </button>
 
-            <div className="esg-table-wrap">
-              <table className="esg-table">
+            <div className="app-esg-table-wrap">
+              <table className="app-esg-table">
                 <thead>
                   <tr>
                     <th scope="col">ID</th>
@@ -172,8 +157,8 @@ const SponsorDashboard: React.FC = () => {
             </div>
           </>
         )}
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 

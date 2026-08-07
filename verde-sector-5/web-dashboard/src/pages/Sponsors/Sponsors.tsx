@@ -5,7 +5,6 @@ import { SEED_SPONSORS } from '../../data/gamificationSeedData';
 import { fetchSponsorsApi } from '../../services/gamificationApi';
 import type { SponsorItem, SponsorTier } from '../../types/gamification';
 import { Handshake, BarChart3 } from 'lucide-react';
-import './Sponsors.css';
 
 export const TIER_LABELS: Record<SponsorTier, string> = {
   GOLD: 'Sponsor principal de campanie',
@@ -53,18 +52,18 @@ const Sponsors: React.FC = () => {
   };
 
   return (
-    <div className="sponsors-root">
+    <>
       <PitchHeader />
-      <main className="sponsors-main">
-        <header className="sponsors-header">
-          <h1><Handshake size={20} aria-hidden="true" /> Partenerii Sectorului Verde</h1>
-          <p>Companii și afaceri locale care susțin îngrijirea copacilor din Sectorul 5.</p>
-          <Link to="/sponsor-dashboard" className="sponsors-inline-link">
+      <div className="app-sponsors-page">
+        <header className="app-sponsors-header">
+          <h2><Handshake size={20} aria-hidden="true" /> Partenerii Sectorului Verde</h2>
+          <p className="hig-secondary">Companii și afaceri locale care susțin îngrijirea copacilor din Sectorul 5.</p>
+          <Link to="/sponsor-dashboard" className="app-inline-link">
             <BarChart3 size={15} aria-hidden="true" /> Dashboard ESG (demo)
           </Link>
         </header>
 
-        <div className="sponsors-grid">
+        <div className="app-sponsors-grid">
           {sponsors.map(s => {
             const linkable = s.tier === 'GOLD' || s.tier === 'SILVER';
             const content = (
@@ -72,37 +71,37 @@ const Sponsors: React.FC = () => {
                 {/* seedLogoFor() resolves this exclusively from the local
                     SEED_SPONSORS literals (never from `s`, which may be
                     API-sourced) — safe to render via dangerouslySetInnerHTML. */}
-                <span className="sponsor-logo" dangerouslySetInnerHTML={{ __html: seedLogoFor(s) }} aria-hidden="true" />
-                <h3 className="sponsor-name">{withDemoTag(s.name)}</h3>
-                <span className={`sponsor-tier tier-${s.tier.toLowerCase()}`}>{TIER_LABELS[s.tier]}</span>
-                <p className="sponsor-desc">{s.description}</p>
+                <span className="app-sponsor-logo" dangerouslySetInnerHTML={{ __html: seedLogoFor(s) }} aria-hidden="true" />
+                <h3 className="hig-headline app-sponsor-name">{withDemoTag(s.name)}</h3>
+                <span className="hig-tag app-sponsor-tier">{TIER_LABELS[s.tier]}</span>
+                <p className="hig-footnote hig-secondary app-sponsor-desc">{s.description}</p>
               </>
             );
 
             return linkable ? (
-              <Link key={s.id} to={`/sponsors/${s.slug}`} className="sponsor-card sponsor-card-link">
+              <Link key={s.id} to={`/sponsors/${s.slug}`} className="hig-card app-sponsor-card app-sponsor-card-link">
                 {content}
-                <span className="sponsor-card-cta">Vezi crângul →</span>
+                <span className="hig-footnote app-sponsor-cta">Vezi crângul →</span>
               </Link>
             ) : (
-              <article key={s.id} className="sponsor-card">
+              <article key={s.id} className="hig-card app-sponsor-card">
                 {content}
               </article>
             );
           })}
 
-          <article className="sponsor-card sponsor-cta-card">
-            <h3 className="sponsor-name">Devino partener</h3>
-            <p className="sponsor-desc">
+          <article className="hig-card app-sponsor-card app-sponsor-cta-card">
+            <h3 className="hig-headline app-sponsor-name">Devino partener</h3>
+            <p className="hig-footnote hig-secondary app-sponsor-desc">
               Susține îngrijirea copacilor din Sectorul 5 și apari alături de ceilalți parteneri aici.
             </p>
-            <a href="mailto:parteneriate@primarie5.ro" className="sponsors-inline-link">
+            <a href="mailto:parteneriate@primarie5.ro" className="hig-button large">
               Devino partener — contactează Primăria Sectorului 5
             </a>
           </article>
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 

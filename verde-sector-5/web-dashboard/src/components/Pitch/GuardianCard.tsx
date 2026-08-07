@@ -4,7 +4,6 @@ import { guardianLevelFor, nextLevelProgress, computeImpact } from '../../utils/
 import type { TreeItem } from '../../types/tree';
 import { Shield, Droplets, Coins } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import './GuardianCard.css';
 
 // „My guardian card" (spec §3.4): level, progress to next, balance, privileges.
 const PRIVILEGES: Record<string, string> = {
@@ -20,36 +19,59 @@ export const GuardianCard: React.FC = () => {
   const NEXT_THRESHOLD: Record<string, number> = { PRIETEN: 500, GARDIAN: 2000 };
   const remaining = nextTitle ? NEXT_THRESHOLD[level.key] - lifetimePoints : 0;
 
+  const clampedProgress = Math.min(1, Math.max(0, progress));
+
   return (
-    <section className="guardian-card" aria-label="Cardul meu de gardian">
-      <header className="guardian-header">
+    <section className="hig-card app-guardian-card" aria-label="Cardul meu de gardian">
+      <header className="app-guardian-header">
         <Shield size={16} aria-hidden="true" />
-        <div>
-          <strong>{userName}</strong>
-          <span className="guardian-level-title">{level.title}</span>
+        <div className="app-guardian-header-text">
+          <strong className="hig-headline">{userName}</strong>
+          <span className="hig-footnote hig-secondary">{level.title}</span>
         </div>
       </header>
 
       <div
-        className="guardian-progress"
+        className="hig-progress"
+        style={{ '--hig-progress': clampedProgress } as React.CSSProperties}
         role="progressbar"
         aria-valuenow={Math.round(progress * 100)}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={nextTitle ? `Progres spre ${nextTitle}` : 'Nivel maxim atins'}
       >
-        <div className="guardian-progress-fill" style={{ transform: `scaleX(${Math.min(1, Math.max(0, progress))})` }} />
+        <div />
       </div>
-      <p className="guardian-next">
-        {nextTitle ? `${lifetimePoints} puncte — încă ${remaining} până la ${nextTitle}` : 'Nivel maxim — mulțumim!'}
-      </p>
-      <p className="guardian-privilege">{PRIVILEGES[level.key]}</p>
 
-      <footer className="guardian-stats">
-        <span><Droplets size={13} aria-hidden="true" /> {userWaterings} udări</span>
-        <span><Coins size={13} aria-hidden="true" /> {userPoints} EcoPuncte</span>
-        <Link to="/rewards" className="guardian-rewards-link">Recompense →</Link>
-      </footer>
+      <div className="hig-list">
+        <div className="hig-list-item app-guardian-list-item">
+          <span>Progres</span>
+          <span className="hig-spacer" />
+          <span className="hig-value">
+            {nextTitle ? `${lifetimePoints} puncte — încă ${remaining} până la ${nextTitle}` : 'Nivel maxim — mulțumim!'}
+          </span>
+        </div>
+        <div className="hig-list-item app-guardian-list-item">
+          <span>Privilegiu</span>
+          <span className="hig-spacer" />
+          <span className="hig-value">{PRIVILEGES[level.key]}</span>
+        </div>
+        <div className="hig-list-item app-guardian-list-item">
+          <span><Droplets size={13} aria-hidden="true" /> Udări</span>
+          <span className="hig-spacer" />
+          <span className="hig-value">{userWaterings}</span>
+        </div>
+        <div className="hig-list-item app-guardian-list-item">
+          <span><Coins size={13} aria-hidden="true" /> EcoPuncte</span>
+          <span className="hig-spacer" />
+          <span className="hig-value">{userPoints}</span>
+        </div>
+        <Link to="/rewards" className="hig-list-item app-guardian-rewards-link">
+          Recompense
+          <span className="hig-spacer" />
+          <span className="hig-value">→</span>
+        </Link>
+      </div>
     </section>
   );
 };
@@ -64,7 +86,7 @@ export const SectorImpactStrip: React.FC<{ trees: TreeItem[] }> = ({ trees }) =>
     { co2: 0, shade: 0 }
   );
   return (
-    <p className="sector-impact-strip" aria-label="Impact estimat al copacilor afișați">
+    <p className="hig-card app-sector-impact-strip hig-footnote hig-secondary" aria-label="Impact estimat al copacilor afișați">
       🌍 Copacii afișați absorb ~{Math.round(totals.co2)} kg CO₂/an și oferă ~{Math.round(totals.shade)} m² de umbră <em>(estimat)</em>
     </p>
   );

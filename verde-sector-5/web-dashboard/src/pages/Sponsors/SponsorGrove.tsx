@@ -7,10 +7,10 @@ import { SEED_SPONSORS, SEED_GROVES, SEED_CHALLENGE } from '../../data/gamificat
 import type { TreeItem } from '../../types/tree';
 import { TIER_LABELS, seedLogoFor } from './Sponsors';
 import { Sprout, ArrowLeft, Droplets, Users } from 'lucide-react';
-import './Sponsors.css';
+import { StatCard } from '../../components/UI/StatCard';
 
 const BackToSponsors: React.FC = () => (
-  <Link to="/sponsors" className="sponsors-inline-link">
+  <Link to="/sponsors" className="app-inline-link">
     <ArrowLeft size={15} aria-hidden="true" /> Înapoi la sponsori
   </Link>
 );
@@ -46,31 +46,31 @@ const SponsorGrove: React.FC = () => {
 
   if (!sponsor) {
     return (
-      <div className="sponsors-root">
+      <>
         <PitchHeader />
-        <main className="sponsors-main">
-          <div className="sponsor-empty-state">
-            <h1>Sponsor negăsit</h1>
-            <p>Acest sponsor demonstrativ nu există sau linkul folosit este greșit.</p>
+        <div className="app-sponsors-page">
+          <div className="hig-card app-sponsor-empty-state">
+            <h2>Sponsor negăsit</h2>
+            <p className="hig-secondary">Acest sponsor demonstrativ nu există sau linkul folosit este greșit.</p>
             <BackToSponsors />
           </div>
-        </main>
-      </div>
+        </div>
+      </>
     );
   }
 
   if (!grove) {
     return (
-      <div className="sponsors-root">
+      <>
         <PitchHeader />
-        <main className="sponsors-main">
-          <div className="sponsor-empty-state">
-            <h1>{sponsor.name} (sponsor demonstrativ)</h1>
-            <p>Acest sponsor contribuie la fondul de recompense și nu are încă un crâng dedicat.</p>
+        <div className="app-sponsors-page">
+          <div className="hig-card app-sponsor-empty-state">
+            <h2>{sponsor.name} (sponsor demonstrativ)</h2>
+            <p className="hig-secondary">Acest sponsor contribuie la fondul de recompense și nu are încă un crâng dedicat.</p>
             <BackToSponsors />
           </div>
-        </main>
-      </div>
+        </div>
+      </>
     );
   }
 
@@ -80,63 +80,57 @@ const SponsorGrove: React.FC = () => {
   const wateringsTotal = trees.reduce((n, t) => n + (t.wateringsCount || 0), 0);
 
   return (
-    <div className="sponsors-root">
+    <>
       <PitchHeader />
-      <main className="sponsors-main">
+      <div className="app-sponsors-page">
         <BackToSponsors />
 
-        <header className="grove-header">
+        <header className="app-grove-header">
           {/* seedLogoFor() resolves this exclusively from the local
               SEED_SPONSORS literals (never from API-sourced sponsor data) —
               safe to render via dangerouslySetInnerHTML. */}
-          <span className="sponsor-logo sponsor-logo-lg" dangerouslySetInnerHTML={{ __html: seedLogoFor(sponsor) }} aria-hidden="true" />
+          <span className="app-sponsor-logo app-sponsor-logo-lg" dangerouslySetInnerHTML={{ __html: seedLogoFor(sponsor) }} aria-hidden="true" />
           <div>
-            <h1>{sponsor.name} (sponsor demonstrativ)</h1>
-            <span className={`sponsor-tier tier-${sponsor.tier.toLowerCase()}`}>{TIER_LABELS[sponsor.tier]}</span>
-            <p className="sponsor-desc">{sponsor.description}</p>
+            <h2>{sponsor.name} (sponsor demonstrativ)</h2>
+            <span className="hig-tag app-sponsor-tier">{TIER_LABELS[sponsor.tier]}</span>
+            <p className="hig-footnote hig-secondary app-sponsor-desc">{sponsor.description}</p>
           </div>
         </header>
 
-        <section className="grove-stats-strip" aria-label="Statistici crâng">
-          <div className="grove-stat">
-            <span className="grove-stat-value">{treeCount}</span>
-            <span className="grove-stat-label">copaci</span>
-          </div>
-          <div className="grove-stat">
-            <span className="grove-stat-value">{aliveRate}%</span>
-            <span className="grove-stat-label">vii</span>
-          </div>
-          <div className="grove-stat">
-            <span className="grove-stat-value"><Droplets size={14} aria-hidden="true" /> {wateringsTotal}</span>
-            <span className="grove-stat-label">udări totale</span>
-          </div>
+        <section className="app-grove-stats-strip" aria-label="Statistici crâng">
+          <StatCard title="copaci" value={treeCount} />
+          <StatCard title="vii" value={`${aliveRate}%`} />
+          <StatCard title="udări totale" value={wateringsTotal} icon={<Droplets size={18} aria-hidden="true" />} />
         </section>
 
         {sponsor.tier === 'GOLD' && (
-          <section className="grove-campaign" aria-label="Campanie sponsorizată">
-            <h2><Sprout size={16} aria-hidden="true" /> Campania «{SEED_CHALLENGE.name}» — susținută de {sponsor.name}</h2>
-            <p>Zi de voluntariat pentru angajați — înscrieri prin HR.</p>
-            <Link to="/community" className="sponsors-inline-link">
+          <section className="hig-card app-grove-campaign" aria-label="Campanie sponsorizată">
+            <h3 className="hig-headline"><Sprout size={16} aria-hidden="true" /> Campania «{SEED_CHALLENGE.name}» — susținută de {sponsor.name}</h3>
+            <p className="hig-footnote hig-secondary">Zi de voluntariat pentru angajați — înscrieri prin HR.</p>
+            <Link to="/community" className="app-inline-link">
               <Users size={15} aria-hidden="true" /> Vezi provocarea în Comunitate
             </Link>
           </section>
         )}
 
         <section aria-label={`Copacii din ${grove.name}`}>
-          <h2 className="grove-tree-list-title">{grove.name}</h2>
-          <p className="sponsor-desc">{grove.description}</p>
+          <h3 className="hig-headline app-grove-tree-list-title">{grove.name}</h3>
+          <p className="hig-footnote hig-secondary app-sponsor-desc">{grove.description}</p>
 
           {loading ? (
-            <p className="sponsors-empty">Se încarcă arborii…</p>
+            <p className="hig-footnote hig-secondary app-sponsors-empty">Se încarcă arborii…</p>
           ) : trees.length === 0 ? (
-            <p className="sponsors-empty">Niciun arbore găsit pentru acest crâng.</p>
+            <div className="hig-empty">
+              <Sprout className="hig-empty-icon" size={44} aria-hidden="true" />
+              <div className="hig-empty-title">Niciun arbore găsit pentru acest crâng.</div>
+            </div>
           ) : (
-            <ul className="grove-tree-list">
+            <ul className="app-grove-tree-grid">
               {trees.map(t => (
-                <li key={t.id} className="grove-tree-row">
-                  <div className="grove-tree-meta">
-                    <strong>{t.nickname || t.code}</strong>
-                    <span>{t.species} · {t.neighborhood}</span>
+                <li key={t.id} className="hig-card app-grove-tree-cell">
+                  <div className="app-grove-tree-meta">
+                    <strong className="hig-headline">{t.nickname || t.code}</strong>
+                    <span className="hig-footnote hig-secondary">{t.species} · {t.neighborhood}</span>
                   </div>
                   <TreeCareDetails tree={t} />
                 </li>
@@ -144,8 +138,8 @@ const SponsorGrove: React.FC = () => {
             </ul>
           )}
         </section>
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 
