@@ -187,8 +187,8 @@ a.hig-button { color: var(--hig-tint-contrast); }
 .app-toast-drought  .app-toast-progress-bar { background: var(--hig-orange); }
 .app-toast-default  .app-toast-progress-bar { background: var(--hig-green); }
 
-/* --- Sheet chrome shared by the five modals (AdoptTreeModal, WateringModal,
-   AdoptionCertificateModal, SelectedTreeSheet) — header row + icon-only
+/* --- Sheet chrome shared by the modals (AdoptTreeModal, WateringModal,
+   AdoptionCertificateModal) — header row + icon-only
    close button + row-of-buttons action bar. hig.css supplies .hig-scrim/
    .hig-sheet/.hig-button/.hig-form-row/.hig-field; these fill the gaps. --- */
 .app-sheet-header {
@@ -476,75 +476,6 @@ a.hig-button { color: var(--hig-tint-contrast); }
 }
 .app-certificate-canvas { max-width: 100%; height: auto; border-radius: var(--hig-radius-sm); box-shadow: var(--hig-shadow-menu); }
 .app-certificate-actions { display: flex; gap: var(--hig-space-3); justify-content: flex-end; }
-
-/* --- SelectedTreeSheet (components/Pitch/SelectedTreeSheet) — hig-sheet
-   centered on desktop; below the app-shell's own 899px breakpoint it's
-   re-pointed at hig-sheet.bottom's geometry via media query, since the
-   component itself doesn't switch classes per viewport. --- */
-.app-tree-sheet {
-  max-width: 540px;
-  max-height: min(720px, 90vh);
-  overflow-y: auto;
-}
-@media (max-width: 899px) {
-  .app-tree-sheet {
-    top: auto;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: var(--hig-radius-xl) var(--hig-radius-xl) 0 0;
-    padding-bottom: max(var(--hig-space-5), env(safe-area-inset-bottom));
-  }
-}
-.app-tree-sheet-handle {
-  width: 40px;
-  height: 5px;
-  background: var(--hig-fill);
-  border-radius: var(--hig-radius-sm);
-  margin: 0 auto var(--hig-space-4);
-}
-.app-tree-sheet-badges { display: flex; align-items: center; gap: var(--hig-space-2); flex-wrap: wrap; margin-bottom: 6px; }
-.app-tree-sheet-code {
-  font-size: var(--hig-text-caption);
-  font-weight: 700;
-  color: var(--hig-tint);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  text-transform: uppercase;
-}
-.app-health-badge { font-size: var(--hig-text-caption); font-weight: 700; padding: 3px var(--hig-space-2); border-radius: var(--hig-radius-full); }
-.app-health-excellent { background: color-mix(in srgb, var(--hig-green) 18%, transparent); color: var(--hig-green); }
-.app-health-good { background: color-mix(in srgb, var(--hig-green) 10%, transparent); color: var(--hig-green); }
-.app-health-needs-water { background: color-mix(in srgb, var(--hig-blue) 15%, transparent); color: var(--hig-blue); }
-.app-health-attention { background: color-mix(in srgb, var(--hig-red) 12%, transparent); color: var(--hig-red); }
-.app-tree-sheet-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--hig-space-3);
-  background: var(--hig-fill-quaternary);
-  padding: var(--hig-space-4);
-  border-radius: var(--hig-radius-lg);
-  margin-bottom: var(--hig-space-5);
-}
-.app-tree-sheet-info-item { display: flex; flex-direction: column; gap: 2px; }
-.app-tree-sheet-info-item-wide { grid-column: span 2; }
-.app-tree-sheet-info-value { font-size: var(--hig-text-subheadline); font-weight: 700; color: var(--hig-label); }
-.app-tree-sheet-actions { display: flex; flex-direction: column; gap: var(--hig-space-2); margin-top: var(--hig-space-5); }
-.app-tree-sheet-actions .hig-button { width: 100%; }
-.app-tree-sheet-adopted-group { display: flex; flex-direction: column; gap: var(--hig-space-2); }
-.app-tree-sheet-adopted-banner {
-  background: color-mix(in srgb, var(--hig-green) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--hig-green) 30%, transparent);
-  padding: var(--hig-space-2) var(--hig-space-3);
-  border-radius: var(--hig-radius-md);
-  display: flex;
-  align-items: center;
-  gap: var(--hig-space-2);
-  color: var(--hig-green);
-  font-size: var(--hig-text-footnote);
-  font-weight: 700;
-}
 
 /* --- Leaflet map popup (used by Sector5TreeMap AND the standalone Map page)
    — dark-skin the default white Leaflet popup chrome so it matches the app
@@ -1348,3 +1279,79 @@ a.hig-sidebar-item.active { color: var(--hig-tint); }
 @media (min-width: 900px) {
   .app-tabbar, .app-mobile-navbar { display: none; }
 }
+
+/* ============================================================
+   Map-first Home (HIG realignment)
+   ============================================================ */
+.app-map-home { position: relative; height: 100dvh; overflow: hidden; }
+.app-map-home-canvas { position: absolute; inset: 0; }
+.app-map-home-canvas .app-sector5-map,
+.app-map-home-canvas .app-sector5-map-canvas { height: 100%; width: 100%; }
+
+/* Muted-cluster bubble */
+.app-map-cluster {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--hig-tint); color: #fff; font-weight: 700;
+  border-radius: 999px; box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  border: 2px solid var(--hig-bg);
+}
+
+/* Selected pin ring */
+.tree-marker-icon.is-selected { filter: drop-shadow(0 0 0 var(--hig-tint)); }
+.tree-marker-icon.is-selected svg { outline: 3px solid var(--hig-tint); outline-offset: 1px; border-radius: 50%; }
+
+/* Adaptive sheet (mobile = bottom sheet) */
+.app-map-sheet {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: var(--hig-bg); border-top-left-radius: var(--hig-radius-lg);
+  border-top-right-radius: var(--hig-radius-lg);
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.18);
+  display: flex; flex-direction: column;
+  transition: height 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  z-index: 500;
+}
+.app-map-sheet[data-detent="peek"] { height: 96px; }
+.app-map-sheet[data-detent="half"] { height: 50dvh; }
+.app-map-sheet[data-detent="full"] { height: calc(100dvh - env(safe-area-inset-top) - 24px); }
+.app-map-sheet-grabber {
+  align-self: center; width: 36px; height: 5px; margin: 8px 0;
+  border: none; border-radius: 3px; background: var(--hig-fill); cursor: pointer;
+}
+.app-map-sheet-body { flex: 1; min-height: 0; overflow-y: auto; padding: 0 var(--hig-space-3) var(--hig-space-4); }
+.app-map-sheet-summary { font-weight: 600; margin: 0 0 var(--hig-space-2); }
+.app-map-sheet-search { display: flex; align-items: center; gap: 6px; margin-bottom: var(--hig-space-2); }
+.app-map-sheet-search .hig-field { flex: 1; }
+
+/* Segmented quick filter */
+.app-map-sheet-segmented { display: flex; gap: 2px; background: var(--hig-fill); border-radius: var(--hig-radius-md); padding: 2px; margin-bottom: var(--hig-space-2); }
+.app-segmented-item { flex: 1; border: none; background: transparent; padding: 6px 8px; border-radius: calc(var(--hig-radius-md) - 2px); font-size: var(--hig-text-footnote); color: var(--hig-label); cursor: pointer; white-space: nowrap; }
+.app-segmented-item.active { background: var(--hig-bg); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
+
+.app-map-sheet-species { width: 100%; margin-bottom: var(--hig-space-2); }
+.app-map-sheet-list { list-style: none; margin: 0; padding: 0; }
+.app-map-sheet-list-row { display: flex; align-items: center; gap: 8px; width: 100%; background: none; border: none; padding: 10px 4px; border-bottom: 0.5px solid var(--hig-material-border); text-align: left; cursor: pointer; }
+.app-map-sheet-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.app-map-sheet-dot.status-ok { background: var(--hig-tint); }
+.app-map-sheet-dot.status-thirsty { background: var(--hig-orange, #FF9500); }
+.app-map-sheet-dot.status-urgent { background: var(--hig-red, #FF3B30); }
+.app-map-sheet-dot.status-unknown { background: var(--hig-fill); }
+.app-map-sheet-list-name { font-weight: 600; }
+.app-map-sheet-back { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; color: var(--hig-tint); font-weight: 600; padding: 4px 0; cursor: pointer; }
+.app-map-sheet-panels { margin-top: var(--hig-space-3); }
+
+/* Desktop: sheet becomes a floating glass panel over the left (macOS Maps). */
+@media (min-width: 768px) {
+  .app-map-sheet {
+    left: var(--hig-space-4); right: auto; bottom: var(--hig-space-4); top: var(--hig-space-4);
+    width: 360px; height: auto; border-radius: var(--hig-radius-lg);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.22);
+  }
+  .app-map-sheet[data-detent="peek"],
+  .app-map-sheet[data-detent="half"],
+  .app-map-sheet[data-detent="full"] { height: auto; }
+  .app-map-sheet-grabber { display: none; }
+}
+
+/* PitchHeader is sticky (z-index:1000) above the edge-to-edge map canvas;
+   nudge Leaflet's default top-left zoom control clear of the header band. */
+.app-map-home-canvas .leaflet-top.leaflet-left { margin-top: 44px; }
