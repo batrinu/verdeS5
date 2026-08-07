@@ -769,7 +769,7 @@
 .app-leaderboard-name { font-weight: 700; }
 .app-leaderboard-stat-group { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .app-leaderboard-points { font-weight: 700; font-variant-numeric: tabular-nums; }
-button.hig-list-item.app-list-item-selected { background: color-mix(in srgb, var(--hig-tint) 8%, transparent); }
+.hig-list-item.app-list-item-selected { background: color-mix(in srgb, var(--hig-tint) 8%, transparent); }
 
 /* --- Trees page (pages/Trees) — registry grid stays card-based (already
    grid-shaped, per mapping table's "keep whichever structure it already
