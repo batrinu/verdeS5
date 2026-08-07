@@ -1,11 +1,9 @@
 import React from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
-  Map,
-  Trees,
+  MapPin,
   FileText,
   Megaphone,
-  LayoutDashboard,
   Award,
   UsersRound,
   Handshake,
@@ -13,17 +11,15 @@ import {
 } from 'lucide-react';
 
 const navItems: { path: string; label: string; icon: LucideIcon; tabLabel?: string }[] = [
-  { path: '/', label: 'Tablou de Comandă', icon: LayoutDashboard, tabLabel: 'Acasă' },
-  { path: '/map', label: 'Hartă', icon: Map, tabLabel: 'Hartă' },
+  { path: '/', label: 'Tablou de Comandă', icon: MapPin, tabLabel: 'Acasă' },
   { path: '/reports', label: 'Rapoarte', icon: FileText, tabLabel: 'Rapoarte' },
   { path: '/campaigns', label: 'Campanii', icon: Megaphone },
-  { path: '/trees', label: 'Copaci', icon: Trees },
   { path: '/rewards', label: 'Recompense', icon: Award, tabLabel: 'Recompense' },
   { path: '/community', label: 'Comunitate', icon: UsersRound },
   { path: '/sponsors', label: 'Sponsori', icon: Handshake, tabLabel: 'Sponsori' },
 ];
 
-const tabBarItems = ['/', '/map', '/reports', '/rewards', '/sponsors'].map(
+const tabBarItems = ['/', '/reports', '/rewards', '/sponsors'].map(
   (path) => navItems.find((item) => item.path === path)!
 );
 
@@ -51,11 +47,13 @@ export const Layout: React.FC = () => {
 
       <div className="app-main">
         {/* Mobile top bar */}
-        <header className="app-mobile-navbar hig-navbar hig-material">
-          <span />
-          <span className="hig-navbar-title">{currentPageLabel}</span>
-          <span />
-        </header>
+        {location.pathname !== '/' && (
+          <header className="app-mobile-navbar hig-navbar hig-material">
+            <span />
+            <span className="hig-navbar-title">{currentPageLabel}</span>
+            <span />
+          </header>
+        )}
         <main className="app-content">
           <Outlet />
         </main>
