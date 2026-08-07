@@ -13,8 +13,8 @@ export default defineConfig({
         name: 'Verde în Sectorul 5',
         short_name: 'Verde S5',
         description: 'Platformă comunitară pentru arborii din Sectorul 5: adopție, îngrijire cu dovadă foto, EcoPuncte și recompense, gardieni și sponsori',
-        theme_color: '#0a0f0d',
-        background_color: '#0a0f0d',
+        theme_color: '#F2F2F7',
+        background_color: '#F2F2F7',
         display: 'standalone',
         orientation: 'portrait-primary',
         scope: '/',
@@ -39,6 +39,11 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Dev-phase cache policy: new deploys take over on the next load
+        // instead of idling behind the old precache (see devlog gotcha #8).
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {
