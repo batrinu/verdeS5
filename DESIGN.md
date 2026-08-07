@@ -1,235 +1,314 @@
 ---
 name: Verde în Sectorul 5
-description: Civic tree-care platform — dark living-green design system for citizens, council and sponsors
+description: Civic tree-care platform — Apple Human Interface Guidelines system for citizens, council and sponsors
 colors:
-  living-green: "#34D87A"
-  living-green-bright: "#6EE7A0"
-  living-green-soft: "#86efac"
-  living-green-deep: "#1F9D5C"
-  living-green-forest: "#1A7A4A"
-  forest-night: "#0B1D1A"
-  surface: "#112220"
-  surface-elevated: "#183029"
-  surface-hover: "#1F3B32"
-  surface-active: "#26473B"
-  text-primary: "#f0fdf4"
-  text-secondary: "#bbf7d0"
-  text-muted: "#94A3B8"
-  ink-inverse: "#0B1D1A"
-  danger: "#F87171"
-  warning: "#FBBF24"
-  success: "#10b981"
-  info: "#0EA5E9"
+  tint-light: "#1F7A36"
+  tint-light-contrast: "#FFFFFF"
+  tint-dark: "#30D158"
+  tint-dark-contrast: "#04250F"
+  hig-red: "#FF3B30"
+  hig-orange: "#FF9500"
+  hig-green: "#34C759"
+  bg-light: "#F2F2F7"
+  bg-secondary-light: "#FFFFFF"
+  bg-dark: "#000000"
+  bg-secondary-dark: "#1C1C1E"
+  label-light: "rgba(0,0,0,1)"
+  label-dark: "rgba(255,255,255,1)"
 typography:
-  display:
-    fontFamily: "Bricolage Grotesque, Inter, system-ui, sans-serif"
-    fontSize: "2.5rem"
+  fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+  large-title:
+    fontSize: "34px"
     fontWeight: 700
-    lineHeight: 1.15
-    letterSpacing: "-0.02em"
+  title1:
+    fontSize: "28px"
+    fontWeight: 700
+  title2:
+    fontSize: "22px"
+    fontWeight: 700
+  title3:
+    fontSize: "20px"
+    fontWeight: 600
   headline:
-    fontFamily: "Bricolage Grotesque, Inter, system-ui, sans-serif"
-    fontSize: "1.5rem"
-    fontWeight: 700
-    lineHeight: 1.2
+    fontSize: "17px"
+    fontWeight: 600
   body:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "1rem"
+    fontSize: "17px"
     fontWeight: 400
-    lineHeight: 1.5
-  label:
-    fontFamily: "Bricolage Grotesque, Inter, system-ui, sans-serif"
-    fontSize: "0.8125rem"
-    fontWeight: 700
-rounded:
-  sm: "0.25rem"
-  md: "0.5rem"
-  lg: "0.75rem"
-  xl: "1rem"
-  full: "9999px"
+  footnote:
+    fontSize: "13px"
+    fontWeight: 400
+  caption2:
+    fontSize: "11px"
+    fontWeight: 400
+radii:
+  sm: "6px"
+  md: "10px"
+  lg: "12px"
+  xl: "16px"
+  full: "980px"
 spacing:
-  "1": "0.25rem"
-  "2": "0.5rem"
-  "3": "0.75rem"
-  "4": "1rem"
-  "6": "1.5rem"
-  "8": "2rem"
-  "12": "3rem"
+  "1": "4px"
+  "2": "8px"
+  "3": "12px"
+  "4": "16px"
+  "5": "20px"
+  "6": "24px"
+  "8": "32px"
 components:
-  button-primary:
-    backgroundColor: "{colors.living-green}"
-    textColor: "{colors.ink-inverse}"
-    rounded: "{rounded.md}"
-    padding: "8px 16px"
-  nav-link:
-    textColor: "{colors.text-muted}"
-    rounded: "{rounded.md}"
-    padding: "8px 14px"
-    height: "40px"
-  nav-link-hover:
-    backgroundColor: "#6EE7A01A"
-    textColor: "{colors.living-green-bright}"
-  card:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.lg}"
-    padding: "14px"
-  input:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.text-primary}"
-    rounded: "{rounded.lg}"
-    padding: "8px 14px"
+  hig-button:
+    backgroundColor: "{colors.tint}"
+    textColor: "{colors.tint-contrast}"
+    rounded: "{radii.md}"
+    minHeight: "44px (mobile) / 28px (hig-desktop)"
+  hig-card:
+    backgroundColor: "{colors.bg-secondary}"
+    rounded: "{radii.lg}"
+  hig-list-item:
+    minHeight: "44px (mobile) / 32px (hig-desktop)"
+  hig-sidebar:
+    width: "260px"
+  hig-navbar:
+    minHeight: "52px"
 ---
 
 # Design System: Verde în Sectorul 5
 
 ## 1. Overview
 
-**Creative North Star: "The Night Garden"**
+**System: Apple Human Interface Guidelines (full HIG).**
 
-A city park after dark. The whole interface lives in deep forest darkness (Forest
-Night, #0B1D1A) and light appears only where life does: Living Green marks care,
-activity, and growth — a watered tree, an active guardian, a filling progress bar.
-The system is warm civic-tech: credible enough for a council chamber, human enough
-that a tree can say „mulțumesc" without breaking register.
+The interface is built on two files, in strict order of authority:
 
-This system explicitly rejects the gray bureaucratic municipal portal, corporate
-ESG greenwash (stock leaves, vague gradients), and childish gamification (mascots,
-confetti). Playfulness is carried by copy and micro-detail, never by clutter.
+1. `verde-sector-5/web-dashboard/src/styles/hig.css` — a verbatim, drop-in Apple
+   HIG stylesheet (design tokens + components, light & dark themes, adaptive
+   density). **Never hand-edited.** It is the single source of truth for every
+   HIG primitive: colors, type scale, spacing, radii, buttons, fields, lists,
+   cards, navbar, sidebar, glass materials, sheets, switches, menus.
+2. `verde-sector-5/web-dashboard/src/styles/app.css` — the app layer on top:
+   the tint override (Section 1), components hig.css cannot cover — map, tree
+   visuals, toasts, the adoption certificate (Section 2), and the shell —
+   sidebar/content grid, mobile navbar, tab bar (Section 3). Every app-specific
+   rule uses an `app-` prefix and reads its colors/spacing/radii from
+   `--hig-*` custom properties; it never hardcodes a hex value or invents a
+   spacing/radius number.
 
-**Key Characteristics:**
-- One dark theme everywhere — no white surfaces, ever (the killed white-modal seam)
-- Green is semantic: it means alive/active/cared-for, not decoration
-- Tonal depth, quiet shadows, glow reserved for living things
-- Romanian voice, plain-language, estimates always labeled „estimat"
-- Mobile-first: one hand, bright sun, 44px targets
+All old Night Garden CSS (`index.css`, `App.css`, every per-page `.css` file,
+the Bricolage Grotesque + Inter webfont links) has been deleted. The system
+font stack is the only font dependency now — the app's only external network
+dependency (Google Fonts) is gone, an offline win as well as a visual one.
+
+This system explicitly rejects the gray bureaucratic municipal portal,
+corporate ESG greenwash (stock leaves, vague gradients), and childish
+gamification (mascots, confetti). Playfulness is carried by copy and
+micro-detail, never by chrome.
+
+**Key characteristics:**
+- Native Apple look and feel: system font, HIG type scale, HIG spacing/radii,
+  standard HIG components (buttons, fields, lists, cards, sheets, navbar,
+  sidebar, tab bar, glass materials).
+- Light and dark themes, both fully supported, switching automatically with
+  the OS (`prefers-color-scheme`) and overridable via `data-theme="light"` /
+  `data-theme="dark"` on `<html>`.
+- Adaptive density: desktop (mouse/trackpad, wide viewport) gets the tighter
+  macOS scale; touch/narrow gets the roomier iOS scale — same markup, one
+  class toggle.
+- Green is semantic and scoped: the single app tint marks interactive
+  elements only. The status palette (green/orange/red) is reserved for
+  tree-health states and is never repurposed as decoration.
+- Romanian voice, plain-language, estimates always labeled „estimat".
+- Mobile-first: one hand, bright sun, ≥44px touch targets.
 
 ## 2. Colors
 
-A single green family carries the identity against deep forest neutrals; status
-hues are reserved strictly for meaning.
+hig.css ships the full iOS/macOS system-color palette (blue, green, indigo,
+orange, pink, purple, red, teal, yellow, mint, cyan, brown) plus a six-step
+gray ramp and semantic surface/label/fill tokens, each with a light and a dark
+value. The app changes exactly one thing in that system: the tint.
 
-### Primary
-- **Living Green** (#34D87A): the color of active care — primary buttons, active
-  states, healthy/watered markers, progress fills, the logo gradient anchor
-  (#34D87A→#1A7A4A). Bright step **#6EE7A0** for hovers/links, deep steps
-  **#1F9D5C/#1A7A4A** for gradients and pressed states.
+### Tint (the app's single accent, WCAG AA verified)
+- **Light:** `--hig-tint: #1F7A36` on `--hig-tint-contrast: #FFFFFF` — 5.39:1
+  contrast.
+- **Dark:** `--hig-tint: #30D158` on `--hig-tint-contrast: #04250F` — 8.14:1
+  contrast.
 
-### Neutral
-- **Forest Night** (#0B1D1A): the page itself; body background.
-- **Surface ramp** (#112220 → #183029 → #1F3B32 → #26473B): cards, elevated
-  panels, hover and active layers — depth without shadows.
-- **Text**: primary #f0fdf4 (green-tinted white), secondary #bbf7d0, muted
-  #94A3B8 (slate — labels and metadata only, never body copy).
-- **Hairlines**: rgba(110,231,160,0.08) — borders are green-tinted whispers.
+Both pairs exceed WCAG AA (4.5:1) for normal text. The tint drives every
+interactive surface: primary buttons, links, active nav/tab states, focus
+rings, switches, progress fills, selected states.
 
-### Tertiary (status — meaning only, never decoration)
-- **Danger** (#F87171): urgent watering, destructive actions.
-- **Warning** (#FBBF24): thirsty trees, gold accents for first place / adoption ring.
-- **Info** (#0EA5E9): council persona accent (Mod Consiliu).
-- **Success** (#10b981): confirmations.
+### Surfaces
+- **Light:** page `#F2F2F7`, cards/list-groups `#FFFFFF`, nested fills
+  `#F2F2F7`.
+- **Dark:** page `#000000`, cards/list-groups `#1C1C1E`, nested fills
+  `#2C2C2E`.
+- **Labels:** primary `rgba(0,0,0,1)` / `rgba(255,255,255,1)` in light/dark,
+  with secondary/tertiary/quaternary alpha steps for hierarchy — never a
+  separate color, always the same label ramped by opacity.
+- **Materials:** `.hig-material` / `.hig-glass` — translucent, blurred
+  surfaces (system chrome look) used for the sidebar, mobile navbar, tab bar,
+  and the presenter demo pill. A `@supports` fallback swaps in a solid
+  `--hig-bg-secondary` where `backdrop-filter` is unsupported.
+
+### Status palette (meaning only, never decoration)
+`--hig-red` (#FF3B30 light / #FF453A dark), `--hig-orange` (#FF9500 /
+#FF9F0A), `--hig-green` (#34C759 / #30D158) — reserved for tree-health and
+alert states (thirst level, urgent watering, healthy). These are drawn from
+the same HIG system palette as the tint but are a *different* token
+(`--hig-red`/`--hig-orange`/`--hig-green`, not `--hig-tint`) so status meaning
+and interactivity never collide.
 
 ### Named Rules
-**The Living Green Rule.** Green always means something is alive, active, or
-cared-for. If an element is inert, it does not get green.
-**The No-White Rule.** No white backgrounds anywhere — including modals, popups,
-and map popups. Every surface comes from the Forest Night ramp.
+**The One-Accent Rule.** `--hig-tint` is the only color that signals
+"interactive" or "brand." No per-instance hardcoded hex, no second accent
+color, anywhere in `app.css` or component markup.
+**Green-Is-Health, Not-Decoration Rule.** Green only appears on interactive
+elements (via the tint) or on genuine tree-health states (via `--hig-green`).
+It is never used as ambient brand decoration.
 
 ## 3. Typography
 
-**Display Font:** Bricolage Grotesque (with Inter fallback)
-**Body Font:** Inter (system-ui fallback)
+**Font:** the system stack — `-apple-system, BlinkMacSystemFont, "SF Pro
+Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`. Renders as
+San Francisco on Apple devices and the platform-native equivalent elsewhere.
+Bricolage Grotesque and Inter (and their Google Fonts `<link>` tags) have
+been fully removed — this was the app's only external font dependency, so
+removing it is also an offline-reliability win.
 
-**Character:** A warm, slightly characterful grotesque for headings against a
-neutral workhorse body — friendly authority; civic but never bureaucratic.
+### Hierarchy (mobile/default scale; desktop scale in §7)
+| Token | Size | Weight | Use |
+|---|---|---|---|
+| `--hig-text-large-title` | 34px | 700 | one per screen, rare |
+| `--hig-text-title1` | 28px | 700 | major section titles |
+| `--hig-text-title2` | 22px | 700 | section titles |
+| `--hig-text-title3` | 20px | 600 | card/empty-state titles |
+| `--hig-text-headline` | 17px | 600 | emphasized body, card headers |
+| `--hig-text-body` | 17px | 400 | body copy |
+| `--hig-text-callout` | 16px | 400 | secondary body |
+| `--hig-text-subheadline` | 15px | 400 | form labels |
+| `--hig-text-footnote` | 13px | 400 | captions, metadata |
+| `--hig-text-caption` / `-caption2` | 12px / 11px | 400 | tab labels, micro-meta |
 
-### Hierarchy
-- **Display** (700, 2.5rem, 1.15, -0.02em): page titles; `text-wrap: balance`.
-- **Headline** (700, 1.5rem, 1.2): section and card titles (Bricolage).
-- **Title** (700, ~1.125rem): widget headers, modal titles (Bricolage).
-- **Body** (400, 1rem, 1.5): Inter; max measure ~70ch.
-- **Label** (700, 12–13px, Bricolage): buttons, nav links, badges. The one
-  sanctioned uppercase: tiny presenter/meta labels (9–10px, tracked).
-
-### Named Rules
-**The Two-Voices Rule.** Bricolage Grotesque speaks (headings, buttons, labels);
-Inter informs (body, data). Never introduce a third family.
-
-## 4. Elevation
-
-Flat by default: depth is tonal, not shadowed. Surfaces step up the Forest Night
-ramp (#112220 → #183029 → #1F3B32) as they approach the user; shadows exist
-(sm/md/lg) but stay quiet and ambient. The exception is light itself: the green
-glow marks living elements, and glass (rgba(11,29,26,0.75) + 12px blur) is
-reserved for the sticky header floating over the map.
-
-### Shadow Vocabulary
-- **Ambient** (`--shadow-sm/md/lg`): resting cards and modals; barely-there.
-- **Life glow** (`0 0 15px rgba(52,216,122,0.25)`): logo badge, active/celebrated
-  elements. Never on inert containers.
+All body-level text (footnote and up, 13–17px) meets WCAG AA at the system's
+label-opacity ramp; caption sizes are reserved for non-essential metadata
+(tab bar labels, timestamps), matching Apple's own usage.
 
 ### Named Rules
-**The Glow-Is-Earned Rule.** The green glow appears only on elements representing
-life or achievement — never as ambient decoration.
+**The Single-Voice Rule.** One font family, one weight ramp (400/500/600/700),
+driven entirely by the `--hig-text-*` tokens. No introduced display font, no
+gradient text.
+**The One-H1 Rule.** Every screen has exactly one `<h1>` — owned by
+`PitchHeader`, the slim page header mounted once per route. Page bodies start
+their own hierarchy at `<h2>`.
 
-## 5. Components
+## 4. Elevation & Materials
 
-Grounded and friendly: soft radii, generous targets, calm surfaces, warmth in
-micro-detail.
+Flat by default: hig.css uses tonal surface steps (`--hig-bg` →
+`--hig-bg-secondary` → `--hig-bg-tertiary`), not shadows, for most depth.
+Two real elevation tools exist and are used narrowly:
 
-### Buttons
-- **Shape:** gently rounded (8px; pills at 9999px for chips/badges)
-- **Primary:** Living Green fill (or #34D87A→#1F9D5C gradient for celebratory
-  actions like „Revendică"), ink-inverse text, Bricolage 700
-- **Hover / Focus:** brighten one green step; focus ring #34D87A with 3px
-  rgba(52,216,122,0.15) halo; 150–250ms ease transitions
-- **Council variant:** info-blue gradient (#0EA5E9→#0284C7) — persona-scoped only
-- **Touch:** ≥40px desktop, ≥44px mobile targets
+- **Glass materials** (`.hig-material`, `.hig-glass`): translucent + blurred,
+  reserved for persistent navigation chrome — the desktop sidebar, the mobile
+  top navbar, the mobile tab bar, and the presenter demo pill. Never on
+  content cards.
+- **Sheet shadows** (`--hig-shadow-menu`, `--hig-shadow-sheet`): modals and
+  menus only.
 
-### Cards / Containers
-- **Corner Style:** 12px (lg)
-- **Background:** #112220, elevated variants step the ramp
-- **Border:** 1px green-tinted hairline; **Shadow:** ambient only
-- **Internal Padding:** 14–16px; nested cards are forbidden
+### Named Rules
+**The Chrome-Only-Glass Rule.** Glass/blur marks *navigation chrome*, not
+content. If a surface holds page content, it gets a flat `hig-card`/`hig-list`
+background, never `hig-glass`.
 
-### Inputs / Fields
-- **Style:** surface background, hairline border, 10–12px radius
-- **Focus:** border → Living Green + soft green halo (no browser default ring)
+## 5. Layout & Density
 
-### Navigation
-- Sticky glass header; Bricolage 700 13px links, muted → green on hover with a
-  10% green wash; collapsible below 900px behind a hamburger (nav only — the
-  presenter persona toggle lives outside the menu, Dashboard-only).
+- **Adaptive density.** `<html>` gets a `hig-desktop` class, toggled by a
+  `(min-width: 900px) and (pointer: fine)` match — genuine desktop input, not
+  just a wide window. `.hig-desktop` scales buttons/fields/list-items/sidebar
+  items down to the tighter macOS control heights (28–36px) and text down to
+  the macOS type scale; below that breakpoint, or on a touch device, the
+  roomier iOS scale and ≥44px targets apply.
+- **Shell.** Desktop: `hig-sidebar` (260px, `hig-material`) + content.
+  Mobile/narrow: a `hig-navbar` (52px, `hig-material`) on top and a
+  `hig-glass` tab bar pinned to the bottom. Mounted once, in `App.tsx`'s
+  layout route (`Layout.tsx`) — pages no longer render their own nav.
+- **Page pattern.** Every routed page is `PitchHeader` (owns the page's one
+  `<h1>` and the presenter demo pill) followed by page content that opens
+  with its own `<h2>`. Content lives in `hig-card` or `hig-list` containers;
+  page-specific styling lives in `app.css` §2 under `app-` prefixed classes
+  that key off `hig-*` component classes for structure/behavior.
+- **8pt grid.** All spacing — margins, gaps, padding — comes from
+  `--hig-space-1` through `--hig-space-8` (4/8/12/16/20/24/32px). No literal
+  pixel spacing outside of documented micro-gap exceptions (2–6px
+  icon/label pairs).
 
-### Water-Status Badge (signature)
-Pill with 1px colored border and colored text on transparent — status color from
-ok #4ade80 / thirsty #FBBF24 / urgent #F87171 / unknown #94A3B8, always paired
-with a Romanian text label (color is never the only signal).
+## 6. Components
 
-### Tree Message (signature)
-First-person quote from the tree: italic body text with a 2px Living Green left
-hairline and leaf icon — the one sanctioned use of an accent edge, because the
-tree is speaking.
+Standard HIG components, used per their hig.css definition; app.css supplies
+only what hig.css cannot know about a tree-care app.
 
-## 6. Do's and Don'ts
+- **Buttons** (`hig-button`, `.tinted`, `.gray`, `.plain`, `.destructive`,
+  `.small`, `.large`): filled = primary (tint fill, tint-contrast text);
+  tinted = secondary (15%-opacity tint fill, tint text). `≥44px` touch
+  targets on mobile, `28–36px` on `hig-desktop`.
+- **Cards** (`hig-card`): `--hig-bg-secondary` background, `--hig-radius-lg`
+  (12px) corners, no border by default — depth is tonal.
+- **Lists** (`hig-list` / `hig-list-item`): the workhorse for any repeated
+  row — leaderboards, guardian rosters, reward catalogs, sponsor tiers.
+- **Fields** (`hig-field`, `hig-form-row`, `hig-switch`): forms across
+  Reports, Login, Register, watering/adoption modals.
+- **Sheets** (`hig-sheet`): the five modals (adopt, water, alert, report,
+  certificate) share one chrome pattern.
+- **Navbar / Sidebar / Tab bar**: the app shell, described in §5.
+- **Badges / Tags** (`hig-badge`, `hig-tag`): status and category pills —
+  always paired with a text label, never color-only.
+- **Empty states** (`hig-empty` + `hig-empty-icon` + `hig-empty-title`):
+  consistent across every list/board that can be empty.
+
+### App-specific components (app.css §2)
+Water-status coloring on the Leaflet map and markers (thirst level →
+green/orange/red, drawn from the status palette, not the tint), the
+adoption certificate canvas, toast notifications (`hig-material` cards), and
+the StatCard/Badge/LoadingSpinner/EmptyState wrappers that give hig.css
+primitives a typed React surface.
+
+## 7. The Five HIG Rules (the page-building checklist)
+
+Every page conversion is self-reviewed against these five rules before
+landing:
+
+1. **Hierarchy via type and space, not boxes.** Visual hierarchy comes from
+   the `--hig-text-*` scale and `--hig-space-*` rhythm — never nested cards,
+   never boxes-in-boxes.
+2. **One accent.** `--hig-tint` is the only color that means "interactive" or
+   "brand." No second accent, no per-instance hex.
+3. **8pt grid.** Every spacing value is a `--hig-space-*` token.
+4. **13–17px AA text.** Body-level text sits in the footnote-to-body range
+   (13–17px) at full label contrast; caption sizes are metadata-only.
+5. **≥44px touch targets.** Every interactive control meets the iOS minimum
+   on mobile (the `hig-desktop` density reduction is scoped to genuine
+   desktop pointer input only).
+
+## 8. Do's and Don'ts
 
 ### Do:
-- **Do** keep every surface on the Forest Night ramp — dark modals, dark popups,
-  dark map UI (#112220 family), matching the „one dark design language" doctrine.
+- **Do** read every color, spacing, and radius value from a `--hig-*` custom
+  property — never a literal hex or pixel number in `app.css` or component
+  markup (dynamic `--hig-progress` fractions are the one sanctioned
+  exception).
+- **Do** keep `hig.css` untouched. App-specific needs go in `app.css`.
 - **Do** pair every status color with a text label (legend, badge copy).
 - **Do** label every estimated number „estimat".
-- **Do** honor `prefers-reduced-motion` with instant/crossfade alternatives.
-- **Do** keep body text ≥ #bbf7d0 contrast on surfaces (muted slate is for
-  metadata only).
+- **Do** honor `prefers-reduced-motion` (already handled globally by
+  `hig.css`).
+- **Do** give every screen exactly one `<h1>`, owned by `PitchHeader`.
 
 ### Don't:
 - **Don't** build gray bureaucratic forms-and-tables screens — the „generic
-  government portal" anti-reference from PRODUCT.md.
-- **Don't** use stock leaf imagery or vague green gradients — the „corporate ESG
-  greenwash" anti-reference.
-- **Don't** add mascots, confetti, or cartoon badges — the „childish gamification"
-  anti-reference; celebration is typographic and calm.
-- **Don't** put white backgrounds on any surface, including third-party widgets
-  (Leaflet popups get the dark treatment).
-- **Don't** use glassmorphism beyond the sticky header, or glow on inert elements.
-- **Don't** exceed two font families or use gradient text on new elements (the
-  brand title's gradient is grandfathered, not a pattern).
+  government portal" anti-reference from `PRODUCT.md`.
+- **Don't** use stock leaf imagery or vague green gradients — the „corporate
+  ESG greenwash" anti-reference.
+- **Don't** add mascots, confetti, or cartoon badges — the „childish
+  gamification" anti-reference; celebration is typographic and calm.
+- **Don't** put `hig-glass`/`hig-material` on content surfaces — glass is
+  navigation chrome only (sidebar, mobile navbar, tab bar, demo pill).
+- **Don't** introduce a second accent color or a display font family.
+- **Don't** hand-edit `hig.css` — extend in `app.css` instead.
