@@ -5,7 +5,10 @@ import {
   Trees,
   FileText,
   Megaphone,
-  Landmark,
+  LayoutDashboard,
+  Award,
+  UsersRound,
+  Handshake,
   BarChart3,
   Users,
 } from 'lucide-react';
@@ -14,11 +17,14 @@ import {
 const userRole = 'admin';
 
 const navItems = [
-  { path: '/harta', label: 'Hartă', icon: Map },
-  { path: '/copaci', label: 'Copaci', icon: Trees },
-  { path: '/rapoarte', label: 'Rapoarte', icon: FileText },
-  { path: '/campanii', label: 'Campanii', icon: Megaphone },
-  { path: '/spatii-verzi', label: 'Spații Verzi', icon: Landmark },
+  { path: '/', label: 'Tablou de Comandă', icon: LayoutDashboard },
+  { path: '/map', label: 'Hartă', icon: Map },
+  { path: '/reports', label: 'Rapoarte', icon: FileText },
+  { path: '/campaigns', label: 'Campanii', icon: Megaphone },
+  { path: '/trees', label: 'Copaci', icon: Trees },
+  { path: '/rewards', label: 'Recompense', icon: Award },
+  { path: '/community', label: 'Comunitate', icon: UsersRound },
+  { path: '/sponsors', label: 'Sponsori', icon: Handshake },
 ];
 
 const adminItems = [

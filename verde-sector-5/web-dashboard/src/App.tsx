@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { PresenterProvider } from './context/PresenterContext';
 import { LoadingSpinner } from './components/UI/LoadingSpinner';
+import { Layout } from './components/Layout/Layout';
 import './App.css';
 
 const DashboardPage = lazy(() => import('./pages/Dashboard/Dashboard'));
@@ -25,19 +26,21 @@ export const App: React.FC = () => {
         <PresenterProvider>
           <Suspense fallback={<LoadingSpinner fullPage />}>
             <Routes>
-              {/* Main Interactive Pitch Dashboard */}
-              <Route path="/" element={<DashboardPage />} />
+              <Route element={<Layout />}>
+                {/* Main Interactive Pitch Dashboard */}
+                <Route path="/" element={<DashboardPage />} />
 
-              {/* Lazy-loaded Feature Routes */}
-              <Route path="/map" element={<MapPage />} />
-              <Route path="/reports" element={<ReportsPage />} />
-              <Route path="/campaigns" element={<CampaignsPage />} />
-              <Route path="/trees" element={<TreesPage />} />
-              <Route path="/rewards" element={<RewardsPage />} />
-              <Route path="/community" element={<CommunityPage />} />
-              <Route path="/sponsors" element={<SponsorsPage />} />
-              <Route path="/sponsors/:slug" element={<SponsorGrovePage />} />
-              <Route path="/sponsor-dashboard" element={<SponsorDashboardPage />} />
+                {/* Lazy-loaded Feature Routes */}
+                <Route path="/map" element={<MapPage />} />
+                <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/campaigns" element={<CampaignsPage />} />
+                <Route path="/trees" element={<TreesPage />} />
+                <Route path="/rewards" element={<RewardsPage />} />
+                <Route path="/community" element={<CommunityPage />} />
+                <Route path="/sponsors" element={<SponsorsPage />} />
+                <Route path="/sponsors/:slug" element={<SponsorGrovePage />} />
+                <Route path="/sponsor-dashboard" element={<SponsorDashboardPage />} />
+              </Route>
 
               {/* Public Auth Routes */}
               <Route path="/login" element={<LoginPage />} />

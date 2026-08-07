@@ -656,11 +656,9 @@
   .app-cards-column.mobile-active { display: flex; flex-direction: column; width: 100%; }
 }
 
-/* --- PitchHeader (components/Pitch/PitchHeader) — compact one-line brand
-   bar (accepted live-mode "field mode" variant, preserved as-is): logo +
-   plain h1 title, primary nav, presenter demo pill. No gradient/hero
-   treatment, no subtitle (none existed in the compact variant being
-   converted). --- */
+/* --- PitchHeader (components/Pitch/PitchHeader) — slim page-title header:
+   plain h1 title plus the presenter demo pill. Navigation now lives only in
+   the HIG shell (Layout.tsx); this header carries no brand link or nav. --- */
 .app-pitch-header {
   padding: var(--hig-space-1) var(--hig-space-4);
   display: grid;
@@ -671,56 +669,12 @@
   z-index: 1000;
   border-bottom: 1px solid var(--hig-material-border);
 }
-.app-pitch-header-top { display: flex; align-items: center; justify-content: space-between; }
-.app-pitch-brand { display: flex; align-items: center; gap: var(--hig-space-3); text-decoration: none; }
-.app-pitch-logo-badge {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--hig-radius-md);
-  background: var(--hig-tint);
-  color: var(--hig-tint-contrast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
 .app-pitch-title {
   font-size: var(--hig-text-headline);
   font-weight: 700;
   color: var(--hig-label);
   margin: 0;
   padding: 0;
-}
-.app-mobile-menu-trigger {
-  display: none;
-  min-height: 44px;
-  min-width: 44px;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: var(--hig-fill-tertiary);
-  color: var(--hig-label);
-  border: none;
-  border-radius: var(--hig-radius-md);
-  cursor: pointer;
-}
-.app-pitch-controls-panel { display: flex; align-items: center; gap: var(--hig-space-5); }
-.app-pitch-nav { display: flex; align-items: center; gap: var(--hig-space-1); }
-.app-pitch-nav-link {
-  min-height: 36px;
-  padding: 0 var(--hig-space-3);
-  font-size: var(--hig-text-footnote);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  border-radius: var(--hig-radius-sm);
-  color: var(--hig-label-secondary);
-  text-decoration: none;
-  transition: background var(--hig-duration-fast) var(--hig-ease-out), color var(--hig-duration-fast) var(--hig-ease-out);
-}
-.app-pitch-nav-link:hover, .app-pitch-nav-link:focus-visible {
-  background: color-mix(in srgb, var(--hig-tint) 12%, transparent);
-  color: var(--hig-tint);
 }
 
 /* Presenter-only demo control (accepted live-mode "floating glass pill"
@@ -752,24 +706,6 @@
 .app-demo-pill-dot.council { background: var(--hig-blue); }
 @media (prefers-reduced-motion: reduce) {
   .app-demo-pill { transition: none; }
-}
-
-@media (max-width: 900px) {
-  .app-pitch-header { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: var(--hig-space-3); }
-  .app-mobile-menu-trigger { display: flex; }
-  .app-pitch-controls-panel {
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--hig-space-2);
-    width: 100%;
-    margin-top: var(--hig-space-3);
-    padding-top: var(--hig-space-3);
-    border-top: 1px solid var(--hig-separator);
-  }
-  .app-pitch-controls-panel.mobile-open { display: flex; }
-  .app-pitch-nav { flex-direction: column; align-items: stretch; width: 100%; gap: 2px; }
-  .app-pitch-nav-link { justify-content: center; width: 100%; min-height: 44px; }
 }
 
 /* --- Shared widget-card header (ChallengeWidget, CitizenAlertsFeed,
