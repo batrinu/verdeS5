@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import type { TreeItem } from '../../types/tree';
 import { computeWaterStatus, waterStatusLabel, type WaterStatus } from '../../utils/treeCare';
 
@@ -67,6 +70,7 @@ const NEIGHBORHOOD_CONFIGS: Record<string, { center: [number, number]; zoom: num
 interface Sector5TreeMapProps {
   trees: TreeItem[];
   selectedNeighborhood?: string;
+  selectedTreeId?: string | null;
   onSelectTree: (tree: TreeItem) => void;
   onAdoptClick: (tree: TreeItem) => void;
   onWaterClick: (tree: TreeItem) => void;
@@ -75,12 +79,15 @@ interface Sector5TreeMapProps {
 export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
   trees,
   selectedNeighborhood = 'ALL',
+  selectedTreeId = null,
   onSelectTree,
   onAdoptClick,
   onWaterClick,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const markerClusterRef = useRef<L.MarkerClusterGroup | null>(null);
+  const markersByIdRef = useRef<Map<string, L.Marker>>(new Map());
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -96,9 +103,26 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
     const map = L.map(mapContainerRef.current).setView(targetConfig.center, targetConfig.zoom);
     mapInstanceRef.current = map;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd',
+      maxZoom: 20,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
     }).addTo(map);
+
+    const markerCluster = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 48,
+      iconCreateFunction: (cluster) =>
+        L.divIcon({
+          html: `<span>${cluster.getChildCount()}</span>`,
+          className: 'app-map-cluster',
+          iconSize: L.point(36, 36),
+        }),
+    });
+    markerClusterRef.current = markerCluster;
+    const markersById = new Map<string, L.Marker>();
+    markersByIdRef.current = markersById;
 
     // Escape user-derived values before they go into popup innerHTML (adopter
     // name / nickname are user input).
@@ -118,7 +142,7 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
         alt: label,
         title: label,
         keyboard: true,
-      }).addTo(map);
+      });
 
       // Styling lives in app.css (.app-map-popup-*) — CSS-variable-driven
       // classes instead of inline hex, so the popup follows the active
@@ -172,7 +196,12 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
 
       marker.bindPopup(popupContainer);
       marker.on('click', () => onSelectTree(tree));
+
+      markerCluster.addLayer(marker);
+      markersById.set(tree.id, marker);
     });
+
+    map.addLayer(markerCluster);
 
     // Schedule invalidateSize to guarantee tiles load on mobile viewports & tabs
     const resizeTimer = setTimeout(() => {
@@ -187,6 +216,27 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
       mapInstanceRef.current = null;
     };
   }, [trees, selectedNeighborhood, onSelectTree, onAdoptClick, onWaterClick]);
+
+  // Lightweight selection effect — toggles the ring class and pans to the
+  // selected marker without rebuilding the whole map (kept separate from the
+  // main init effect above so selecting a tree never resets the viewport).
+  useEffect(() => {
+    const cluster = markerClusterRef.current;
+    const markers = markersByIdRef.current;
+    if (!cluster) return;
+
+    // Clear any previous selection ring.
+    markers.forEach((m) => m.getElement()?.classList.remove('is-selected'));
+
+    if (!selectedTreeId) return;
+    const marker = markers.get(selectedTreeId);
+    if (!marker) return;
+
+    // Expand the enclosing cluster, then ring the marker once it is on the map.
+    cluster.zoomToShowLayer(marker, () => {
+      marker.getElement()?.classList.add('is-selected');
+    });
+  }, [selectedTreeId, trees]);
 
   return (
     // Leaflet mounts directly into the ref'd div's DOM, outside React's own
