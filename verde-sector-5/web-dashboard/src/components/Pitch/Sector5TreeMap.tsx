@@ -89,7 +89,12 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
     const targetConfig = NEIGHBORHOOD_CONFIGS[selectedNeighborhood] || NEIGHBORHOOD_CONFIGS.ALL;
 
     // Initialize Leaflet map instance
-    const map = L.map(mapContainerRef.current).setView(targetConfig.center, targetConfig.zoom);
+    const map = L.map(mapContainerRef.current, { zoomControl: false }).setView(
+      targetConfig.center,
+      targetConfig.zoom,
+    );
+    // Zoom lives top-right so it never collides with the desktop sheet panel (top-left).
+    L.control.zoom({ position: 'topright' }).addTo(map);
     mapInstanceRef.current = map;
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -107,6 +112,7 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
           html: `<span>${cluster.getChildCount()}</span>`,
           className: 'app-map-cluster',
           iconSize: L.point(36, 36),
+          iconAnchor: L.point(18, 18),
         }),
     });
     markerClusterRef.current = markerCluster;

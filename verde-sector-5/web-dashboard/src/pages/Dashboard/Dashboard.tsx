@@ -214,16 +214,17 @@ export const Dashboard: React.FC = () => {
         </div>
       )}
 
-      <div className="app-map-home-canvas">
-        <Sector5TreeMap
-          trees={trees}
-          selectedNeighborhood={selectedNeighborhood}
-          selectedTreeId={selectedTree?.id ?? null}
-          onSelectTree={handleSelectTree}
-        />
-      </div>
+      <div className="app-map-home-stage">
+        <div className="app-map-home-canvas">
+          <Sector5TreeMap
+            trees={trees}
+            selectedNeighborhood={selectedNeighborhood}
+            selectedTreeId={selectedTree?.id ?? null}
+            onSelectTree={handleSelectTree}
+          />
+        </div>
 
-      <MapSheet
+        <MapSheet
         trees={trees}
         selectedTree={selectedTree}
         criteria={criteria}
@@ -264,7 +265,8 @@ export const Dashboard: React.FC = () => {
             <CouncilAlertDispatcher alerts={alerts} onCreateAlert={handleCreateAlert} />
           </>
         )}
-      </MapSheet>
+        </MapSheet>
+      </div>
 
       {/* Adoption Modal */}
       {adoptTreeModalTarget && (
