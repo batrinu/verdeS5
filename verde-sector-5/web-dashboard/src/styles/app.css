@@ -1300,7 +1300,7 @@ a.app-sponsor-card-link { color: inherit; }
 .app-sidebar-logo { font-size: var(--hig-text-title3); font-weight: 700; padding: var(--hig-space-3) var(--hig-space-3) var(--hig-space-4); }
 .app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .app-mobile-navbar { border-bottom: 0.5px solid var(--hig-material-border); }
-.app-content { flex: 1; min-width: 0; padding: var(--hig-space-4) var(--app-inset) 0; max-width: 1200px; }
+.app-content { flex: 1; min-width: 0; padding: var(--hig-space-6) var(--app-inset); max-width: 1200px; }
 .app-tabbar {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
   display: flex;
@@ -1323,7 +1323,7 @@ a.hig-sidebar-item { color: var(--hig-label); }
 a.hig-sidebar-item.active { color: var(--hig-tint); }
 @media (max-width: 899px) {
   .app-sidebar { display: none; }
-  .app-content { padding-bottom: 84px; }
+  .app-content { padding-top: var(--hig-space-4); padding-bottom: 84px; }
   .app-pitch-header { display: none; }
 }
 @media (min-width: 900px) {
