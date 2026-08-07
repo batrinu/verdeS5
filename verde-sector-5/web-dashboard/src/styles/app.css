@@ -767,9 +767,13 @@ a.hig-button { color: var(--hig-tint-contrast); }
 }
 .app-sector5-map-legend {
   position: absolute;
-  left: var(--hig-space-2);
-  bottom: var(--hig-space-2);
-  z-index: 1000;
+  /* Bottom strip. On desktop it shifts right of the ~360px floating panel and
+     stays left of Leaflet's bottom-right attribution; on mobile it lifts above
+     the bottom-sheet peek. */
+  left: var(--hig-space-3);
+  bottom: var(--hig-space-3);
+  right: auto;
+  z-index: 400;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -789,6 +793,15 @@ a.hig-button { color: var(--hig-tint-contrast); }
 .app-sector5-map-legend-dot.thirsty { background: var(--hig-orange); }
 .app-sector5-map-legend-dot.urgent { background: var(--hig-red); }
 .app-sector5-map-legend-dot.unknown { background: var(--hig-gray); }
+/* Desktop: shift the legend right of the ~360px left floating panel. */
+@media (min-width: 900px) {
+  .app-sector5-map-legend { left: calc(360px + var(--hig-space-6)); }
+}
+/* Below the desktop breakpoint the sheet is a bottom sheet (96px peek) — lift
+   the legend clear of it. */
+@media (max-width: 899px) {
+  .app-sector5-map-legend { bottom: 108px; }
+}
 @media (max-width: 480px) {
   .app-sector5-map-legend { flex-direction: column; align-items: flex-start; gap: 4px; }
 }
