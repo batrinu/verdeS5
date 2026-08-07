@@ -34,11 +34,8 @@ export const CitizenAlertsFeed: React.FC<CitizenAlertsFeedProps> = ({ alerts }) 
       {active.length === 0 ? (
         <div className="hig-empty">
           <CheckCircle2 size={32} className="hig-empty-icon" />
-          <div className="hig-footnote">
-            Nicio alertă activă în Sectorul 5.
-            <br />
-            Toți arborii sunt îngrijiți. 🌳
-          </div>
+          <div className="hig-empty-title">Nicio alertă activă în Sectorul 5.</div>
+          <div className="hig-footnote hig-secondary">Toți arborii sunt îngrijiți. 🌳</div>
         </div>
       ) : (
         <ul className="hig-list app-alerts-list">
