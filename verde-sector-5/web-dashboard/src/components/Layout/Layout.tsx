@@ -9,12 +9,7 @@ import {
   Award,
   UsersRound,
   Handshake,
-  BarChart3,
-  Users,
 } from 'lucide-react';
-
-// Using dummy roles for now, usually coming from context/auth store
-const userRole = 'admin';
 
 const navItems = [
   { path: '/', label: 'Tablou de Comandă', icon: LayoutDashboard },
@@ -27,24 +22,21 @@ const navItems = [
   { path: '/sponsors', label: 'Sponsori', icon: Handshake },
 ];
 
-const adminItems = [
-  { path: '/analitice', label: 'Analitice', icon: BarChart3 },
-  { path: '/utilizatori', label: 'Utilizatori', icon: Users },
-];
+const tabBarItems = ['/', '/map', '/reports', '/rewards', '/sponsors'].map(
+  (path) => navItems.find((item) => item.path === path)!
+);
 
 export const Layout: React.FC = () => {
   const location = useLocation();
 
-  const allNavItems = userRole === 'admin' ? [...navItems, ...adminItems] : navItems;
-
-  const currentPageLabel = allNavItems.find(item => item.path === location.pathname)?.label || 'Tablou de Comandă';
+  const currentPageLabel = navItems.find(item => item.path === location.pathname)?.label || 'Tablou de Comandă';
 
   return (
     <div className="app-shell">
       {/* Desktop */}
       <aside className="app-sidebar hig-sidebar hig-material">
         <div className="app-sidebar-logo">Verde S5</div>
-        {allNavItems.map((item) => (
+        {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
@@ -68,7 +60,7 @@ export const Layout: React.FC = () => {
 
       {/* Mobile bottom tab bar — the one glass surface in the shell */}
       <nav className="app-tabbar hig-glass">
-        {navItems.slice(0, 5).map((item) => (
+        {tabBarItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
