@@ -85,32 +85,17 @@ const Trees: React.FC = () => {
             ))}
           </select>
 
-          <div
-            className="hig-segmented app-trees-status-segmented"
-            role="radiogroup"
+          <select
+            value={filterStatus}
+            onChange={e => setFilterStatus(e.target.value as typeof filterStatus)}
+            className="hig-field app-trees-status-select"
             aria-label="Filtrează după starea de udare"
           >
-            <label>
-              <input
-                type="radio"
-                name="water-status-filter"
-                checked={filterStatus === 'toate'}
-                onChange={() => setFilterStatus('toate')}
-              />
-              <span>Orice stare de udare</span>
-            </label>
+            <option value="toate">Orice stare de udare</option>
             {WATER_STATUS_OPTIONS.map(status => (
-              <label key={status}>
-                <input
-                  type="radio"
-                  name="water-status-filter"
-                  checked={filterStatus === status}
-                  onChange={() => setFilterStatus(status)}
-                />
-                <span>{waterStatusLabel(status)}</span>
-              </label>
+              <option key={status} value={status}>{waterStatusLabel(status)}</option>
             ))}
-          </div>
+          </select>
         </div>
 
         {loading ? (

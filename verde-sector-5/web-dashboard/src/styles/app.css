@@ -803,8 +803,9 @@ a.hig-button { color: var(--hig-tint-contrast); }
 
 /* --- Trees page (pages/Trees) — registry grid stays card-based (already
    grid-shaped, per mapping table's "keep whichever structure it already
-   uses"); water-status filter becomes a wrapping hig-segmented (fixed
-   5-option enum), species stays a hig-field select (dynamic option count
+   uses"); water-status filter is a hig-field select (5-option enum was
+   previously a wrapping hig-segmented — always broke to two rows at phone
+   widths), species stays a hig-field select too (dynamic option count
    doesn't fit a segmented control). --- */
 .app-trees-page { display: flex; flex-direction: column; gap: var(--hig-space-5); }
 .app-trees-header { text-align: center; }
@@ -816,7 +817,7 @@ a.hig-button { color: var(--hig-tint-contrast); }
 .app-trees-search-icon { position: absolute; left: var(--hig-space-3); color: var(--hig-label-tertiary); pointer-events: none; }
 .app-trees-search-input { padding-left: calc(var(--hig-space-3) + 22px); }
 .app-trees-species-select { min-width: 190px; flex-shrink: 0; width: auto; }
-.app-trees-status-segmented { flex-wrap: wrap; }
+.app-trees-status-select { min-width: 190px; flex-shrink: 0; width: auto; }
 
 .app-trees-loading { text-align: center; padding: var(--hig-space-8); }
 
