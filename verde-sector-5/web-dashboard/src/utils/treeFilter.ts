@@ -54,6 +54,7 @@ export function summarizeTrees(trees: TreeItem[]): TreeSummary {
   const hydrated = trees.filter((t) => {
     const ws = computeWaterStatus(t);
     if (ws === 'ok') return true;
+    // Demo/seed data often lacks lastWateredAt, yielding 'unknown'; treat healthy trees as hydrated to avoid misleading near-0% headlines.
     if (ws === 'unknown' && (t.healthStatus === 'EXCELLENT' || t.healthStatus === 'GOOD')) return true;
     return false;
   }).length;
