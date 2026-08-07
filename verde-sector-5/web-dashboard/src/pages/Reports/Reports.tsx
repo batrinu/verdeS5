@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Reports.css';
+import { PitchHeader } from '../../components/Pitch/PitchHeader';
+import { FileText } from 'lucide-react';
 
 const mockReports = [
   { id: 1, title: 'Creangă ruptă care blochează trotuarul', type: 'Siguranță', status: 'Nou', location: 'Str. Mărgeanului nr. 20', date: '2023-10-25' },
@@ -24,55 +25,75 @@ const Reports: React.FC = () => {
   });
 
   return (
-    <div className="reports-container">
-      <div className="reports-header-section">
-        <div>
-          <h1>Rapoarte și Sesizări</h1>
-          <p>Vizualizează stadiul sesizărilor din Sectorul 5</p>
-        </div>
-        <Link to="/reports/create" className="btn-primary">
-          + Raportează o problemă
-        </Link>
-      </div>
-
-      <div className="reports-filters">
-        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="filter-select">
-          <option value="toate">Toate Statusurile</option>
-          <option value="nou">Nou</option>
-          <option value="în lucru">În lucru</option>
-          <option value="rezolvat">Rezolvat</option>
-        </select>
-
-        <select value={filterType} onChange={e => setFilterType(e.target.value)} className="filter-select">
-          <option value="toate">Toate Tipurile</option>
-          <option value="siguranță">Siguranță</option>
-          <option value="copac uscat">Copac Uscat</option>
-          <option value="toaletare">Toaletare</option>
-        </select>
-      </div>
-
-      <div className="reports-grid">
-        {filteredReports.map(report => (
-          <div key={report.id} className="report-card fade-in">
-            <div className="report-card-header">
-              <span className={`status-badge status-${report.status.toLowerCase().replace(' ', '-')}`}>
-                {report.status}
-              </span>
-              <span className="report-date">{report.date}</span>
-            </div>
-            <h3 className="report-title">{report.title}</h3>
-            <div className="report-details">
-              <p><strong>Tip:</strong> {report.type}</p>
-              <p><strong>Locație:</strong> {report.location}</p>
-            </div>
-            <button className="btn-details">Vezi detalii</button>
+    <>
+      <PitchHeader />
+      <div className="app-reports-page">
+        <header className="app-reports-header">
+          <div>
+            <h2><FileText size={20} aria-hidden="true" /> Rapoarte și Sesizări</h2>
+            <p className="hig-secondary">Vizualizează stadiul sesizărilor din Sectorul 5</p>
           </div>
-        ))}
-        {filteredReports.length === 0 && (
-          <div className="no-results">Nu s-au găsit rapoarte.</div>
+          <Link to="/reports/create" className="hig-button">
+            + Raportează o problemă
+          </Link>
+        </header>
+
+        <div className="app-reports-filters">
+          <select
+            value={filterStatus}
+            onChange={e => setFilterStatus(e.target.value)}
+            className="hig-field app-reports-filter-select"
+            aria-label="Filtrează după status"
+          >
+            <option value="toate">Toate Statusurile</option>
+            <option value="nou">Nou</option>
+            <option value="în lucru">În lucru</option>
+            <option value="rezolvat">Rezolvat</option>
+          </select>
+
+          <select
+            value={filterType}
+            onChange={e => setFilterType(e.target.value)}
+            className="hig-field app-reports-filter-select"
+            aria-label="Filtrează după tip"
+          >
+            <option value="toate">Toate Tipurile</option>
+            <option value="siguranță">Siguranță</option>
+            <option value="copac uscat">Copac Uscat</option>
+            <option value="toaletare">Toaletare</option>
+          </select>
+        </div>
+
+        {filteredReports.length > 0 ? (
+          <div className="hig-list app-reports-list">
+            {filteredReports.map(report => (
+              <div key={report.id} className="hig-list-item app-reports-list-item">
+                <div className="app-reports-list-main">
+                  <div className="app-reports-list-top">
+                    <span className="hig-tag">{report.status}</span>
+                    <span className="hig-footnote hig-tertiary">{report.date}</span>
+                  </div>
+                  <div className="app-reports-list-title">{report.title}</div>
+                  <div className="app-reports-list-meta hig-secondary">
+                    <span>{report.type}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{report.location}</span>
+                  </div>
+                </div>
+                <button type="button" className="hig-button plain small app-reports-list-action">
+                  Vezi detalii
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="hig-empty">
+            <FileText className="hig-empty-icon" size={44} aria-hidden="true" />
+            <div className="hig-empty-title">Nu s-au găsit rapoarte.</div>
+          </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

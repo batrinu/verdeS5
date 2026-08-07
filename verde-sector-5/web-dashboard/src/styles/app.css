@@ -903,6 +903,88 @@ button.hig-list-item.app-list-item-selected { background: color-mix(in srgb, var
   .app-map-content { min-height: 60vh; }
 }
 
+/* --- Reports page (pages/Reports/Reports) --- */
+.app-reports-page { display: flex; flex-direction: column; gap: var(--hig-space-5); }
+.app-reports-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--hig-space-3); }
+.app-reports-header h2 { display: flex; align-items: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-1); }
+.app-reports-header p { margin: 0; }
+
+.app-reports-filters { display: flex; flex-wrap: wrap; gap: var(--hig-space-3); }
+.app-reports-filter-select { min-width: 180px; width: auto; }
+
+.app-reports-list-item { align-items: flex-start; gap: var(--hig-space-3); padding-top: var(--hig-space-3); padding-bottom: var(--hig-space-3); }
+.app-reports-list-main { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.app-reports-list-top { display: flex; align-items: center; justify-content: space-between; gap: var(--hig-space-2); }
+.app-reports-list-title { font-weight: 600; color: var(--hig-label); }
+.app-reports-list-meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: var(--hig-text-footnote); }
+.app-reports-list-action { flex-shrink: 0; }
+
+@media (max-width: 899px) {
+  .app-reports-header { flex-direction: column; align-items: stretch; }
+  .app-reports-header > .hig-button { align-self: stretch; text-align: center; }
+}
+
+/* --- CreateReport page (pages/Reports/CreateReport) --- */
+.app-create-report-page { display: flex; justify-content: center; }
+.app-create-report-card { width: 100%; max-width: 600px; padding: var(--hig-space-6); }
+.app-create-report-header { text-align: center; margin-bottom: var(--hig-space-5); }
+.app-create-report-header h2 { margin: 0 0 var(--hig-space-1); }
+.app-create-report-header p { margin: 0; }
+.app-create-report-form { display: flex; flex-direction: column; }
+
+.app-issue-types-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--hig-space-3); }
+.app-issue-type-card {
+  background: var(--hig-fill-quaternary);
+  border-radius: var(--hig-radius-md);
+  padding: var(--hig-space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--hig-space-2);
+  cursor: pointer;
+  transition: background var(--hig-duration-fast) var(--hig-ease-out);
+}
+.app-issue-type-card:hover { background: var(--hig-fill-tertiary); }
+.app-issue-type-card.selected {
+  background: color-mix(in srgb, var(--hig-tint) 15%, transparent);
+  color: var(--hig-tint);
+}
+.app-issue-type-icon { font-size: 1.5rem; }
+.app-issue-type-label { font-size: var(--hig-text-footnote); font-weight: 500; text-align: center; }
+
+.app-location-picker-mock {
+  margin-top: var(--hig-space-2);
+  height: 100px;
+  background: var(--hig-fill-quaternary);
+  border-radius: var(--hig-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hig-label-secondary);
+  cursor: pointer;
+}
+
+/* The one sanctioned dashed border in the app: dashed --hig-separator on
+   --hig-fill-quaternary, reserved for upload/drop targets. */
+.app-dropzone {
+  border: 2px dashed var(--hig-separator);
+  background: var(--hig-fill-quaternary);
+  border-radius: var(--hig-radius-md);
+  padding: var(--hig-space-6) var(--hig-space-4);
+  text-align: center;
+  cursor: pointer;
+}
+.app-dropzone-title { display: block; font-size: var(--hig-text-body); margin-bottom: var(--hig-space-1); color: var(--hig-label); }
+.app-dropzone-subtitle { margin: 0; }
+
+.app-create-report-actions { display: flex; gap: var(--hig-space-3); margin-top: var(--hig-space-2); }
+.app-create-report-actions .hig-button.gray { flex: 0 0 auto; min-width: 140px; }
+.app-create-report-actions .hig-button.large { flex: 1; width: auto; }
+@media (max-width: 899px) {
+  .app-create-report-actions { flex-direction: column-reverse; }
+  .app-create-report-actions .hig-button { width: 100%; }
+}
+
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
