@@ -2,6 +2,25 @@
    verdeS5 app layer over hig.css. hig.css is never edited.
    ========================================================================== */
 
+/* 0. BASE RESET — carried over from the deleted src/index.css (Task 14).
+   hig.css scopes its own reset to `.hig`/`body.hig` (font, color, background,
+   focus-visible, reduced-motion) but never touches box-sizing or UA margins,
+   so every app.css rule that pairs an explicit width with padding assumes
+   border-box. Without this, UA default margins (body/h1-h6/p) and
+   content-box sizing would reappear across every page. `html { font-size }`
+   and the old dark scrollbar theming (Night-Garden-tokened) are intentionally
+   NOT carried forward — 16px is the UA default, and native scrollbars are
+   the HIG-correct choice over a themed one. */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 /* 1. TINT — the app's single accent (WCAG AA verified, see plan Task 1) */
 :root {
   --hig-tint: #1F7A36;
@@ -272,6 +291,7 @@
   color: var(--hig-label-secondary);
 }
 .app-watering-photo-label svg { color: var(--hig-blue); }
+.app-hidden-file-input { display: none; }
 .app-watering-bonus-pill {
   font-size: var(--hig-text-caption);
   font-weight: 700;

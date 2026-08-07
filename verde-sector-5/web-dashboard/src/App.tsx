@@ -4,7 +4,6 @@ import { AuthProvider } from './context/AuthContext';
 import { PresenterProvider } from './context/PresenterContext';
 import { LoadingSpinner } from './components/UI/LoadingSpinner';
 import { Layout } from './components/Layout/Layout';
-import './App.css';
 
 const DashboardPage = lazy(() => import('./pages/Dashboard/Dashboard'));
 const MapPage = lazy(() => import('./pages/Map/Map'));

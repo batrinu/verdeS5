@@ -228,7 +228,7 @@ export const WateringModal: React.FC<WateringModalProps> = ({ tree, onClose, onC
               ref={fileInputRef}
               onChange={handleFileChange}
               accept="image/*"
-              style={{ display: 'none' }}
+              className="app-hidden-file-input"
               id="watering-photo-input"
             />
 

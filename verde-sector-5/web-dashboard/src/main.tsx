@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client'
 import './styles/hig.css';
 import './styles/app.css';
 import './styles/density';
-import './index.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
