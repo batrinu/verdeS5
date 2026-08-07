@@ -37,6 +37,14 @@ html {
   }
 }
 
+/* hig.css's `.hig a { color: var(--hig-tint) }` (specificity 0,1,1) outranks
+   the base `.hig-button` rule (0,1,0), so an <a class="hig-button"> renders
+   tint-on-tint — invisible text on the filled/primary variant. Re-assert the
+   intended contrast color at matching specificity; app.css loads after
+   hig.css so it wins the tie. Modifier variants (.tinted/.gray/.plain/
+   .destructive) already have two-class selectors (0,2,0) and are unaffected. */
+a.hig-button { color: var(--hig-tint-contrast); }
+
 /* 2. APP COMPONENTS — pieces hig.css cannot cover (map, tree visuals,
    toasts, certificate). Populated by later tasks. */
 
