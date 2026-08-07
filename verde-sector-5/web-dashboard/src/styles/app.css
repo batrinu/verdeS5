@@ -1292,6 +1292,8 @@ a.app-sponsor-card-link { color: inherit; }
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
 .app-sidebar-logo { font-size: var(--hig-text-title3); font-weight: 700; padding: var(--hig-space-3) var(--hig-space-3) var(--hig-space-4); }
+.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-mobile-navbar { border-bottom: 0.5px solid var(--hig-material-border); }
 .app-content { flex: 1; min-width: 0; padding: var(--hig-space-6); max-width: 1200px; }
 .app-tabbar {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
@@ -1306,6 +1308,7 @@ a.app-sponsor-card-link { color: inherit; }
   color: var(--hig-label-secondary); text-decoration: none;
 }
 .app-tabbar-item.active { color: var(--hig-tint); }
+.app-tabbar-item span { white-space: nowrap; font-size: var(--hig-text-caption2); }
 
 /* .hig a (0,1,1) outcolors class-only selectors on anchors; pin nav chrome */
 a.app-tabbar-item { color: var(--hig-label-secondary); }
@@ -1315,6 +1318,7 @@ a.hig-sidebar-item.active { color: var(--hig-tint); }
 @media (max-width: 899px) {
   .app-sidebar { display: none; }
   .app-content { padding: var(--hig-space-4); padding-bottom: 84px; }
+  .app-pitch-header { display: none; }
 }
 @media (min-width: 900px) {
   .app-tabbar, .app-mobile-navbar { display: none; }

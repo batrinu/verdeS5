@@ -9,17 +9,18 @@ import {
   Award,
   UsersRound,
   Handshake,
+  type LucideIcon,
 } from 'lucide-react';
 
-const navItems = [
-  { path: '/', label: 'Tablou de Comandă', icon: LayoutDashboard },
-  { path: '/map', label: 'Hartă', icon: Map },
-  { path: '/reports', label: 'Rapoarte', icon: FileText },
+const navItems: { path: string; label: string; icon: LucideIcon; tabLabel?: string }[] = [
+  { path: '/', label: 'Tablou de Comandă', icon: LayoutDashboard, tabLabel: 'Acasă' },
+  { path: '/map', label: 'Hartă', icon: Map, tabLabel: 'Hartă' },
+  { path: '/reports', label: 'Rapoarte', icon: FileText, tabLabel: 'Rapoarte' },
   { path: '/campaigns', label: 'Campanii', icon: Megaphone },
   { path: '/trees', label: 'Copaci', icon: Trees },
-  { path: '/rewards', label: 'Recompense', icon: Award },
+  { path: '/rewards', label: 'Recompense', icon: Award, tabLabel: 'Recompense' },
   { path: '/community', label: 'Comunitate', icon: UsersRound },
-  { path: '/sponsors', label: 'Sponsori', icon: Handshake },
+  { path: '/sponsors', label: 'Sponsori', icon: Handshake, tabLabel: 'Sponsori' },
 ];
 
 const tabBarItems = ['/', '/map', '/reports', '/rewards', '/sponsors'].map(
@@ -48,15 +49,17 @@ export const Layout: React.FC = () => {
         ))}
       </aside>
 
-      <main className="app-content">
+      <div className="app-main">
         {/* Mobile top bar */}
         <header className="app-mobile-navbar hig-navbar hig-material">
           <span />
           <span className="hig-navbar-title">{currentPageLabel}</span>
           <span />
         </header>
-        <Outlet />
-      </main>
+        <main className="app-content">
+          <Outlet />
+        </main>
+      </div>
 
       {/* Mobile bottom tab bar — the one glass surface in the shell */}
       <nav className="app-tabbar hig-glass">
@@ -67,7 +70,7 @@ export const Layout: React.FC = () => {
             className={({ isActive }) => `app-tabbar-item ${isActive ? 'active' : ''}`}
           >
             <item.icon size={22} aria-hidden />
-            <span>{item.label}</span>
+            <span>{item.tabLabel ?? item.label}</span>
           </NavLink>
         ))}
       </nav>
