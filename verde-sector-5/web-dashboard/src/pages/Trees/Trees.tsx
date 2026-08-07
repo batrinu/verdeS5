@@ -5,7 +5,6 @@ import { TreeService } from '../../api/treeService';
 import type { TreeItem } from '../../types/tree';
 import { computeWaterStatus, waterStatusLabel, type WaterStatus } from '../../utils/treeCare';
 import { TreePine, MapPin, Search } from 'lucide-react';
-import './Trees.css';
 
 const WATER_STATUS_OPTIONS: WaterStatus[] = ['ok', 'thirsty', 'urgent', 'unknown'];
 
@@ -53,23 +52,23 @@ const Trees: React.FC = () => {
   }, [trees, search, filterSpecies, filterStatus]);
 
   return (
-    <div className="trees-root">
+    <>
       <PitchHeader />
-      <main className="trees-main">
-        <header className="trees-header">
-          <h1><TreePine size={20} aria-hidden="true" /> Registrul Spațiilor Verzi</h1>
-          <p>Explorează și adoptă copaci din Sectorul 5</p>
+      <div className="app-trees-page">
+        <header className="app-trees-header">
+          <h2><TreePine size={20} aria-hidden="true" /> Registrul Spațiilor Verzi</h2>
+          <p className="hig-secondary">Explorează și adoptă copaci din Sectorul 5</p>
         </header>
 
-        <div className="trees-filters">
-          <div className="trees-search-wrap">
-            <Search size={16} aria-hidden="true" className="trees-search-icon" />
+        <div className="app-trees-filters">
+          <div className="app-trees-search">
+            <Search size={16} aria-hidden="true" className="app-trees-search-icon" />
             <input
               type="text"
               placeholder="Caută după specie, cartier sau cod..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="trees-search-input"
+              className="hig-field app-trees-search-input"
               aria-label="Caută copaci"
             />
           </div>
@@ -77,7 +76,7 @@ const Trees: React.FC = () => {
           <select
             value={filterSpecies}
             onChange={e => setFilterSpecies(e.target.value)}
-            className="trees-filter-select"
+            className="hig-field app-trees-species-select"
             aria-label="Filtrează după specie"
           >
             <option value="toate">Orice specie</option>
@@ -86,41 +85,56 @@ const Trees: React.FC = () => {
             ))}
           </select>
 
-          <select
-            value={filterStatus}
-            onChange={e => setFilterStatus(e.target.value as 'toate' | WaterStatus)}
-            className="trees-filter-select"
+          <div
+            className="hig-segmented app-trees-status-segmented"
+            role="radiogroup"
             aria-label="Filtrează după starea de udare"
           >
-            <option value="toate">Orice stare de udare</option>
+            <label>
+              <input
+                type="radio"
+                name="water-status-filter"
+                checked={filterStatus === 'toate'}
+                onChange={() => setFilterStatus('toate')}
+              />
+              <span>Orice stare de udare</span>
+            </label>
             {WATER_STATUS_OPTIONS.map(status => (
-              <option key={status} value={status}>{waterStatusLabel(status)}</option>
+              <label key={status}>
+                <input
+                  type="radio"
+                  name="water-status-filter"
+                  checked={filterStatus === status}
+                  onChange={() => setFilterStatus(status)}
+                />
+                <span>{waterStatusLabel(status)}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </div>
 
         {loading ? (
-          <p className="trees-loading">Se încarcă registrul…</p>
+          <p className="hig-secondary app-trees-loading">Se încarcă registrul…</p>
         ) : (
           <>
-            <div className="trees-grid">
+            <div className="app-trees-grid">
               {filteredTrees.map(tree => {
                 const isGuardianed = tree.isAdopted && !!tree.adopterName;
                 return (
-                  <div key={tree.id} className="tree-card">
-                    <div className="tree-card-header">
-                      <h3>{tree.nickname || tree.species}</h3>
-                      {tree.nickname && <span className="tree-species-tag">{tree.species}</span>}
+                  <div key={tree.id} className="hig-card app-tree-card">
+                    <div className="app-tree-card-header">
+                      <h3 className="hig-headline">{tree.nickname || tree.species}</h3>
+                      {tree.nickname && <span className="hig-tertiary app-tree-species-tag">{tree.species}</span>}
                     </div>
-                    <p className="tree-meta">
+                    <p className="hig-footnote hig-secondary app-tree-meta">
                       <MapPin size={12} aria-hidden="true" /> {tree.neighborhood} · {tree.code}
                     </p>
 
                     <TreeCareDetails tree={tree} />
 
-                    <div className="tree-card-footer">
-                      {!isGuardianed && <span className="tree-adoption-line">Neadoptat</span>}
-                      <span className="tree-waterings-line">{tree.wateringsCount ?? 0} udări</span>
+                    <div className="app-tree-card-footer">
+                      {!isGuardianed && <span className="hig-tertiary app-tree-adoption-line">Neadoptat</span>}
+                      <span className="hig-footnote app-tree-waterings-line">{tree.wateringsCount ?? 0} udări</span>
                     </div>
                   </div>
                 );
@@ -128,14 +142,17 @@ const Trees: React.FC = () => {
             </div>
 
             {filteredTrees.length === 0 && (
-              <div className="no-results">
-                Nu s-au găsit copaci care să corespundă filtrelor.
+              <div className="hig-empty">
+                <TreePine className="hig-empty-icon" size={44} aria-hidden="true" />
+                <div className="hig-empty-title app-trees-empty-title">
+                  Nu s-au găsit copaci care să corespundă filtrelor.
+                </div>
               </div>
             )}
           </>
         )}
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 

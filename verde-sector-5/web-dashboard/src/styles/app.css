@@ -766,6 +766,36 @@
 .app-leaderboard-points { font-weight: 700; font-variant-numeric: tabular-nums; }
 button.hig-list-item.app-list-item-selected { background: color-mix(in srgb, var(--hig-tint) 8%, transparent); }
 
+/* --- Trees page (pages/Trees) — registry grid stays card-based (already
+   grid-shaped, per mapping table's "keep whichever structure it already
+   uses"); water-status filter becomes a wrapping hig-segmented (fixed
+   5-option enum), species stays a hig-field select (dynamic option count
+   doesn't fit a segmented control). --- */
+.app-trees-page { display: flex; flex-direction: column; gap: var(--hig-space-5); }
+.app-trees-header { text-align: center; }
+.app-trees-header h2 { display: flex; align-items: center; justify-content: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-1); }
+.app-trees-header p { margin: 0; }
+
+.app-trees-filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hig-space-3); }
+.app-trees-search { position: relative; flex: 1; min-width: 240px; display: flex; align-items: center; }
+.app-trees-search-icon { position: absolute; left: var(--hig-space-3); color: var(--hig-label-tertiary); pointer-events: none; }
+.app-trees-search-input { padding-left: calc(var(--hig-space-3) + 22px); }
+.app-trees-species-select { min-width: 190px; flex-shrink: 0; width: auto; }
+.app-trees-status-segmented { flex-wrap: wrap; }
+
+.app-trees-loading { text-align: center; padding: var(--hig-space-8); }
+
+.app-trees-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--hig-space-4); }
+.app-tree-card { display: flex; flex-direction: column; }
+.app-tree-card-header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--hig-space-2); margin-bottom: 2px; }
+.app-tree-card-header h3 { margin: 0; }
+.app-tree-species-tag { flex-shrink: 0; }
+.app-tree-meta { display: flex; align-items: center; gap: 4px; margin: 0 0 var(--hig-space-3); }
+.app-tree-card-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--hig-space-2); margin-top: auto; padding-top: var(--hig-space-3); }
+.app-tree-adoption-line { font-style: italic; }
+.app-tree-waterings-line { margin-left: auto; font-weight: 600; }
+.app-trees-empty-title { font-size: var(--hig-text-body); font-weight: 400; }
+
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
