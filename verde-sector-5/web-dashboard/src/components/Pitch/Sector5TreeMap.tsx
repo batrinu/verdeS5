@@ -140,14 +140,26 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
 
     map.addLayer(markerCluster);
 
-    // Schedule invalidateSize to guarantee tiles load on mobile viewports & tabs
-    const resizeTimer = setTimeout(() => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.invalidateSize();
+    // Leaflet measures its container at init, but on the flex map stage (and on
+    // mobile) the container often has no size yet — so the map lands zoomed out.
+    // A ResizeObserver re-applies the intended view exactly once the container
+    // first gains real dimensions, then keeps tiles correct on later resizes.
+    const container = mapContainerRef.current;
+    let viewApplied = false;
+    const settle = () => {
+      map.invalidateSize();
+      if (!viewApplied && container.clientWidth > 0 && container.clientHeight > 0) {
+        map.setView(targetConfig.center, targetConfig.zoom);
+        viewApplied = true;
       }
-    }, 150);
+    };
+    const ro = new ResizeObserver(settle);
+    ro.observe(container);
+    // Fallback in case the observer's first callback is delayed.
+    const resizeTimer = setTimeout(settle, 200);
 
     return () => {
+      ro.disconnect();
       clearTimeout(resizeTimer);
       map.remove();
       mapInstanceRef.current = null;
