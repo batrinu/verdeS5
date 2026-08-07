@@ -6,7 +6,6 @@ import { SEED_SPONSORS } from '../../data/gamificationSeedData';
 import type { RewardItem, RedemptionItem } from '../../types/gamification';
 import { useModalA11y } from '../../hooks/useModalA11y';
 import { Coins, Gift, Ticket } from 'lucide-react';
-import './Rewards.css';
 
 interface ConfirmRedeemModalProps {
   reward: RewardItem;
@@ -22,28 +21,24 @@ const ConfirmRedeemModal: React.FC<ConfirmRedeemModalProps> = ({ reward, userPoi
   const dialogRef = useModalA11y<HTMLDivElement>(onCancel);
 
   return (
-    <div
-      className="reward-modal-backdrop"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onCancel();
-      }}
-    >
+    <>
+      <div className="hig-scrim" onClick={onCancel} />
       <div
         ref={dialogRef}
-        className="reward-modal"
+        className="hig-sheet"
         role="dialog"
         aria-modal="true"
         aria-label="Confirmă revendicarea"
         tabIndex={-1}
       >
         <h3>Revendici „{reward.title}"?</h3>
-        <p>Costă {reward.costPoints} EcoPuncte. Rămâi cu {userPoints - reward.costPoints}.</p>
-        <div className="reward-modal-actions">
-          <button className="btn-secondary" onClick={onCancel}>Renunță</button>
-          <button className="btn-redeem" onClick={() => onConfirm(reward)}>Confirmă</button>
+        <p className="hig-secondary">Costă {reward.costPoints} EcoPuncte. Rămâi cu {userPoints - reward.costPoints}.</p>
+        <div className="app-sheet-actions">
+          <button className="hig-button plain" onClick={onCancel}>Renunță</button>
+          <button className="hig-button" onClick={() => onConfirm(reward)}>Confirmă</button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -56,30 +51,26 @@ const VoucherIssuedModal: React.FC<VoucherIssuedModalProps> = ({ redemption, onC
   const dialogRef = useModalA11y<HTMLDivElement>(onClose);
 
   return (
-    <div
-      className="reward-modal-backdrop"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <>
+      <div className="hig-scrim" onClick={onClose} />
       <div
         ref={dialogRef}
-        className="reward-modal"
+        className="hig-sheet"
         role="dialog"
         aria-modal="true"
         aria-label="Voucher emis"
         tabIndex={-1}
       >
-        {/* Calm celebration (DESIGN.md): the glow on the code is the reward — no emoji. */}
-        <h3 className="voucher-issued-title">Voucher emis!</h3>
-        <p>{redemption.rewardTitle}</p>
-        <code className="voucher-code voucher-code-big">{redemption.code}</code>
-        <p className="voucher-note">Arată codul la partener. Valabil 30 de zile (demo).</p>
-        <div className="reward-modal-actions">
-          <button className="btn-redeem" onClick={onClose}>Am notat codul</button>
+        {/* Calm celebration (DESIGN.md): the confirmed code is the reward — no emoji, no glow. */}
+        <h3 className="app-voucher-issued-title">Voucher emis!</h3>
+        <p className="hig-secondary">{redemption.rewardTitle}</p>
+        <code className="app-voucher-modal-code">{redemption.code}</code>
+        <p className="hig-footnote hig-secondary app-voucher-note">Arată codul la partener. Valabil 30 de zile (demo).</p>
+        <div className="app-sheet-actions">
+          <button className="hig-button" onClick={onClose}>Am notat codul</button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -154,57 +145,64 @@ const Rewards: React.FC = () => {
   };
 
   return (
-    <div className="rewards-root">
+    <>
       <PitchHeader />
-      <main className="rewards-main">
-        <header className="rewards-header">
-          <h1><Gift size={20} aria-hidden="true" /> Recompense</h1>
-          <p className="rewards-balance"><Coins size={15} aria-hidden="true" /> {userPoints} EcoPuncte disponibile</p>
-          <p className="rewards-hint">Punctele cheltuite nu îți scad nivelul de gardian.</p>
+      <div className="app-rewards-page">
+        <header className="app-rewards-header">
+          <h2><Gift size={20} aria-hidden="true" /> Recompense</h2>
+          <p className="app-rewards-balance"><Coins size={15} aria-hidden="true" /> {userPoints} EcoPuncte disponibile</p>
+          <p className="hig-footnote hig-secondary">Punctele cheltuite nu îți scad nivelul de gardian.</p>
         </header>
 
-        {error && <p className="rewards-error" role="alert">{error}</p>}
+        {error && <p className="app-rewards-error" role="alert">{error}</p>}
 
-        <div className="rewards-grid">
-          {sortedRewards.map(r => (
-            <article key={r.id} className="reward-card">
-              <h3>{r.title}</h3>
-              <p className="reward-desc">{r.description}</p>
-              <p className="reward-merchant">
-                {r.merchantName}
-                {sponsorName(r.sponsorId) && <span className="reward-sponsor"> · oferit de {sponsorName(r.sponsorId)} (demo)</span>}
-              </p>
-              <footer className="reward-footer">
-                <span className="reward-cost"><Coins size={13} aria-hidden="true" /> {r.costPoints}</span>
-                <span className="reward-stock">{r.stock > 0 ? `${r.stock} disponibile` : 'stoc epuizat'}</span>
-                <button
-                  className="btn-redeem"
-                  disabled={r.stock <= 0 || userPoints < r.costPoints}
-                  onClick={() => setConfirmTarget(r)}
-                >
-                  Revendică
-                </button>
-              </footer>
-            </article>
-          ))}
+        <div className="app-rewards-grid">
+          {sortedRewards.map(r => {
+            const claimable = r.stock > 0 && userPoints >= r.costPoints;
+            return (
+              <article key={r.id} className={`hig-card app-reward${claimable ? '' : ' locked'}`}>
+                <h3 className="hig-headline">{r.title}</h3>
+                <p className="app-reward-desc hig-secondary">{r.description}</p>
+                <p className="app-reward-merchant hig-footnote hig-secondary">
+                  {r.merchantName}
+                  {sponsorName(r.sponsorId) && <span className="app-reward-sponsor"> · oferit de {sponsorName(r.sponsorId)} (demo)</span>}
+                </p>
+                <footer className="app-reward-footer">
+                  <span className="app-reward-cost"><Coins size={13} aria-hidden="true" /> {r.costPoints}</span>
+                  <span className="app-reward-stock hig-footnote hig-secondary">{r.stock > 0 ? `${r.stock} disponibile` : 'stoc epuizat'}</span>
+                  <button
+                    className="hig-button small tinted"
+                    disabled={!claimable}
+                    onClick={() => setConfirmTarget(r)}
+                  >
+                    Revendică
+                  </button>
+                </footer>
+              </article>
+            );
+          })}
         </div>
 
-        <section className="my-vouchers" aria-label="Voucherele mele">
-          <h2><Ticket size={16} aria-hidden="true" /> Voucherele mele</h2>
+        <section aria-label="Voucherele mele">
+          <div className="hig-section-header"><Ticket size={13} aria-hidden="true" /> Voucherele mele</div>
           {redemptions.length === 0 ? (
-            <p className="vouchers-empty">Niciun voucher încă — revendică prima ta recompensă!</p>
+            <div className="hig-empty">
+              <Ticket className="hig-empty-icon" size={44} aria-hidden="true" />
+              <div className="hig-empty-title">Niciun voucher încă — revendică prima ta recompensă!</div>
+            </div>
           ) : (
-            <ul>
+            <ul className="hig-list">
               {redemptions.map(v => (
-                <li key={v.id}>
-                  <code className="voucher-code">{v.code}</code>
-                  <span>{v.rewardTitle}</span>
+                <li key={v.id} className="hig-list-item">
+                  <code className="app-voucher-code">{v.code}</code>
+                  <span className="hig-spacer" />
+                  <span className="hig-footnote hig-secondary">{v.rewardTitle}</span>
                 </li>
               ))}
             </ul>
           )}
         </section>
-      </main>
+      </div>
 
       {confirmTarget && (
         <ConfirmRedeemModal
@@ -218,7 +216,7 @@ const Rewards: React.FC = () => {
       {issued && (
         <VoucherIssuedModal redemption={issued} onClose={() => setIssued(null)} />
       )}
-    </div>
+    </>
   );
 };
 

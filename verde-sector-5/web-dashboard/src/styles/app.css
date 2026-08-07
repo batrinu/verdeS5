@@ -1004,6 +1004,77 @@ button.hig-list-item.app-list-item-selected { background: color-mix(in srgb, var
 
 .app-campaign-join { margin-top: auto; width: 100%; }
 
+/* --- Rewards page (pages/Rewards) — quiet gamification: points balance
+   reads as a neutral stat number (no green, no glow); locked/unaffordable
+   catalog items are grayscaled rather than flagged in red. --- */
+.app-rewards-page { display: flex; flex-direction: column; gap: var(--hig-space-5); }
+.app-rewards-header { text-align: center; }
+.app-rewards-header h2 { display: flex; align-items: center; justify-content: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-1); }
+.app-rewards-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 var(--hig-space-1);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--hig-label);
+}
+.app-rewards-error {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--hig-space-3) var(--hig-space-4);
+  border-radius: var(--hig-radius-md);
+  background: color-mix(in srgb, var(--hig-red) 12%, transparent);
+  color: var(--hig-red);
+  font-size: var(--hig-text-footnote);
+  font-weight: 600;
+  text-align: center;
+}
+
+.app-rewards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--hig-space-4); }
+.app-reward { display: flex; flex-direction: column; }
+.app-reward.locked { filter: grayscale(1); opacity: .45; }
+.app-reward-desc { font-size: var(--hig-text-subheadline); line-height: 1.5; margin: 0 0 var(--hig-space-2); flex: 1; }
+.app-reward-merchant { margin: 0 0 var(--hig-space-3); }
+.app-reward-sponsor { font-style: italic; }
+.app-reward-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hig-space-2);
+  margin-top: auto;
+  padding-top: var(--hig-space-3);
+  border-top: 1px solid var(--hig-separator);
+}
+.app-reward-cost { display: inline-flex; align-items: center; gap: 4px; font-weight: 700; font-size: var(--hig-text-subheadline); color: var(--hig-label); }
+.app-reward-stock { margin-right: auto; }
+
+.app-voucher-code {
+  font-family: var(--hig-font-mono);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--hig-label);
+}
+
+.app-voucher-issued-title { text-align: center; }
+/* Genuine confirmation state (the code just became valid) — same green
+   tint/border treatment as the watering photo-verified badge, no glow. */
+.app-voucher-modal-code {
+  display: block;
+  text-align: center;
+  font-family: var(--hig-font-mono);
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  padding: var(--hig-space-3) var(--hig-space-4);
+  margin: 0 0 var(--hig-space-4);
+  border-radius: var(--hig-radius-md);
+  background: color-mix(in srgb, var(--hig-green) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hig-green) 30%, transparent);
+  color: var(--hig-green);
+}
+.app-voucher-note { text-align: center; }
+
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }
