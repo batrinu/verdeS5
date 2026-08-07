@@ -40,7 +40,7 @@ html {
 /* 1b. INSET — the single horizontal page inset. .app-content owns ALL
    page-level horizontal padding; no other page/container rule may add its
    own horizontal padding or margin (vertical rhythm stays local). */
-:root { --app-inset: var(--hig-space-4); }
+:root { --app-inset: var(--hig-space-4); --app-tabbar-h: calc(55px + env(safe-area-inset-bottom)); }
 @media (min-width: 900px) { :root { --app-inset: var(--hig-space-6); } }
 
 /* hig.css's `.hig a { color: var(--hig-tint) }` (specificity 0,1,1) outranks
@@ -797,10 +797,10 @@ a.hig-button { color: var(--hig-tint-contrast); }
 @media (min-width: 900px) {
   .app-sector5-map-legend { left: calc(360px + var(--hig-space-6)); }
 }
-/* Below the desktop breakpoint the sheet is a bottom sheet (96px peek) — lift
-   the legend clear of it. */
+/* Below the desktop breakpoint the sheet is a bottom sheet — lift the legend
+   above the tab bar + sheet peek. */
 @media (max-width: 899px) {
-  .app-sector5-map-legend { bottom: 108px; }
+  .app-sector5-map-legend { bottom: calc(var(--app-tabbar-h) + 104px); left: var(--hig-space-3); }
 }
 @media (max-width: 480px) {
   .app-sector5-map-legend { flex-direction: column; align-items: flex-start; gap: 4px; }
@@ -1335,3 +1335,12 @@ a.hig-sidebar-item.active { color: var(--hig-tint); }
    collides with the desktop floating panel on the left; small inset from the
    stage edges. */
 .app-map-home-canvas .leaflet-top.leaflet-right { margin-top: var(--hig-space-3); margin-right: var(--hig-space-3); }
+
+/* Mobile bottom-stack: the tab bar owns bottom:0, the bottom sheet sits ON TOP
+   of it (not over it), and Leaflet's bottom-right attribution lifts above the
+   sheet peek so the map chrome never bleeds over the sheet's own controls. */
+@media (max-width: 899px) {
+  .app-map-sheet { bottom: var(--app-tabbar-h); }
+  .app-map-sheet[data-detent="full"] { height: calc(100dvh - var(--app-tabbar-h) - 24px); }
+  .app-map-home-canvas .leaflet-bottom { bottom: calc(var(--app-tabbar-h) + 104px); }
+}
