@@ -13,14 +13,12 @@ import { ChallengeWidget } from '../../components/Pitch/ChallengeWidget';
 import { CouncilAlertDispatcher } from '../../components/Pitch/CouncilAlertDispatcher';
 import { CouncilAnalyticsBoard } from '../../components/Pitch/CouncilAnalyticsBoard';
 import { PitchHeader } from '../../components/Pitch/PitchHeader';
-import { SelectedTreeSheet } from '../../components/Pitch/SelectedTreeSheet';
+import { MapSheet } from '../../components/Pitch/MapSheet';
 import { usePresenter } from '../../context/PresenterContext';
-import { Map, Trophy, BarChart3, MapPin } from 'lucide-react';
-
-type MobileTab = 'MAP' | 'DETAILS';
+import { DEFAULT_CRITERIA, type TreeFilterCriteria } from '../../utils/treeFilter';
 
 export const Dashboard: React.FC = () => {
-  const { role, selectedNeighborhood, setSelectedNeighborhood, addPoints, incrementWaterings } = usePresenter();
+  const { role, selectedNeighborhood, addPoints, incrementWaterings } = usePresenter();
 
   const [trees, setTrees] = useState<TreeItem[]>([]);
   const [alerts, setAlerts] = useState<CareAlertItem[]>([]);
@@ -36,11 +34,11 @@ export const Dashboard: React.FC = () => {
   // True until the first data load settles — drives the loading skeleton.
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mobile active tab state
-  const [mobileTab, setMobileTab] = useState<MobileTab>('MAP');
-
   // Selected Tree Bottom Sheet Target
   const [selectedTree, setSelectedTree] = useState<TreeItem | null>(null);
+
+  // Map-sheet search/filter criteria
+  const [criteria, setCriteria] = useState<TreeFilterCriteria>(DEFAULT_CRITERIA);
 
   // Active Modals state
   const [adoptTreeModalTarget, setAdoptTreeModalTarget] = useState<TreeItem | null>(null);
@@ -202,136 +200,69 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="app-dashboard">
+    <div className="app-map-home">
       <PitchHeader />
 
-      <div className="app-dashboard-content">
-        {/* Mobile View Switcher Tabs (< 768px only) */}
-        <div className="app-view-tabs" role="tablist" aria-label="Navigare Mobil">
-          <button
-            role="tab"
-            aria-selected={mobileTab === 'MAP'}
-            className={`app-view-tab ${mobileTab === 'MAP' ? (role === 'COUNCIL_ADMIN' ? 'active app-view-tab-council' : 'active') : ''}`}
-            onClick={() => setMobileTab('MAP')}
-          >
-            <Map size={15} />
-            <span>Hartă</span>
-          </button>
-
-          <button
-            role="tab"
-            aria-selected={mobileTab === 'DETAILS'}
-            className={`app-view-tab ${mobileTab === 'DETAILS' ? (role === 'COUNCIL_ADMIN' ? 'active app-view-tab-council' : 'active') : ''}`}
-            onClick={() => setMobileTab('DETAILS')}
-          >
-            {role === 'CITIZEN' ? (
-              <>
-                <Trophy size={15} />
-                <span>Clasament</span>
-              </>
-            ) : (
-              <>
-                <BarChart3 size={15} />
-                <span>Raport Consiliu</span>
-              </>
-            )}
-          </button>
+      {/* Offline / local-data notice */}
+      {isOffline && (
+        <div className="app-offline-banner" role="status">
+          📡 Mod offline — nu ne-am putut conecta la server, afișăm date demonstrative locale.
         </div>
+      )}
 
-        {/* Offline / local-data notice */}
-        {isOffline && (
-          <div className="app-offline-banner" role="status">
-            📡 Mod offline — nu ne-am putut conecta la server, afișăm date demonstrative locale.
-          </div>
-        )}
-
-        {/* Dashboard Split-Screen Grid Layout */}
-        <div className="app-dashboard-grid">
-
-          {/* Left Column: Interactive Map */}
-          <div className={`app-map-column ${mobileTab === 'MAP' ? 'mobile-active' : ''}`}>
-            <div className="app-map-header">
-              <div className="app-district-select-group">
-                <MapPin size={16} />
-                <label htmlFor="district-select" className="app-district-label">
-                  Cartier:
-                </label>
-                <select
-                  id="district-select"
-                  className="hig-field app-district-select"
-                  value={selectedNeighborhood}
-                  onChange={(e) => setSelectedNeighborhood(e.target.value as any)}
-                  aria-label="Selectează cartierul din Sectorul 5"
-                >
-                  <option value="ALL">Toate Cartierele (Sector 5)</option>
-                  <option value="Cotroceni">Cotroceni</option>
-                  <option value="Rahova">Rahova</option>
-                  <option value="Ferentari">Ferentari</option>
-                  <option value="Sebastian">Sebastian</option>
-                  <option value="Izvor">Izvor</option>
-                </select>
-              </div>
-
-              <p className="hig-footnote hig-secondary app-map-hint">
-                💡 Apasă un copac de pe hartă pentru a-l adopta sau a-i loga o udare.
-              </p>
-            </div>
-
-            <div className="app-map-wrapper">
-              <Sector5TreeMap
-                trees={trees}
-                selectedNeighborhood={selectedNeighborhood}
-                onSelectTree={(tree) => setSelectedTree(tree)}
-                onAdoptClick={(tree) => setAdoptTreeModalTarget(tree)}
-                onWaterClick={(tree) => setWaterTreeModalTarget(tree)}
-              />
-            </div>
-          </div>
-
-          {/* Right Column: Persona-Specific Cards */}
-          <div className={`app-cards-column ${mobileTab === 'DETAILS' ? 'mobile-active' : ''}`}>
-            {isLoading && stats.length === 0 ? (
-              /* First-load skeleton so the column isn't blank while data arrives */
-              <div className="hig-card app-skeleton-card" aria-hidden="true">
-                <div className="app-skeleton-line app-skeleton-line-title" />
-                <div className="app-skeleton-row" />
-                <div className="app-skeleton-row" />
-                <div className="app-skeleton-row" />
-                <div className="app-skeleton-row" />
-                <div className="app-skeleton-row" />
-              </div>
-            ) : role === 'CITIZEN' ? (
-              /* Citizen Persona: Guardian Card, Challenge, Sector Impact, Leaderboard + Alerts */
-              <>
-                <GuardianCard />
-                <ChallengeWidget />
-                <SectorImpactStrip trees={trees} />
-                <DistrictLeaderboard
-                  stats={stats}
-                  selectedNeighborhood={selectedNeighborhood}
-                  onSelectNeighborhood={() => {}}
-                />
-                <CitizenAlertsFeed alerts={alerts} />
-              </>
-            ) : (
-              /* Council Admin Persona: Executive Analytics & Alert Dispatcher */
-              <>
-                <CouncilAnalyticsBoard trees={trees} stats={stats} />
-                <CouncilAlertDispatcher alerts={alerts} onCreateAlert={handleCreateAlert} />
-              </>
-            )}
-          </div>
-        </div>
+      <div className="app-map-home-canvas">
+        <Sector5TreeMap
+          trees={trees}
+          selectedNeighborhood={selectedNeighborhood}
+          selectedTreeId={selectedTree?.id ?? null}
+          onSelectTree={(tree) => setSelectedTree(tree)}
+          onAdoptClick={(tree) => setAdoptTreeModalTarget(tree)}
+          onWaterClick={(tree) => setWaterTreeModalTarget(tree)}
+        />
       </div>
 
-      {/* Selected Tree Mobile Bottom Sheet */}
-      <SelectedTreeSheet
-        tree={selectedTree}
-        onClose={() => setSelectedTree(null)}
+      <MapSheet
+        trees={trees}
+        selectedTree={selectedTree}
+        criteria={criteria}
+        onCriteriaChange={setCriteria}
+        onSelectTree={(tree) => setSelectedTree(tree)}
+        onBack={() => setSelectedTree(null)}
         onAdoptClick={(tree) => setAdoptTreeModalTarget(tree)}
         onWaterClick={(tree) => setWaterTreeModalTarget(tree)}
         onCertClick={(tree) => setAdoptionCertModalTarget(tree)}
-      />
+      >
+        {isLoading && stats.length === 0 ? (
+          /* First-load skeleton so the panel isn't blank while data arrives */
+          <div className="hig-card app-skeleton-card" aria-hidden="true">
+            <div className="app-skeleton-line app-skeleton-line-title" />
+            <div className="app-skeleton-row" />
+            <div className="app-skeleton-row" />
+            <div className="app-skeleton-row" />
+            <div className="app-skeleton-row" />
+            <div className="app-skeleton-row" />
+          </div>
+        ) : role === 'CITIZEN' ? (
+          /* Citizen Persona: Guardian Card, Challenge, Sector Impact, Leaderboard + Alerts */
+          <>
+            <GuardianCard />
+            <ChallengeWidget />
+            <SectorImpactStrip trees={trees} />
+            <DistrictLeaderboard
+              stats={stats}
+              selectedNeighborhood={selectedNeighborhood}
+              onSelectNeighborhood={() => {}}
+            />
+            <CitizenAlertsFeed alerts={alerts} />
+          </>
+        ) : (
+          /* Council Admin Persona: Executive Analytics & Alert Dispatcher */
+          <>
+            <CouncilAnalyticsBoard trees={trees} stats={stats} />
+            <CouncilAlertDispatcher alerts={alerts} onCreateAlert={handleCreateAlert} />
+          </>
+        )}
+      </MapSheet>
 
       {/* Adoption Modal */}
       {adoptTreeModalTarget && (
