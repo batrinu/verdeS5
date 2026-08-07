@@ -1075,6 +1075,46 @@ button.hig-list-item.app-list-item-selected { background: color-mix(in srgb, var
 }
 .app-voucher-note { text-align: center; }
 
+/* --- Community page (pages/Community) — two hig-list leaderboards (hoods by
+   waterings, guardians by points). Ruling: rank is hig-value (tabular-nums);
+   top-3 get a tinted hig-tag instead of gold/silver/bronze colors, so 1st
+   place carries no special color either. Guardian rows add a 28px initials
+   avatar on --hig-fill (no existing avatar precedent in the app, added per
+   ruling). The "you are here" row reuses DistrictLeaderboard's selected-row
+   tint (.app-list-item-selected) instead of the old green border. Note-under-
+   list border-top follows the same divider precedent as .app-reward-footer /
+   .app-map-page-legend. --- */
+.app-community-page { display: flex; flex-direction: column; gap: var(--hig-space-5); }
+.app-community-header { text-align: center; }
+.app-community-header h2 { display: flex; align-items: center; justify-content: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-1); }
+.app-community-header p { margin: 0; }
+
+.app-community-boards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--hig-space-4); }
+.app-community-board-title { display: flex; align-items: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-3); }
+
+.app-community-rank { min-width: 28px; flex-shrink: 0; text-align: center; justify-content: center; font-variant-numeric: tabular-nums; }
+.app-community-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: var(--hig-radius-full);
+  background: var(--hig-fill);
+  color: var(--hig-label-secondary);
+  font-size: var(--hig-text-caption);
+  font-weight: 600;
+}
+.app-community-name { display: flex; align-items: center; gap: var(--hig-space-2); font-weight: 600; color: var(--hig-label); }
+.app-community-you-tag { font-size: var(--hig-text-caption); }
+.app-community-loading { text-align: center; padding: var(--hig-space-6); }
+.app-community-note { margin: var(--hig-space-3) 0 0; padding-top: var(--hig-space-3); border-top: 1px solid var(--hig-separator); }
+
+@media (max-width: 768px) {
+  .app-community-boards { grid-template-columns: 1fr; }
+}
+
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }

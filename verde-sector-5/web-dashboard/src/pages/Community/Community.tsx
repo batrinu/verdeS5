@@ -7,7 +7,16 @@ import { usePresenter } from '../../context/PresenterContext';
 import type { DistrictStat } from '../../types/tree';
 import { guardianLevelFor } from '../../utils/treeCare';
 import { Trophy, Users } from 'lucide-react';
-import './Community.css';
+
+// Presentational only — derives avatar initials from a guardian's display
+// name (up to two, per the "28px circle, --hig-fill, initials" ruling).
+const initialsFor = (name: string) =>
+  name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(part => part[0]?.toUpperCase() ?? '')
+    .join('');
 
 // Community hub (spec §3.6): neighborhood + top-guardian leaderboards around
 // the active challenge. Local-first via TreeService and seed leaders.
@@ -32,58 +41,66 @@ const Community: React.FC = () => {
   }, [userName, lifetimePoints]);
 
   return (
-    <div className="community-root">
+    <>
       <PitchHeader />
-      <main className="community-main">
-        <header className="community-header">
-          <h1><Users size={20} aria-hidden="true" /> Comunitate</h1>
-          <p>Cartierele și gardienii care țin Sectorul 5 verde.</p>
+      <div className="app-community-page">
+        <header className="app-community-header">
+          <h2><Users size={20} aria-hidden="true" /> Comunitate</h2>
+          <p className="hig-secondary">Cartierele și gardienii care țin Sectorul 5 verde.</p>
         </header>
 
         <ChallengeWidget detailed />
 
-        <div className="community-boards">
-          <section className="board" aria-label="Clasament cartiere">
-            <h2><Trophy size={16} aria-hidden="true" /> Cartiere — udări</h2>
+        <div className="app-community-boards">
+          <section className="hig-card app-community-board" aria-label="Clasament cartiere">
+            <h3 className="hig-headline app-community-board-title"><Trophy size={16} aria-hidden="true" /> Cartiere — udări</h3>
             {rankedHoods.length === 0 ? (
-              <p className="board-loading">Se încarcă clasamentul…</p>
+              <p className="hig-secondary app-community-loading">Se încarcă clasamentul…</p>
             ) : (
-            <ol>
+            <ol className="hig-list">
               {rankedHoods.map((s, i) => (
-                <li key={s.neighborhood} className={i === 0 ? 'board-first' : ''}>
-                  <span className="board-rank">{i + 1}</span>
-                  <span className="board-name">{s.neighborhood}</span>
-                  <span className="board-value">{s.wateringsCount} udări</span>
+                <li key={s.neighborhood} className="hig-list-item">
+                  <span className={`app-community-rank ${i < 3 ? 'hig-tag' : 'hig-value'}`}>{i + 1}</span>
+                  <span className="app-community-name">{s.neighborhood}</span>
+                  <span className="hig-spacer" />
+                  <span className="hig-value">{s.wateringsCount} udări</span>
                 </li>
               ))}
             </ol>
             )}
-            <p className="board-note">Cartierul câștigător al provocării primește un micro-grant pentru un proiect verde.</p>
+            <p className="hig-footnote hig-secondary app-community-note">Cartierul câștigător al provocării primește un micro-grant pentru un proiect verde.</p>
           </section>
 
-          <section className="board" aria-label="Top gardieni">
-            <h2><Trophy size={16} aria-hidden="true" /> Top gardieni</h2>
-            <ol>
+          <section className="hig-card app-community-board" aria-label="Top gardieni">
+            <h3 className="hig-headline app-community-board-title"><Trophy size={16} aria-hidden="true" /> Top gardieni</h3>
+            <ol className="hig-list">
               {rankedGuardians.map((u, i) => {
                 const isYou = u.name === userName;
-                const rowClass = [i === 0 ? 'board-first' : '', isYou ? 'board-you' : ''].filter(Boolean).join(' ');
                 return (
-                  <li key={u.name} className={rowClass} aria-current={isYou ? 'true' : undefined}>
-                    <span className="board-rank">{i + 1}</span>
-                    <span className="board-name">
-                      {u.name}
-                      {isYou && <span className="board-you-tag">(tu)</span>}
-                      <em className="board-level">{guardianLevelFor(u.points).title}</em>
-                    </span>
-                    <span className="board-value">{u.points} p</span>
+                  <li
+                    key={u.name}
+                    className={`hig-list-item${isYou ? ' app-list-item-selected' : ''}`}
+                    aria-current={isYou ? 'true' : undefined}
+                  >
+                    <span className={`app-community-rank ${i < 3 ? 'hig-tag' : 'hig-value'}`}>{i + 1}</span>
+                    <span className="app-community-avatar" aria-hidden="true">{initialsFor(u.name)}</span>
+                    <div>
+                      <div className="app-community-name">
+                        {u.name}
+                        {isYou && <span className="hig-tag app-community-you-tag">(tu)</span>}
+                      </div>
+                      <div className="hig-footnote hig-secondary">{guardianLevelFor(u.points).title}</div>
+                    </div>
+                    <span className="hig-spacer" />
+                    <span className="hig-value">{u.points} p</span>
                   </li>
                 );
               })}
             </ol>
           </section>
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 
