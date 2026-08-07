@@ -1222,6 +1222,45 @@
   .app-grove-header { flex-direction: column; align-items: center; text-align: center; }
 }
 
+/* --- Login + Register pages (pages/Login, pages/Register) — both render
+   outside the app shell (see App.tsx routing), so the page itself owns
+   full-viewport centering: a single hig-card on --hig-bg, no gradient
+   hero. The "selected demo profile" preview reuses the tinted-card recipe
+   from app-sheet-tree-card (WateringModal precedent); the role pill is a
+   plain hig-tag — one accent, no per-role badge colors. --- */
+.app-auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--hig-space-4);
+  background: var(--hig-bg);
+}
+.app-auth-card { max-width: 380px; width: 100%; margin: 0 auto; }
+.app-auth-header { text-align: center; margin-bottom: var(--hig-space-5); }
+.app-auth-logo { display: flex; align-items: center; justify-content: center; margin-bottom: var(--hig-space-2); color: var(--hig-tint); }
+.app-auth-preview {
+  background: color-mix(in srgb, var(--hig-tint) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hig-tint) 15%, transparent);
+  border-radius: var(--hig-radius-lg);
+  padding: var(--hig-space-3) var(--hig-space-4);
+  margin-bottom: var(--hig-space-5);
+}
+.app-auth-preview-top { display: flex; align-items: center; justify-content: space-between; gap: var(--hig-space-2); margin-bottom: var(--hig-space-1); }
+.app-auth-preview-name { font-weight: 700; }
+.app-auth-footer { display: flex; align-items: center; justify-content: center; gap: var(--hig-space-1); margin-top: var(--hig-space-5); text-align: center; }
+.app-auth-error {
+  padding: var(--hig-space-3) var(--hig-space-4);
+  border-radius: var(--hig-radius-md);
+  background: color-mix(in srgb, var(--hig-red) 12%, transparent);
+  color: var(--hig-red);
+  font-size: var(--hig-text-footnote);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: var(--hig-space-4);
+}
+.app-auth-footer-link { text-align: center; margin-top: var(--hig-space-4); }
+
 /* 3. SHELL — sidebar/content grid and mobile tab bar */
 .app-shell { display: flex; min-height: 100vh; }
 .app-sidebar { position: sticky; top: 0; height: 100vh; flex-shrink: 0; }

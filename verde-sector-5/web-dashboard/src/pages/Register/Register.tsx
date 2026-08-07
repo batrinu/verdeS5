@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import './Register.css';
 
 const neighborhoods = [
   'Giulești',
@@ -22,7 +21,7 @@ const Register: React.FC = () => {
   const [neighborhood, setNeighborhood] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -42,51 +41,55 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card fade-in">
-        <div className="register-logo">
-          <h2>Verde în Sectorul 5</h2>
+    <div className="app-auth">
+      <div className="hig-card app-auth-card">
+        <div className="app-auth-header">
+          <h1>Verde în Sectorul 5</h1>
         </div>
-        <form onSubmit={handleSubmit} className="register-form">
-          {error && <div className="error-message">{error}</div>}
-          
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className="app-auth-form">
+          {error && <div className="app-auth-error">{error}</div>}
+
+          <div className="hig-form-row">
             <label htmlFor="name">Nume Complet</label>
-            <input 
-              type="text" 
-              id="name" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              required 
+            <input
+              type="text"
+              id="name"
+              className="hig-field"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
 
-          <div className="form-group">
+          <div className="hig-form-row">
             <label htmlFor="email">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
+            <input
+              type="email"
+              id="email"
+              className="hig-field"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
-          <div className="form-group">
+          <div className="hig-form-row">
             <label htmlFor="phone">Telefon</label>
-            <input 
-              type="tel" 
-              id="phone" 
-              value={phone} 
-              onChange={(e) => setPhone(e.target.value)} 
+            <input
+              type="tel"
+              id="phone"
+              className="hig-field"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
 
-          <div className="form-group">
+          <div className="hig-form-row">
             <label htmlFor="neighborhood">Cartier</label>
-            <select 
-              id="neighborhood" 
-              value={neighborhood} 
+            <select
+              id="neighborhood"
+              className="hig-field"
+              value={neighborhood}
               onChange={(e) => setNeighborhood(e.target.value)}
               required
             >
@@ -96,23 +99,24 @@ const Register: React.FC = () => {
               ))}
             </select>
           </div>
-          
-          <div className="form-group">
+
+          <div className="hig-form-row">
             <label htmlFor="password">Parolă</label>
-            <input 
-              type="password" 
-              id="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
+            <input
+              type="password"
+              id="password"
+              className="hig-field"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-          
-          <button type="submit" className="btn-primary" disabled={loading}>
+
+          <button type="submit" className="hig-button large" disabled={loading}>
             {loading ? 'Se încarcă...' : 'Înregistrare'}
           </button>
-          
-          <p className="login-link">
+
+          <p className="app-auth-footer-link hig-footnote">
             Ai deja cont? <Link to="/login">Autentifică-te</Link>
           </p>
         </form>
