@@ -750,37 +750,6 @@ a.hig-button { color: var(--hig-tint-contrast); }
 .app-leaderboard-points { font-weight: 700; font-variant-numeric: tabular-nums; }
 .hig-list-item.app-list-item-selected { background: color-mix(in srgb, var(--hig-tint) 8%, transparent); }
 
-/* --- Trees page (pages/Trees) — registry grid stays card-based (already
-   grid-shaped, per mapping table's "keep whichever structure it already
-   uses"); water-status filter is a hig-field select (5-option enum was
-   previously a wrapping hig-segmented — always broke to two rows at phone
-   widths), species stays a hig-field select too (dynamic option count
-   doesn't fit a segmented control). --- */
-.app-trees-page { display: flex; flex-direction: column; gap: var(--hig-space-5); }
-.app-trees-header { text-align: center; }
-.app-trees-header h2 { display: flex; align-items: center; justify-content: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-1); }
-.app-trees-header p { margin: 0; }
-
-.app-trees-filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hig-space-3); }
-.app-trees-search { position: relative; flex: 1; min-width: 240px; display: flex; align-items: center; }
-.app-trees-search-icon { position: absolute; left: var(--hig-space-3); color: var(--hig-label-tertiary); pointer-events: none; }
-.app-trees-search-input { padding-left: calc(var(--hig-space-3) + 22px); }
-.app-trees-species-select { min-width: 190px; flex-shrink: 0; width: auto; }
-.app-trees-status-select { min-width: 190px; flex-shrink: 0; width: auto; }
-
-.app-trees-loading { text-align: center; padding: var(--hig-space-8); }
-
-.app-trees-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--hig-space-4); }
-.app-tree-card { display: flex; flex-direction: column; }
-.app-tree-card-header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--hig-space-2); margin-bottom: 2px; }
-.app-tree-card-header h3 { margin: 0; }
-.app-tree-species-tag { flex-shrink: 0; }
-.app-tree-meta { display: flex; align-items: center; gap: 4px; margin: 0 0 var(--hig-space-3); }
-.app-tree-card-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--hig-space-2); margin-top: auto; padding-top: var(--hig-space-3); }
-.app-tree-adoption-line { font-style: italic; }
-.app-tree-waterings-line { margin-left: auto; font-weight: 600; }
-.app-trees-empty-title { font-size: var(--hig-text-body); font-weight: 400; }
-
 /* --- Sector5TreeMap (components/Pitch/Sector5TreeMap, embedded on Dashboard
    inside .app-map-wrapper) — this is a real Leaflet + OpenStreetMap-tile map,
    not a custom-drawn schematic (no land/road/label SVG to theme); the parts
@@ -861,27 +830,6 @@ a.hig-button { color: var(--hig-tint-contrast); }
 .app-map-popup-btn.adopt { background: var(--hig-tint); color: var(--hig-tint-contrast); }
 .app-map-popup-btn.water { background: color-mix(in srgb, var(--hig-blue) 20%, transparent); color: var(--hig-blue); }
 .app-map-popup-btn.full { width: 100%; margin-top: var(--hig-space-1); }
-
-/* --- Map page (pages/Map) — full-height two-column layout: filter sidebar +
-   Leaflet canvas, the only routed page that needs to fill the viewport
-   below the shell's own padding instead of scrolling like a document.
-   Filters reuse hig-form-row/hig-field (mapping table) rather than a
-   bespoke filter-group. --- */
-.app-map-page { display: flex; flex-direction: column; gap: var(--hig-space-5); height: 100%; }
-.app-map-page-header h2 { display: flex; align-items: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-1); }
-.app-map-page-header p { margin: 0; }
-.app-map-page-body { display: flex; gap: var(--hig-space-5); flex: 1; min-height: 560px; }
-.app-map-sidebar { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; gap: var(--hig-space-4); overflow-y: auto; }
-.app-map-page-legend { margin-top: auto; padding-top: var(--hig-space-5); border-top: 1px solid var(--hig-separator); display: flex; flex-direction: column; gap: var(--hig-space-2); }
-.app-map-page-legend-item { display: flex; align-items: center; gap: var(--hig-space-2); font-size: var(--hig-text-footnote); color: var(--hig-label-secondary); }
-.app-map-page-legend-item img { height: 24px; }
-.app-map-content { flex: 1; position: relative; border-radius: var(--hig-radius-xl); overflow: hidden; min-height: 400px; }
-.app-map-leaflet { width: 100%; height: 100%; }
-@media (max-width: 768px) {
-  .app-map-page-body { flex-direction: column; }
-  .app-map-sidebar { width: 100%; max-height: 40vh; }
-  .app-map-content { min-height: 60vh; }
-}
 
 /* --- Reports page (pages/Reports/Reports) --- */
 .app-reports-page { display: flex; flex-direction: column; gap: var(--hig-space-5); }
@@ -1062,8 +1010,7 @@ a.hig-button { color: var(--hig-tint-contrast); }
    avatar on --hig-fill (no existing avatar precedent in the app, added per
    ruling). The "you are here" row reuses DistrictLeaderboard's selected-row
    tint (.app-list-item-selected) instead of the old green border. Note-under-
-   list border-top follows the same divider precedent as .app-reward-footer /
-   .app-map-page-legend. --- */
+   list border-top follows the same divider precedent as .app-reward-footer. --- */
 .app-community-page { display: flex; flex-direction: column; gap: var(--hig-space-5); }
 .app-community-header { text-align: center; }
 .app-community-header h2 { display: flex; align-items: center; justify-content: center; gap: var(--hig-space-2); margin: 0 0 var(--hig-space-1); }
@@ -1334,13 +1281,17 @@ a.hig-sidebar-item.active { color: var(--hig-tint); }
 .app-map-sheet-dot.status-ok { background: var(--hig-tint); }
 .app-map-sheet-dot.status-thirsty { background: var(--hig-orange, #FF9500); }
 .app-map-sheet-dot.status-urgent { background: var(--hig-red, #FF3B30); }
-.app-map-sheet-dot.status-unknown { background: var(--hig-fill); }
+.app-map-sheet-dot.status-unknown { background: var(--hig-gray); }
 .app-map-sheet-list-name { font-weight: 600; }
 .app-map-sheet-back { display: inline-flex; align-items: center; gap: 4px; background: none; border: none; color: var(--hig-tint); font-weight: 600; padding: 4px 0; cursor: pointer; }
 .app-map-sheet-panels { margin-top: var(--hig-space-3); }
 
-/* Desktop: sheet becomes a floating glass panel over the left (macOS Maps). */
-@media (min-width: 768px) {
+/* Desktop: sheet becomes a floating glass panel over the left (macOS Maps).
+   Matches the shell's own mobile→desktop breakpoint (tab bar hides / sidebar
+   shows at min-width: 900px, see .app-tabbar / .app-sidebar above) so the
+   sheet and the shell chrome switch layouts together instead of overlapping
+   in the 768–899px gap. */
+@media (min-width: 900px) {
   .app-map-sheet {
     left: var(--hig-space-4); right: auto; bottom: var(--hig-space-4); top: var(--hig-space-4);
     width: 360px; height: auto; border-radius: var(--hig-radius-lg);

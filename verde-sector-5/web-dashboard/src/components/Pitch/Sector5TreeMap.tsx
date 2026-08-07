@@ -7,13 +7,6 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import type { TreeItem } from '../../types/tree';
 import { computeWaterStatus, waterStatusLabel, type WaterStatus } from '../../utils/treeCare';
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
 // Marker fill color now comes from water status (Task 14's computeWaterStatus),
 // not health status — an SVG divIcon lets us paint the exact legend hex values,
 // which the fixed CDN pin-color presets used previously could not do. Shape and
@@ -72,8 +65,6 @@ interface Sector5TreeMapProps {
   selectedNeighborhood?: string;
   selectedTreeId?: string | null;
   onSelectTree: (tree: TreeItem) => void;
-  onAdoptClick: (tree: TreeItem) => void;
-  onWaterClick: (tree: TreeItem) => void;
 }
 
 export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
@@ -81,8 +72,6 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
   selectedNeighborhood = 'ALL',
   selectedTreeId = null,
   onSelectTree,
-  onAdoptClick,
-  onWaterClick,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -124,13 +113,6 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
     const markersById = new Map<string, L.Marker>();
     markersByIdRef.current = markersById;
 
-    // Escape user-derived values before they go into popup innerHTML (adopter
-    // name / nickname are user input).
-    const esc = (s: unknown) =>
-      String(s ?? '').replace(/[&<>"']/g, (c) => (
-        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string
-      ));
-
     // Add tree markers
     trees.forEach((tree) => {
       const status = computeWaterStatus(tree);
@@ -144,57 +126,6 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
         keyboard: true,
       });
 
-      // Styling lives in app.css (.app-map-popup-*) — CSS-variable-driven
-      // classes instead of inline hex, so the popup follows the active
-      // theme like every other surface.
-      const popupContainer = document.createElement('div');
-      popupContainer.className = 'app-map-popup';
-
-      popupContainer.innerHTML = `
-        <div class="app-map-popup-head">
-          <span class="app-map-popup-eyebrow">
-            ${esc(tree.neighborhood)} • ${esc(tree.code)}
-          </span>
-          ${tree.isAdopted ? `
-            <span class="app-map-popup-badge adopted">
-              🌟 Adoptat
-            </span>
-          ` : `
-            <span class="app-map-popup-badge available">
-              Disponibil
-            </span>
-          `}
-        </div>
-        <h4 class="app-map-popup-title">
-          ${esc(tree.nickname || tree.species)}
-        </h4>
-        <p class="app-map-popup-meta">
-          ${tree.isAdopted ? `Îngrijit de: ${esc(tree.adopterName)}` : `Specie: ${esc(tree.species)}`}
-        </p>
-        <div class="app-map-popup-actions">
-          ${!tree.isAdopted ? `<button class="btn-adopt-tree app-map-popup-btn adopt">🌱 Adoptă</button>` : ''}
-          <button class="btn-water-tree app-map-popup-btn water">💧 Udă Copacul</button>
-        </div>
-      `;
-
-      // Event listener bindings
-      const adoptBtn = popupContainer.querySelector('.btn-adopt-tree');
-      if (adoptBtn) {
-        adoptBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          onAdoptClick(tree);
-        });
-      }
-
-      const waterBtn = popupContainer.querySelector('.btn-water-tree');
-      if (waterBtn) {
-        waterBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          onWaterClick(tree);
-        });
-      }
-
-      marker.bindPopup(popupContainer);
       marker.on('click', () => onSelectTree(tree));
 
       markerCluster.addLayer(marker);
@@ -215,7 +146,7 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
       map.remove();
       mapInstanceRef.current = null;
     };
-  }, [trees, selectedNeighborhood, onSelectTree, onAdoptClick, onWaterClick]);
+  }, [trees, selectedNeighborhood, onSelectTree]);
 
   // Lightweight selection effect — toggles the ring class and pans to the
   // selected marker without rebuilding the whole map (kept separate from the

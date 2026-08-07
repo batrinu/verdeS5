@@ -45,6 +45,10 @@ export const Dashboard: React.FC = () => {
   const [waterTreeModalTarget, setWaterTreeModalTarget] = useState<TreeItem | null>(null);
   const [adoptionCertModalTarget, setAdoptionCertModalTarget] = useState<TreeItem | null>(null);
 
+  // Stable identity so Sector5TreeMap's init effect (which depends on this
+  // callback) doesn't tear down/rebuild the map on every Dashboard render.
+  const handleSelectTree = useCallback((tree: TreeItem) => setSelectedTree(tree), []);
+
   const loadData = useCallback(async () => {
     try {
       const [fetchedTrees, fetchedAlerts, fetchedStats] = await Promise.all([
@@ -215,9 +219,7 @@ export const Dashboard: React.FC = () => {
           trees={trees}
           selectedNeighborhood={selectedNeighborhood}
           selectedTreeId={selectedTree?.id ?? null}
-          onSelectTree={(tree) => setSelectedTree(tree)}
-          onAdoptClick={(tree) => setAdoptTreeModalTarget(tree)}
-          onWaterClick={(tree) => setWaterTreeModalTarget(tree)}
+          onSelectTree={handleSelectTree}
         />
       </div>
 

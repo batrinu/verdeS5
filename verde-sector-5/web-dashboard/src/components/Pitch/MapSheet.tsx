@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import type { TreeItem } from '../../types/tree';
 import {
   filterTrees,
@@ -44,6 +44,12 @@ export const MapSheet: React.FC<MapSheetProps> = ({
   children,
 }) => {
   const [detent, setDetent] = useState<Detent>('peek');
+
+  // Lift the sheet off the 96px peek when a tree gets selected, so the
+  // detail view isn't squeezed into the collapsed strip.
+  useEffect(() => {
+    if (selectedTree) setDetent((d) => (d === 'peek' ? 'half' : d));
+  }, [selectedTree]);
 
   const filtered = useMemo(() => filterTrees(trees, criteria), [trees, criteria]);
   const species = useMemo(() => treeSpeciesOptions(trees), [trees]);
