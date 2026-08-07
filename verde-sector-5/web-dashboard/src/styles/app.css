@@ -613,6 +613,19 @@ a.hig-button { color: var(--hig-tint-contrast); }
   box-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.04);
 }
 .app-view-tab.active.app-view-tab-council { color: var(--hig-blue); }
+/* Dark elevation audit (Task 5): the active tab already sits on
+   --hig-bg-secondary against the --hig-fill-tertiary track — background
+   contrast alone reads the elevation in dark mode, so the light-mode
+   hairline/drop-shadow (tuned for a white-on-white surface) is dropped
+   rather than rendering as dead, near-invisible black-on-black. */
+:root[data-theme="dark"] .app-view-tab.active {
+  box-shadow: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .app-view-tab.active {
+    box-shadow: none;
+  }
+}
 
 .app-offline-banner {
   background: color-mix(in srgb, var(--hig-orange) 12%, transparent);
