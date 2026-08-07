@@ -1209,6 +1209,9 @@ a.hig-button { color: var(--hig-tint-contrast); }
 
 .app-sponsors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--hig-space-4); }
 .app-sponsor-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; }
+/* .hig a (0,1,1) outranks .app-sponsor-card's `color: inherit` (0,1,0) on the
+   linkable GOLD/SILVER cards, turning the card headline green; re-pin. */
+a.app-sponsor-card-link { color: inherit; }
 .app-sponsor-card-link:hover { background: var(--hig-fill-quaternary); }
 .app-sponsor-cta-card { justify-content: flex-start; }
 .app-sponsor-logo { display: inline-flex; margin-bottom: var(--hig-space-3); }
@@ -1303,6 +1306,12 @@ a.hig-button { color: var(--hig-tint-contrast); }
   color: var(--hig-label-secondary); text-decoration: none;
 }
 .app-tabbar-item.active { color: var(--hig-tint); }
+
+/* .hig a (0,1,1) outcolors class-only selectors on anchors; pin nav chrome */
+a.app-tabbar-item { color: var(--hig-label-secondary); }
+a.app-tabbar-item.active { color: var(--hig-tint); }
+a.hig-sidebar-item { color: var(--hig-label); }
+a.hig-sidebar-item.active { color: var(--hig-tint); }
 @media (max-width: 899px) {
   .app-sidebar { display: none; }
   .app-content { padding: var(--hig-space-4); padding-bottom: 84px; }
