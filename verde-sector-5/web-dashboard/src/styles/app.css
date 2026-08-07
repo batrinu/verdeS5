@@ -692,6 +692,7 @@ html {
   position: sticky;
   top: 0;
   z-index: 1000;
+  background: var(--hig-bg);
   border-bottom: 1px solid var(--hig-material-border);
 }
 .app-pitch-title {
