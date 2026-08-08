@@ -7,6 +7,7 @@ import { Layout } from './components/Layout/Layout';
 
 const DashboardPage = lazy(() => import('./pages/Dashboard/Dashboard'));
 const ReportsPage = lazy(() => import('./pages/Reports/Reports'));
+const CreateReportPage = lazy(() => import('./pages/Reports/CreateReport'));
 const CampaignsPage = lazy(() => import('./pages/Campaigns/Campaigns'));
 const RewardsPage = lazy(() => import('./pages/Rewards/Rewards'));
 const CommunityPage = lazy(() => import('./pages/Community/Community'));
@@ -29,6 +30,7 @@ export const App: React.FC = () => {
 
                 {/* Lazy-loaded Feature Routes */}
                 <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/reports/create" element={<CreateReportPage />} />
                 <Route path="/campaigns" element={<CampaignsPage />} />
                 <Route path="/rewards" element={<RewardsPage />} />
                 <Route path="/community" element={<CommunityPage />} />
