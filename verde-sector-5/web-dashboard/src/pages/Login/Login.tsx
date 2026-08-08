@@ -12,7 +12,6 @@ interface DemoUserPreset {
   email: string;
   neighborhood: string;
   icon: string;
-  badgeColor: string;
 }
 
 const DEMO_USERS: DemoUserPreset[] = [
@@ -24,7 +23,6 @@ const DEMO_USERS: DemoUserPreset[] = [
     email: 'elena.popa@gmail.com',
     neighborhood: 'Cotroceni',
     icon: '🌱',
-    badgeColor: '#16a34a',
   },
   {
     id: 'admin-1',
@@ -34,7 +32,6 @@ const DEMO_USERS: DemoUserPreset[] = [
     email: 'admin@sector5.ro',
     neighborhood: 'Sector 5 (Toate)',
     icon: '🏛️',
-    badgeColor: '#0284c7',
   },
   {
     id: 'worker-1',
@@ -44,7 +41,6 @@ const DEMO_USERS: DemoUserPreset[] = [
     email: 'worker1@sector5.ro',
     neighborhood: 'Rahova',
     icon: '👷',
-    badgeColor: '#eab308',
   },
 ];
 

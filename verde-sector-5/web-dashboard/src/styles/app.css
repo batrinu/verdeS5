@@ -1005,7 +1005,7 @@ a.hig-button { color: var(--hig-tint-contrast); }
   display: block;
   text-align: center;
   font-family: var(--hig-font-mono);
-  font-size: 20px;
+  font-size: var(--hig-text-title3);
   letter-spacing: 0.12em;
   padding: var(--hig-space-3) var(--hig-space-4);
   margin: 0 0 var(--hig-space-4);
@@ -1260,7 +1260,7 @@ a.hig-sidebar-item.active { color: var(--hig-tint); }
   display: flex; align-items: center; justify-content: center;
   width: 36px; height: 36px; line-height: 1;
   font-size: var(--hig-text-footnote); font-weight: 700;
-  background: var(--hig-tint); color: #fff;
+  background: var(--hig-tint); color: var(--hig-tint-contrast);
   border-radius: 999px; box-shadow: 0 1px 4px rgba(0,0,0,0.3);
   border: 2px solid var(--hig-bg);
 }
@@ -1344,3 +1344,35 @@ a.hig-sidebar-item.active { color: var(--hig-tint); }
   .app-map-sheet[data-detent="full"] { height: calc(100dvh - var(--app-tabbar-h) - 24px); }
   .app-map-home-canvas .leaflet-bottom { bottom: calc(var(--app-tabbar-h) + 104px); }
 }
+
+/* Leaflet control chrome (zoom buttons + attribution) themed to HIG. Leaflet's
+   own CSS ships light-only white boxes in Arial; here the structure/behaviour
+   stay Leaflet's while the surface, colour and type read from --hig-* tokens so
+   the map chrome adapts to dark mode and matches the system font. */
+.app-sector5-map .leaflet-bar {
+  border: none;
+  border-radius: var(--hig-radius-md);
+  box-shadow: var(--hig-shadow-menu);
+  overflow: hidden;
+}
+.app-sector5-map .leaflet-control-zoom a {
+  background: var(--hig-bg-secondary);
+  color: var(--hig-label);
+  font-family: inherit;
+  border-bottom: 1px solid var(--hig-separator);
+}
+.app-sector5-map .leaflet-control-zoom a:last-child { border-bottom: none; }
+.app-sector5-map .leaflet-control-zoom a:hover,
+.app-sector5-map .leaflet-control-zoom a:focus-visible {
+  background: var(--hig-fill);
+  color: var(--hig-tint);
+}
+.app-sector5-map .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--hig-bg-secondary) 80%, transparent);
+  color: var(--hig-label-tertiary);
+  font-family: inherit;
+  font-size: var(--hig-text-caption2);
+  border-radius: var(--hig-radius-sm);
+  padding: 2px var(--hig-space-2);
+}
+.app-sector5-map .leaflet-control-attribution a { color: var(--hig-tint); }

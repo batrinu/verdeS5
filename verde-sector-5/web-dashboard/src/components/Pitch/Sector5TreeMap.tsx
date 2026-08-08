@@ -97,12 +97,33 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
     L.control.zoom({ position: 'topright' }).addTo(map);
     mapInstanceRef.current = map;
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // Theme-aware basemap: Carto light in light mode, dark in dark mode, so the
+    // map surface honors the app's dark theme instead of glowing bright on black.
+    const isDark = () => {
+      const attr = document.documentElement.getAttribute('data-theme');
+      if (attr === 'dark') return true;
+      if (attr === 'light') return false;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    };
+    const tileUrl = (dark: boolean) =>
+      `https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`;
+    const tiles = L.tileLayer(tileUrl(isDark()), {
       subdomains: 'abcd',
       maxZoom: 20,
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
     }).addTo(map);
+
+    // Swap the basemap live when the app theme changes — either an explicit
+    // data-theme override on <html>, or (absent that) the OS colour scheme.
+    const applyMapTheme = () => tiles.setUrl(tileUrl(isDark()));
+    const themeObserver = new MutationObserver(applyMapTheme);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    const colorSchemeMq = window.matchMedia('(prefers-color-scheme: dark)');
+    colorSchemeMq.addEventListener('change', applyMapTheme);
 
     const markerCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
@@ -160,6 +181,8 @@ export const Sector5TreeMap: React.FC<Sector5TreeMapProps> = ({
 
     return () => {
       ro.disconnect();
+      themeObserver.disconnect();
+      colorSchemeMq.removeEventListener('change', applyMapTheme);
       clearTimeout(resizeTimer);
       map.remove();
       mapInstanceRef.current = null;
